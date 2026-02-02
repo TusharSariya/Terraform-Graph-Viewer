@@ -2,12 +2,30 @@ import { useState, useEffect, useRef } from 'react';
 import LambdaIcon from './assets/svg/Compute/Lambda.svg';
 import RoughLine from './RoughLine';
 
+
+function terraformShapes(data) {
+    const shapes = [];
+    for (let i = 0; i < data.resource_changes.length; i++) {
+        const shape = data.resource_changes[i];
+        shapes.push({
+            id: i,
+            x: Math.random() * 100,
+            y: Math.random() * 100,
+            size: 40,
+            color: 'red',
+            name: shape.address
+        })
+    }
+    return shapes;
+}
+
 function SvgPage() {
     const [shapes, setShapes] = useState([]);
     const [viewTransform, setViewTransform] = useState({ x: 0, y: 0, scale: 1 });
     const [draggingShapeId, setDraggingShapeId] = useState(null);
     const [isPanning, setIsPanning] = useState(false);
     const [dimensions, setDimensions] = useState({ width: window.innerWidth, height: window.innerHeight });
+    const [data, setData] = useState([])
 
     // Drawing Mode State
     const [mode, setMode] = useState('pan'); // 'pan' | 'draw' | 'eraser'
@@ -37,6 +55,14 @@ function SvgPage() {
         return () => window.removeEventListener('resize', handleResize);
     }, []);
 
+    useEffect(() => {
+        fetch('http://localhost:8000/api/plan')
+            .then(res => res.json())
+            .then(jsonData => { console.log("Fetched Data:", jsonData); return terraformShapes(jsonData) })
+            .then(shapes => setShapes(shapes))
+            .catch(err => console.error("Error fetching data:", err))
+    }, [])
+
     //creates rectangles in random places
     useEffect(() => {
         const newShapes = [];
@@ -59,7 +85,8 @@ function SvgPage() {
                 showLabel: false // Default to hidden
             });
         }
-        setShapes(newShapes);
+
+        //setShapes(newShapes);
     }, []);
 
     const getSVGPoint = (clientX, clientY) => {
@@ -277,7 +304,7 @@ function SvgPage() {
                     <rect x="-50000" y="-50000" width="100000" height="100000" fill="url(#grid)" />
 
                     {/* Auto-connected lines */}
-                    {shapes.map((shape, i) => {
+                    {/*shapes.map((shape, i) => {
                         if (i === shapes.length - 1) return null;
                         const nextShape = shapes[i + 1];
                         return (
@@ -292,7 +319,7 @@ function SvgPage() {
                                 style={{ pointerEvents: 'none' }}
                             />
                         );
-                    })}
+                    })*/}
 
                     {/* User Drawn Arrows */}
                     {drawnLines.map((line, i) => (
