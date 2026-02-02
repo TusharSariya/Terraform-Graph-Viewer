@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
+import LambdaIcon from './assets/svg/Compute/Lambda.svg';
 
 function SvgPage() {
     const [shapes, setShapes] = useState([]);
@@ -220,18 +221,18 @@ function SvgPage() {
 
                     {shapes.map((shape) => (
                         <g key={`group-${shape.id}`}>
-                            <rect
+                            <image
+                                href={LambdaIcon}
                                 x={shape.x}
                                 y={shape.y}
                                 width={shape.size}
                                 height={shape.size}
-                                fill={shape.color}
                                 onMouseDown={(e) => handleMouseDown(e, shape.id)}
                                 onContextMenu={(e) => handleContextMenu(e, shape.id)}
                                 style={{
                                     cursor: 'move',
-                                    stroke: draggingShapeId === shape.id ? 'white' : 'none',
-                                    strokeWidth: 2 / viewTransform.scale
+                                    // Drop shadow to act as highlight (stroke doesn't work on image)
+                                    filter: draggingShapeId === shape.id ? 'drop-shadow(0 0 5px white)' : 'none'
                                 }}
                             />
                             {shape.showLabel && (
