@@ -4,10 +4,10 @@ import RoughLine from './RoughLine';
 
 
 function terraformShapes(data) {
-    const shapes = [];
+    const shapes = {};
     for (let i = 0; i < data.resource_changes.length; i++) {
         const shape = data.resource_changes[i];
-        shapes.push({
+        shapes[shape.address] = ({
             id: i,
             x: Math.random() * 100,
             y: Math.random() * 100,
@@ -16,7 +16,38 @@ function terraformShapes(data) {
             name: shape.address
         })
     }
-    return shapes;
+
+    for (let i = 0; i < data.configuration.root_module.resources.length; i++) {
+        const shape = data.configuration.root_module.resources[i];
+        const address = shape.address;
+        const expressions = shape.expressions;
+        for (var key in expressions) {
+            const expression = expressions[key];
+
+            if (expression.references) {
+                for (var j = 0; j < expression.references.length; j++) {
+                    const reference = expression.references[j];
+
+                    if (shapes[address]) {
+                        if (!shapes[address].dependencies) {
+                            shapes[address].dependencies = [];
+                        }
+                        // Avoid duplicates
+                        if (!shapes[address].dependencies.includes(reference)) {
+                            shapes[address].dependencies.push(reference);
+                        }
+                    }
+                }
+            }
+
+        }
+    }
+
+
+
+
+
+    return Object.values(shapes);
 }
 
 function SvgPage() {
@@ -59,7 +90,7 @@ function SvgPage() {
         fetch('http://localhost:8000/api/plan')
             .then(res => res.json())
             .then(jsonData => { console.log("Fetched Data:", jsonData); return terraformShapes(jsonData) })
-            .then(shapes => setShapes(shapes))
+            .then(shapes => { setShapes(shapes); console.log("Shapes: ", shapes) })
             .catch(err => console.error("Error fetching data:", err))
     }, [])
 

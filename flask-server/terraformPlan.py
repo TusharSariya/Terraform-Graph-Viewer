@@ -79,7 +79,7 @@ class Module:
 class PlannedValues:
     def __init__(self, data):
         # planned_values contains a "root_module"
-        self.root_module = Module(data.get('root_module', {}))
+        self.root_module = Module(data.get('root_module', {})) #this needs to be nested
 
     def to_dict(self):
         return {
@@ -98,7 +98,7 @@ class ConfigModule:
 class Configuration:
     def __init__(self, data):
         self.provider_config = data.get('provider_config', {})
-        self.root_module = ConfigModule(data.get('root_module', {}))
+        self.root_module = ConfigModule(data.get('root_module', {})) #this needs to be nested
 
     def to_dict(self):
         return {
