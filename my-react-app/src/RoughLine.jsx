@@ -1,7 +1,7 @@
 import React, { useRef, useEffect } from 'react';
 import rough from 'roughjs/bin/rough';
 
-const RoughLine = ({ x1, y1, x2, y2, stroke, strokeWidth, hasArrow }) => {
+const RoughLine = ({ x1, y1, x2, y2, stroke, strokeWidth, hasArrow, onClick, cursor }) => {
     const svgRef = useRef(null);
 
     useEffect(() => {
@@ -46,7 +46,17 @@ const RoughLine = ({ x1, y1, x2, y2, stroke, strokeWidth, hasArrow }) => {
     }, [x1, y1, x2, y2, stroke, strokeWidth, hasArrow]);
 
     return (
-        <g ref={svgRef} style={{ pointerEvents: 'none' }} />
+        <g style={{ cursor: cursor || 'default' }}>
+            <g ref={svgRef} style={{ pointerEvents: 'none' }} />
+            {/* Invisible hit box for easier clicking */}
+            <line
+                x1={x1} y1={y1} x2={x2} y2={y2}
+                stroke="transparent"
+                strokeWidth={15}
+                onClick={onClick}
+                style={{ pointerEvents: onClick ? 'stroke' : 'none' }}
+            />
+        </g>
     );
 };
 

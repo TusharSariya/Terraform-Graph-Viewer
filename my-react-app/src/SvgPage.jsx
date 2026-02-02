@@ -10,7 +10,7 @@ function SvgPage() {
     const [dimensions, setDimensions] = useState({ width: window.innerWidth, height: window.innerHeight });
 
     // Drawing Mode State
-    const [mode, setMode] = useState('pan'); // 'pan' | 'draw'
+    const [mode, setMode] = useState('pan'); // 'pan' | 'draw' | 'eraser'
     const [drawnLines, setDrawnLines] = useState([]);
     const [currentLine, setCurrentLine] = useState(null);
 
@@ -159,7 +159,7 @@ function SvgPage() {
     const handleMouseUp = () => {
         if (currentLine) {
             // Finish Drawing
-            setDrawnLines(prev => [...prev, currentLine]);
+            setDrawnLines(prev => [...prev, { ...currentLine, id: Date.now() }]);
             setCurrentLine(null);
         }
         setDraggingShapeId(null);
@@ -239,6 +239,16 @@ function SvgPage() {
                     >
                         ✏️ Draw
                     </button>
+                    <button
+                        onClick={() => setMode('eraser')}
+                        style={{
+                            background: mode === 'eraser' ? '#e0efff' : 'transparent',
+                            border: mode === 'eraser' ? '1px solid #1a73e8' : '1px solid transparent',
+                            cursor: 'pointer'
+                        }}
+                    >
+                        🧹 Eraser
+                    </button>
                 </div>
             </div>
 
@@ -287,7 +297,7 @@ function SvgPage() {
                     {/* User Drawn Arrows */}
                     {drawnLines.map((line, i) => (
                         <RoughLine
-                            key={`drawn-${i}`}
+                            key={`drawn-${line.id || i}`}
                             x1={line.x1}
                             y1={line.y1}
                             x2={line.x2}
@@ -295,6 +305,12 @@ function SvgPage() {
                             stroke="#333"
                             strokeWidth={2}
                             hasArrow={true}
+                            cursor={mode === 'eraser' ? 'pointer' : 'default'}
+                            onClick={() => {
+                                if (mode === 'eraser') {
+                                    setDrawnLines(prev => prev.filter(l => l.id !== line.id));
+                                }
+                            }}
                         />
                     ))}
 
