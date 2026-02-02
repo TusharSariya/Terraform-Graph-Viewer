@@ -5,23 +5,46 @@ function SvgPage() {
     const [viewTransform, setViewTransform] = useState({ x: 0, y: 0, scale: 1 });
     const [draggingShapeId, setDraggingShapeId] = useState(null);
     const [isPanning, setIsPanning] = useState(false);
+    const [dimensions, setDimensions] = useState({ width: window.innerWidth, height: window.innerHeight });
 
-    // We store partial drag state in refs to avoid frequent re-renders or stale state closures in heavy events
-    const dragStartRef = useRef({ x: 0, y: 0 }); // Mouse position at start of drag
-    const initialTransformRef = useRef({ x: 0, y: 0 }); // View transform at start of pan
-    const initialShapePosRef = useRef({ x: 0, y: 0 }); // Shape position at start of drag
+    const dragStartRef = useRef({ x: 0, y: 0 });
+    const initialTransformRef = useRef({ x: 0, y: 0 });
+    const initialShapePosRef = useRef({ x: 0, y: 0 });
 
     const svgRef = useRef(null);
-    const canvasWidth = 600;
-    const canvasHeight = 400;
+
+    // Handle Resize
+    useEffect(() => {
+        const handleResize = () => {
+            // Subtract navbar height roughly (or exact if we knew it)
+            // For true fullscreen, we might want to overlay nav, but for now let's fill 'rest of screen'
+            // We'll use window dimensions but subtract a bit for the top nav if it's there.
+            // Actually, let's just make it full viewport and let the nav sit on top or push it down.
+            // Since App.jsx currently puts nav in normal flow, we should probably account for it, 
+            // OR just switch to full viewport calculation.
+            setDimensions({
+                width: window.innerWidth,
+                height: window.innerHeight - 60 // Approximate nav height
+            });
+        };
+
+        window.addEventListener('resize', handleResize);
+        handleResize(); // Initial size
+
+        return () => window.removeEventListener('resize', handleResize);
+    }, []);
 
     useEffect(() => {
         // Generate random shapes once on mount
         const newShapes = [];
+        // Use initial dimensions for bounds, or larger since it's infinite
+        const bounds = { w: 2000, h: 2000 };
+
         for (let i = 0; i < 10; i++) {
             const size = 30 + Math.random() * 20;
-            const x = Math.random() * (canvasWidth - size);
-            const y = Math.random() * (canvasHeight - size);
+            // Spread them out a bit more
+            const x = Math.random() * (bounds.w / 2);
+            const y = Math.random() * (bounds.h / 2);
             const color = `hsl(${Math.random() * 360}, 70%, 50%)`;
 
             newShapes.push({
@@ -41,9 +64,6 @@ function SvgPage() {
         const pt = svg.createSVGPoint();
         pt.x = clientX;
         pt.y = clientY;
-        // Transform screen point to SVG coordinate system (taking into account the viewTransform)
-        // We manually apply the inverse of translate(x,y) scale(s)
-        // pt_svg = (pt_screen - translate) / scale
         return {
             x: (pt.x - svg.getBoundingClientRect().left - viewTransform.x) / viewTransform.scale,
             y: (pt.y - svg.getBoundingClientRect().top - viewTransform.y) / viewTransform.scale
@@ -55,13 +75,10 @@ function SvgPage() {
         const scaleAmount = -e.deltaY * 0.001;
         const newScale = Math.max(0.1, Math.min(viewTransform.scale * (1 + scaleAmount), 5));
 
-        // precise zoom: keep the point under cursor stable
-        // mouse position relative to SVG container
         const rect = svgRef.current.getBoundingClientRect();
         const mouseX = e.clientX - rect.left;
         const mouseY = e.clientY - rect.top;
 
-        // Formula: newTranslate = mouse - (mouse - oldTranslate) * (newScale / oldScale)
         const scaleRatio = newScale / viewTransform.scale;
         const newX = mouseX - (mouseX - viewTransform.x) * scaleRatio;
         const newY = mouseY - (mouseY - viewTransform.y) * scaleRatio;
@@ -71,19 +88,14 @@ function SvgPage() {
 
     const handleMouseDown = (e, shapeId = null) => {
         if (shapeId !== null) {
-            // Dragging a SHAPE
-            e.stopPropagation(); // prevent panning
+            e.stopPropagation();
             e.preventDefault();
-
             const pt = getSVGPoint(e.clientX, e.clientY);
-            // find the shape to get its current pos
             const shape = shapes.find(s => s.id === shapeId);
-
             setDraggingShapeId(shapeId);
             dragStartRef.current = { x: pt.x, y: pt.y };
-            initialShapePosRef.current = { x: shape.x, y: shape.y }; // Store original shape pos
+            initialShapePosRef.current = { x: shape.x, y: shape.y };
         } else {
-            // Panning the CANVAS
             e.preventDefault();
             setIsPanning(true);
             dragStartRef.current = { x: e.clientX, y: e.clientY };
@@ -95,7 +107,6 @@ function SvgPage() {
         e.preventDefault();
 
         if (draggingShapeId !== null) {
-            // Move Shape
             const pt = getSVGPoint(e.clientX, e.clientY);
             const dx = pt.x - dragStartRef.current.x;
             const dy = pt.y - dragStartRef.current.y;
@@ -112,7 +123,6 @@ function SvgPage() {
             }));
 
         } else if (isPanning) {
-            // Pan View
             const dx = e.clientX - dragStartRef.current.x;
             const dy = e.clientY - dragStartRef.current.y;
 
@@ -130,21 +140,44 @@ function SvgPage() {
     };
 
     return (
-        <div style={{ textAlign: 'center', marginTop: '20px' }}>
-            <h2>SVG Infinite Canvas</h2>
-            <p><strong>Pan</strong> (drag background) | <strong>Zoom</strong> (scroll) | <strong>Drag Rects</strong></p>
+        <div style={{
+            position: 'absolute',
+            top: '60px', // Below nav
+            left: 0,
+            width: '100%',
+            height: 'calc(100vh - 60px)',
+            overflow: 'hidden'
+        }}>
+
+            {/* Control Panel Overlay */}
+            <div style={{
+                position: 'absolute',
+                top: 10,
+                left: 10,
+                background: 'rgba(255, 255, 255, 0.9)',
+                padding: '10px',
+                borderRadius: '8px',
+                boxShadow: '0 2px 5px rgba(0,0,0,0.2)',
+                zIndex: 100,
+                pointerEvents: 'none' // Let clicks pass through if needed, but usually we want controls clickable.
+                // Actually, text shouldn't block, but buttons would. 
+                // For this simple text, pointerEvents none is fine.
+            }}>
+                <h3 style={{ margin: '0 0 5px 0' }}>SVG Infinite Canvas</h3>
+                <div style={{ fontSize: '12px', color: '#666' }}>
+                    Zoom: {Math.round(viewTransform.scale * 100)}% <br />
+                    X: {Math.round(viewTransform.x)} Y: {Math.round(viewTransform.y)}
+                </div>
+            </div>
 
             <svg
                 ref={svgRef}
-                width={canvasWidth}
-                height={canvasHeight}
+                width={dimensions.width}
+                height={dimensions.height}
                 style={{
-                    border: '1px solid #ccc',
-                    borderRadius: '8px',
-                    boxShadow: '0 4px 6px rgba(0,0,0,0.1)',
                     background: '#f0f0f0',
                     cursor: isPanning ? 'grabbing' : 'grab',
-                    overflow: 'hidden'
+                    display: 'block' // Remove inline-block spacing
                 }}
                 onMouseDown={(e) => handleMouseDown(e, null)}
                 onMouseMove={handleMouseMove}
@@ -152,19 +185,14 @@ function SvgPage() {
                 onMouseLeave={handleMouseUp}
                 onWheel={handleWheel}
             >
-                {/* Apply Pan & Zoom Transform to the Group */}
                 <g transform={`translate(${viewTransform.x}, ${viewTransform.y}) scale(${viewTransform.scale})`}>
-
-                    {/* Grid Pattern Background (Optional, helps visualize movement) */}
                     <defs>
                         <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
-                            <path d="M 40 0 L 0 0 0 40" fill="none" stroke="#ddd" strokeWidth="1" />
+                            <path d="M 40 0 L 0 0 0 40" fill="none" stroke="#e0e0e0" strokeWidth="1" />
                         </pattern>
                     </defs>
-                    {/* Infinite grid illusion - make it huge */}
-                    <rect x="-5000" y="-5000" width="10000" height="10000" fill="url(#grid)" />
+                    <rect x="-50000" y="-50000" width="100000" height="100000" fill="url(#grid)" />
 
-                    {/* Draw lines */}
                     {shapes.map((shape, i) => {
                         if (i === shapes.length - 1) return null;
                         const nextShape = shapes[i + 1];
@@ -182,7 +210,6 @@ function SvgPage() {
                         );
                     })}
 
-                    {/* Draw squares */}
                     {shapes.map((shape) => (
                         <rect
                             key={`rect-${shape.id}`}
@@ -195,17 +222,12 @@ function SvgPage() {
                             style={{
                                 cursor: 'move',
                                 stroke: draggingShapeId === shape.id ? 'white' : 'none',
-                                strokeWidth: 2 / viewTransform.scale // Keep border thickness constant visually
+                                strokeWidth: 2 / viewTransform.scale
                             }}
                         />
                     ))}
                 </g>
             </svg>
-            <div style={{ marginTop: '10px', fontSize: '12px', color: '#666' }}>
-                Zoom: {Math.round(viewTransform.scale * 100)}% |
-                X: {Math.round(viewTransform.x)} |
-                Y: {Math.round(viewTransform.y)}
-            </div>
         </div>
     );
 }
