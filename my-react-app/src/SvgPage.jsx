@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import LambdaIcon from './assets/svg/Compute/Lambda.svg';
+import RoughLine from './RoughLine';
 
 function SvgPage() {
     const [shapes, setShapes] = useState([]);
@@ -7,6 +8,11 @@ function SvgPage() {
     const [draggingShapeId, setDraggingShapeId] = useState(null);
     const [isPanning, setIsPanning] = useState(false);
     const [dimensions, setDimensions] = useState({ width: window.innerWidth, height: window.innerHeight });
+
+    // Drawing Mode State
+    const [mode, setMode] = useState('pan'); // 'pan' | 'draw'
+    const [drawnLines, setDrawnLines] = useState([]);
+    const [currentLine, setCurrentLine] = useState(null);
 
     const dragStartRef = useRef({ x: 0, y: 0 });
     const initialTransformRef = useRef({ x: 0, y: 0 });
@@ -31,12 +37,13 @@ function SvgPage() {
         return () => window.removeEventListener('resize', handleResize);
     }, []);
 
+    //creates rectangles in random places
     useEffect(() => {
         const newShapes = [];
         const bounds = { w: 2000, h: 2000 };
 
         for (let i = 0; i < 10; i++) {
-            const size = 30 + Math.random() * 20;
+            const size = 40;
             const x = Math.random() * (bounds.w / 2);
             const y = Math.random() * (bounds.h / 2);
             const color = `hsl(${Math.random() * 360}, 70%, 50%)`;
@@ -83,11 +90,18 @@ function SvgPage() {
     };
 
     const handleMouseDown = (e, shapeId = null) => {
-        // Prevent strictly left-click drags if we want right-click for context menu
-        // But usually dragging works on left click.
-        if (e.button !== 0) return; // Only drag on left click
+        if (e.button !== 0) return;
+
+        if (mode === 'draw' && shapeId === null) {
+            // Start Drawing Arrow
+            e.preventDefault();
+            const pt = getSVGPoint(e.clientX, e.clientY);
+            setCurrentLine({ x1: pt.x, y1: pt.y, x2: pt.x, y2: pt.y });
+            return;
+        }
 
         if (shapeId !== null) {
+            // Drag Shape
             e.stopPropagation();
             e.preventDefault();
             const pt = getSVGPoint(e.clientX, e.clientY);
@@ -96,6 +110,7 @@ function SvgPage() {
             dragStartRef.current = { x: pt.x, y: pt.y };
             initialShapePosRef.current = { x: shape.x, y: shape.y };
         } else {
+            // Pan Canvas
             e.preventDefault();
             setIsPanning(true);
             dragStartRef.current = { x: e.clientX, y: e.clientY };
@@ -106,7 +121,13 @@ function SvgPage() {
     const handleMouseMove = (e) => {
         e.preventDefault();
 
-        if (draggingShapeId !== null) {
+        if (currentLine) {
+            // Update Drawing Arrow
+            const pt = getSVGPoint(e.clientX, e.clientY);
+            setCurrentLine(prev => ({ ...prev, x2: pt.x, y2: pt.y }));
+        }
+        else if (draggingShapeId !== null) {
+            // Drag Shape
             const pt = getSVGPoint(e.clientX, e.clientY);
             const dx = pt.x - dragStartRef.current.x;
             const dy = pt.y - dragStartRef.current.y;
@@ -123,6 +144,7 @@ function SvgPage() {
             }));
 
         } else if (isPanning) {
+            // Pan
             const dx = e.clientX - dragStartRef.current.x;
             const dy = e.clientY - dragStartRef.current.y;
 
@@ -135,12 +157,17 @@ function SvgPage() {
     };
 
     const handleMouseUp = () => {
+        if (currentLine) {
+            // Finish Drawing
+            setDrawnLines(prev => [...prev, currentLine]);
+            setCurrentLine(null);
+        }
         setDraggingShapeId(null);
         setIsPanning(false);
     };
 
     const handleContextMenu = (e, shapeId) => {
-        e.preventDefault(); // Stop native browser menu
+        e.preventDefault();
         e.stopPropagation();
 
         setShapes(prevShapes => prevShapes.map(s => {
@@ -164,17 +191,54 @@ function SvgPage() {
                 position: 'absolute',
                 top: 10,
                 left: 10,
-                background: 'rgba(255, 255, 255, 0.9)',
-                padding: '10px',
-                borderRadius: '8px',
-                boxShadow: '0 2px 5px rgba(0,0,0,0.2)',
-                zIndex: 100,
-                pointerEvents: 'none'
+                display: 'flex',
+                alignItems: 'center',
+                gap: '10px',
+                zIndex: 100
             }}>
-                <h3 style={{ margin: '0 0 5px 0' }}>SVG Infinite Canvas</h3>
-                <div style={{ fontSize: '12px', color: '#666' }}>
-                    Right-click box to show name<br />
-                    Zoom: {Math.round(viewTransform.scale * 100)}%
+                <div style={{
+                    background: 'rgba(255, 255, 255, 0.9)',
+                    padding: '10px',
+                    borderRadius: '8px',
+                    boxShadow: '0 2px 5px rgba(0,0,0,0.2)',
+                    pointerEvents: 'none'
+                }}>
+                    <h3 style={{ margin: '0 0 5px 0' }}>SVG Infinite Canvas</h3>
+                    <div style={{ fontSize: '12px', color: '#666' }}>
+                        Right-click box to show name<br />
+                        Zoom: {Math.round(viewTransform.scale * 100)}%
+                    </div>
+                </div>
+
+                {/* Toolbar */}
+                <div style={{
+                    background: 'white',
+                    padding: '5px',
+                    borderRadius: '8px',
+                    boxShadow: '0 2px 5px rgba(0,0,0,0.2)',
+                    display: 'flex',
+                    gap: '5px'
+                }}>
+                    <button
+                        onClick={() => setMode('pan')}
+                        style={{
+                            background: mode === 'pan' ? '#e0efff' : 'transparent',
+                            border: mode === 'pan' ? '1px solid #1a73e8' : '1px solid transparent',
+                            cursor: 'pointer'
+                        }}
+                    >
+                        ✋ Pan
+                    </button>
+                    <button
+                        onClick={() => setMode('draw')}
+                        style={{
+                            background: mode === 'draw' ? '#e0efff' : 'transparent',
+                            border: mode === 'draw' ? '1px solid #1a73e8' : '1px solid transparent',
+                            cursor: 'pointer'
+                        }}
+                    >
+                        ✏️ Draw
+                    </button>
                 </div>
             </div>
 
@@ -184,7 +248,7 @@ function SvgPage() {
                 height={dimensions.height}
                 style={{
                     background: '#f0f0f0',
-                    cursor: isPanning ? 'grabbing' : 'grab',
+                    cursor: mode === 'draw' ? 'crosshair' : (isPanning ? 'grabbing' : 'grab'),
                     display: 'block'
                 }}
                 onMouseDown={(e) => handleMouseDown(e, null)}
@@ -192,7 +256,7 @@ function SvgPage() {
                 onMouseUp={handleMouseUp}
                 onMouseLeave={handleMouseUp}
                 onWheel={handleWheel}
-                onContextMenu={(e) => e.preventDefault()} // Disable default context menu on background
+                onContextMenu={(e) => e.preventDefault()}
             >
                 <g transform={`translate(${viewTransform.x}, ${viewTransform.y}) scale(${viewTransform.scale})`}>
                     <defs>
@@ -202,11 +266,12 @@ function SvgPage() {
                     </defs>
                     <rect x="-50000" y="-50000" width="100000" height="100000" fill="url(#grid)" />
 
+                    {/* Auto-connected lines */}
                     {shapes.map((shape, i) => {
                         if (i === shapes.length - 1) return null;
                         const nextShape = shapes[i + 1];
                         return (
-                            <line
+                            <RoughLine
                                 key={`line-${i}`}
                                 x1={shape.x + shape.size / 2}
                                 y1={shape.y + shape.size / 2}
@@ -219,6 +284,34 @@ function SvgPage() {
                         );
                     })}
 
+                    {/* User Drawn Arrows */}
+                    {drawnLines.map((line, i) => (
+                        <RoughLine
+                            key={`drawn-${i}`}
+                            x1={line.x1}
+                            y1={line.y1}
+                            x2={line.x2}
+                            y2={line.y2}
+                            stroke="#333"
+                            strokeWidth={2}
+                            hasArrow={true}
+                        />
+                    ))}
+
+                    {/* Currently Drawing Arrow */}
+                    {currentLine && (
+                        <RoughLine
+                            x1={currentLine.x1}
+                            y1={currentLine.y1}
+                            x2={currentLine.x2}
+                            y2={currentLine.y2}
+                            stroke="#333"
+                            strokeWidth={2}
+                            hasArrow={true}
+                        />
+                    )}
+
+                    {/* Lambda Icons */}
                     {shapes.map((shape) => (
                         <g key={`group-${shape.id}`}>
                             <image
@@ -231,7 +324,6 @@ function SvgPage() {
                                 onContextMenu={(e) => handleContextMenu(e, shape.id)}
                                 style={{
                                     cursor: 'move',
-                                    // Drop shadow to act as highlight (stroke doesn't work on image)
                                     filter: draggingShapeId === shape.id ? 'drop-shadow(0 0 5px white)' : 'none'
                                 }}
                             />
