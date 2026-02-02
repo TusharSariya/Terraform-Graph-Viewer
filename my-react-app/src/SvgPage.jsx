@@ -8,7 +8,7 @@ function terraformShapes(data) {
     for (let i = 0; i < data.resource_changes.length; i++) {
         const shape = data.resource_changes[i];
         shapes[shape.address] = ({
-            id: i,
+            id: shape.address,
             x: Math.random() * 100,
             y: Math.random() * 100,
             size: 40,
@@ -43,15 +43,11 @@ function terraformShapes(data) {
         }
     }
 
-
-
-
-
-    return Object.values(shapes);
+    return shapes;
 }
 
 function SvgPage() {
-    const [shapes, setShapes] = useState([]);
+    const [shapes, setShapes] = useState({});
     const [viewTransform, setViewTransform] = useState({ x: 0, y: 0, scale: 1 });
     const [draggingShapeId, setDraggingShapeId] = useState(null);
     const [isPanning, setIsPanning] = useState(false);
@@ -163,7 +159,7 @@ function SvgPage() {
             e.stopPropagation();
             e.preventDefault();
             const pt = getSVGPoint(e.clientX, e.clientY);
-            const shape = shapes.find(s => s.id === shapeId);
+            const shape = shapes[shapeId];
             setDraggingShapeId(shapeId);
             dragStartRef.current = { x: pt.x, y: pt.y };
             initialShapePosRef.current = { x: shape.x, y: shape.y };
@@ -190,15 +186,13 @@ function SvgPage() {
             const dx = pt.x - dragStartRef.current.x;
             const dy = pt.y - dragStartRef.current.y;
 
-            setShapes(prevShapes => prevShapes.map(s => {
-                if (s.id === draggingShapeId) {
-                    return {
-                        ...s,
-                        x: initialShapePosRef.current.x + dx,
-                        y: initialShapePosRef.current.y + dy
-                    };
+            setShapes(prevShapes => ({
+                ...prevShapes,
+                [draggingShapeId]: {
+                    ...prevShapes[draggingShapeId],
+                    x: initialShapePosRef.current.x + dx,
+                    y: initialShapePosRef.current.y + dy
                 }
-                return s;
             }));
 
         } else if (isPanning) {
@@ -228,11 +222,12 @@ function SvgPage() {
         e.preventDefault();
         e.stopPropagation();
 
-        setShapes(prevShapes => prevShapes.map(s => {
-            if (s.id === shapeId) {
-                return { ...s, showLabel: !s.showLabel };
+        setShapes(prevShapes => ({
+            ...prevShapes,
+            [shapeId]: {
+                ...prevShapes[shapeId],
+                showLabel: !prevShapes[shapeId].showLabel
             }
-            return s;
         }));
     };
 
@@ -386,7 +381,7 @@ function SvgPage() {
                     )}
 
                     {/* Lambda Icons */}
-                    {shapes.map((shape) => (
+                    {Object.values(shapes).map((shape) => (
                         <g key={`group-${shape.id}`}>
                             <image
                                 href={LambdaIcon}
