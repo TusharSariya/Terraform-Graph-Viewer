@@ -1,0 +1,9 @@
+.terraform/*
+
+builds/*
+
+plan.json
+
+tfplan
+
+.terraform.lock.hcl
