@@ -1,7 +1,6 @@
 from flask import Flask, jsonify
 from flask_cors import CORS
-import json
-import os
+from terraformPlan import TerraformPlan
 
 app = Flask(__name__)
 CORS(app)  # Enable CORS for all routes
@@ -25,18 +24,13 @@ def get_data():
 
 @app.route('/api/plan')
 def get_plan():
-    try:
-        file_path = 'plan.json'
-        if not os.path.exists(file_path):
-            file_path = '../plan.json'
-        
-        if os.path.exists(file_path):
-            with open(file_path, 'r') as f:
-                return jsonify(json.load(f))
-        else:
-            return jsonify({"error": "plan.json not found"}), 404
-    except Exception as e:
-        return jsonify({"error": str(e)}), 500
+    # Load the plan using the object model
+    plan, error = TerraformPlan.from_file(['plan.json', '../plan.json'])
+    
+    if plan:
+        return jsonify(plan.to_dict())
+    else:
+        return jsonify({"error": error}), 500
 
 if __name__ == '__main__':
     app.run(debug=True, port=8000)
