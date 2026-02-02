@@ -396,6 +396,23 @@ function SvgPage() {
                                     filter: draggingShapeId === shape.id ? 'drop-shadow(0 0 5px white)' : 'none'
                                 }}
                             />
+                            {shape.showLabel && shape.dependencies && shape.dependencies.map(depId => {
+                                const depShape = shapes[depId];
+                                if (!depShape) return null;
+                                return (
+                                    <RoughLine
+                                        key={`conn-${shape.id}-${depId}`}
+                                        x1={shape.x + shape.size / 2}
+                                        y1={shape.y + shape.size / 2}
+                                        x2={depShape.x + depShape.size / 2}
+                                        y2={depShape.y + depShape.size / 2}
+                                        stroke="#ccc"
+                                        strokeWidth={1}
+                                        hasArrow={true}
+                                    />
+                                );
+                            })}
+
                             {shape.showLabel && (
                                 <text
                                     x={shape.x + shape.size + 5}
