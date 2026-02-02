@@ -13,52 +13,47 @@ function SvgPage() {
 
     const svgRef = useRef(null);
 
-    // Handle Resize
+    // Initial shape generation with Random Names
+    const shapeNames = ["Alpha", "Beta", "Gamma", "Delta", "Epsilon", "Zeta", "Eta", "Theta", "Iota", "Kappa", "Lambda", "Mu"];
+
     useEffect(() => {
         const handleResize = () => {
-            // Subtract navbar height roughly (or exact if we knew it)
-            // For true fullscreen, we might want to overlay nav, but for now let's fill 'rest of screen'
-            // We'll use window dimensions but subtract a bit for the top nav if it's there.
-            // Actually, let's just make it full viewport and let the nav sit on top or push it down.
-            // Since App.jsx currently puts nav in normal flow, we should probably account for it, 
-            // OR just switch to full viewport calculation.
             setDimensions({
                 width: window.innerWidth,
-                height: window.innerHeight - 60 // Approximate nav height
+                height: window.innerHeight - 60
             });
         };
 
         window.addEventListener('resize', handleResize);
-        handleResize(); // Initial size
+        handleResize();
 
         return () => window.removeEventListener('resize', handleResize);
     }, []);
 
     useEffect(() => {
-        // Generate random shapes once on mount
         const newShapes = [];
-        // Use initial dimensions for bounds, or larger since it's infinite
         const bounds = { w: 2000, h: 2000 };
 
         for (let i = 0; i < 10; i++) {
             const size = 30 + Math.random() * 20;
-            // Spread them out a bit more
             const x = Math.random() * (bounds.w / 2);
             const y = Math.random() * (bounds.h / 2);
             const color = `hsl(${Math.random() * 360}, 70%, 50%)`;
+            const name = shapeNames[Math.floor(Math.random() * shapeNames.length)] + "-" + (i + 1);
 
             newShapes.push({
                 id: i,
                 x,
                 y,
                 size,
-                color
+                color,
+                name,
+                showLabel: false // Default to hidden
             });
         }
         setShapes(newShapes);
     }, []);
 
-    // SCREEN to SVG COORDINATES helper
     const getSVGPoint = (clientX, clientY) => {
         const svg = svgRef.current;
         const pt = svg.createSVGPoint();
@@ -87,6 +82,10 @@ function SvgPage() {
     };
 
     const handleMouseDown = (e, shapeId = null) => {
+        // Prevent strictly left-click drags if we want right-click for context menu
+        // But usually dragging works on left click.
+        if (e.button !== 0) return; // Only drag on left click
+
         if (shapeId !== null) {
             e.stopPropagation();
             e.preventDefault();
@@ -139,17 +138,27 @@ function SvgPage() {
         setIsPanning(false);
     };
 
+    const handleContextMenu = (e, shapeId) => {
+        e.preventDefault(); // Stop native browser menu
+        e.stopPropagation();
+
+        setShapes(prevShapes => prevShapes.map(s => {
+            if (s.id === shapeId) {
+                return { ...s, showLabel: !s.showLabel };
+            }
+            return s;
+        }));
+    };
+
     return (
         <div style={{
             position: 'absolute',
-            top: '60px', // Below nav
+            top: '60px',
             left: 0,
             width: '100%',
             height: 'calc(100vh - 60px)',
             overflow: 'hidden'
         }}>
-
-            {/* Control Panel Overlay */}
             <div style={{
                 position: 'absolute',
                 top: 10,
@@ -159,14 +168,12 @@ function SvgPage() {
                 borderRadius: '8px',
                 boxShadow: '0 2px 5px rgba(0,0,0,0.2)',
                 zIndex: 100,
-                pointerEvents: 'none' // Let clicks pass through if needed, but usually we want controls clickable.
-                // Actually, text shouldn't block, but buttons would. 
-                // For this simple text, pointerEvents none is fine.
+                pointerEvents: 'none'
             }}>
                 <h3 style={{ margin: '0 0 5px 0' }}>SVG Infinite Canvas</h3>
                 <div style={{ fontSize: '12px', color: '#666' }}>
-                    Zoom: {Math.round(viewTransform.scale * 100)}% <br />
-                    X: {Math.round(viewTransform.x)} Y: {Math.round(viewTransform.y)}
+                    Right-click box to show name<br />
+                    Zoom: {Math.round(viewTransform.scale * 100)}%
                 </div>
             </div>
 
@@ -177,13 +184,14 @@ function SvgPage() {
                 style={{
                     background: '#f0f0f0',
                     cursor: isPanning ? 'grabbing' : 'grab',
-                    display: 'block' // Remove inline-block spacing
+                    display: 'block'
                 }}
                 onMouseDown={(e) => handleMouseDown(e, null)}
                 onMouseMove={handleMouseMove}
                 onMouseUp={handleMouseUp}
                 onMouseLeave={handleMouseUp}
                 onWheel={handleWheel}
+                onContextMenu={(e) => e.preventDefault()} // Disable default context menu on background
             >
                 <g transform={`translate(${viewTransform.x}, ${viewTransform.y}) scale(${viewTransform.scale})`}>
                     <defs>
@@ -211,20 +219,38 @@ function SvgPage() {
                     })}
 
                     {shapes.map((shape) => (
-                        <rect
-                            key={`rect-${shape.id}`}
-                            x={shape.x}
-                            y={shape.y}
-                            width={shape.size}
-                            height={shape.size}
-                            fill={shape.color}
-                            onMouseDown={(e) => handleMouseDown(e, shape.id)}
-                            style={{
-                                cursor: 'move',
-                                stroke: draggingShapeId === shape.id ? 'white' : 'none',
-                                strokeWidth: 2 / viewTransform.scale
-                            }}
-                        />
+                        <g key={`group-${shape.id}`}>
+                            <rect
+                                x={shape.x}
+                                y={shape.y}
+                                width={shape.size}
+                                height={shape.size}
+                                fill={shape.color}
+                                onMouseDown={(e) => handleMouseDown(e, shape.id)}
+                                onContextMenu={(e) => handleContextMenu(e, shape.id)}
+                                style={{
+                                    cursor: 'move',
+                                    stroke: draggingShapeId === shape.id ? 'white' : 'none',
+                                    strokeWidth: 2 / viewTransform.scale
+                                }}
+                            />
+                            {shape.showLabel && (
+                                <text
+                                    x={shape.x + shape.size + 5}
+                                    y={shape.y + shape.size / 2}
+                                    dominantBaseline="middle"
+                                    fill="#333"
+                                    fontSize={14}
+                                    style={{
+                                        pointerEvents: 'none',
+                                        userSelect: 'none',
+                                        textShadow: '0px 0px 2px white'
+                                    }}
+                                >
+                                    {shape.name}
+                                </text>
+                            )}
+                        </g>
                     ))}
                 </g>
             </svg>
