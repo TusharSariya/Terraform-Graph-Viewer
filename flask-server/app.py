@@ -25,7 +25,7 @@ def get_data():
 @app.route('/api/plan')
 def get_plan():
     # Load the plan using the object model
-    plan, error = TerraformPlan.from_file(['plan.json', '../plan.json'])
+    plan, error = TerraformPlan.from_file(['plan-large.json', '../plan-large.json'])
     
     if plan:
         return jsonify(plan.to_dict())

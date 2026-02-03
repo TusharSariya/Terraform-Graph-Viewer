@@ -7,3 +7,9 @@ planned values -> root module -> child modules -> resources
 resource changes
 
 prior state
+
+
+configuration -> edges
+
+
+resource_changes -> nodes

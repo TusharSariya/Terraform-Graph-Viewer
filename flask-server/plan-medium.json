@@ -1,0 +1,681 @@
+{
+    "format_version": "1.2",
+    "terraform_version": "1.11.4",
+    "planned_values": {
+        "root_module": {
+            "resources": [
+                {
+                    "address": "aws_iam_role.iam_for_lambda",
+                    "mode": "managed",
+                    "type": "aws_iam_role",
+                    "name": "iam_for_lambda",
+                    "provider_name": "registry.opentofu.org/hashicorp/aws",
+                    "schema_version": 0,
+                    "values": {
+                        "assume_role_policy": "{\"Statement\":[{\"Action\":\"sts:AssumeRole\",\"Effect\":\"Allow\",\"Principal\":{\"Service\":\"lambda.amazonaws.com\"}}],\"Version\":\"2012-10-17\"}",
+                        "description": null,
+                        "force_detach_policies": false,
+                        "max_session_duration": 3600,
+                        "name": "iam_for_lambda",
+                        "path": "/",
+                        "permissions_boundary": null,
+                        "tags": null
+                    },
+                    "sensitive_values": {
+                        "inline_policy": [],
+                        "managed_policy_arns": [],
+                        "tags_all": {}
+                    }
+                },
+                {
+                    "address": "aws_lambda_function.test_lambda",
+                    "mode": "managed",
+                    "type": "aws_lambda_function",
+                    "name": "test_lambda",
+                    "provider_name": "registry.opentofu.org/hashicorp/aws",
+                    "schema_version": 0,
+                    "values": {
+                        "capacity_provider_config": [],
+                        "code_signing_config_arn": null,
+                        "dead_letter_config": [],
+                        "description": null,
+                        "durable_config": [],
+                        "environment": [],
+                        "file_system_config": [],
+                        "filename": "./lambda_function.zip",
+                        "function_name": "test_lambda",
+                        "handler": "lambda_function.handler",
+                        "image_config": [],
+                        "image_uri": null,
+                        "kms_key_arn": null,
+                        "layers": null,
+                        "memory_size": 128,
+                        "package_type": "Zip",
+                        "publish": false,
+                        "publish_to": null,
+                        "region": "us-east-1",
+                        "replace_security_groups_on_destroy": null,
+                        "replacement_security_group_ids": null,
+                        "reserved_concurrent_executions": -1,
+                        "runtime": "python3.9",
+                        "s3_bucket": null,
+                        "s3_key": null,
+                        "s3_object_version": null,
+                        "skip_destroy": false,
+                        "snap_start": [],
+                        "source_code_hash": "MfvryqAyOW4HhLEAzyWQRVN2CAxTTlO2tzUyrokB1c4=",
+                        "source_kms_key_arn": null,
+                        "tags": null,
+                        "tenancy_config": [],
+                        "timeout": 3,
+                        "timeouts": null,
+                        "vpc_config": []
+                    },
+                    "sensitive_values": {
+                        "architectures": [],
+                        "capacity_provider_config": [],
+                        "dead_letter_config": [],
+                        "durable_config": [],
+                        "environment": [],
+                        "ephemeral_storage": [],
+                        "file_system_config": [],
+                        "image_config": [],
+                        "logging_config": [],
+                        "snap_start": [],
+                        "tags_all": {},
+                        "tenancy_config": [],
+                        "tracing_config": [],
+                        "vpc_config": []
+                    }
+                },
+                {
+                    "address": "aws_s3_bucket.test",
+                    "mode": "managed",
+                    "type": "aws_s3_bucket",
+                    "name": "test",
+                    "provider_name": "registry.opentofu.org/hashicorp/aws",
+                    "schema_version": 0,
+                    "values": {
+                        "bucket": "test",
+                        "force_destroy": false,
+                        "region": "us-east-1",
+                        "tags": null,
+                        "timeouts": null
+                    },
+                    "sensitive_values": {
+                        "cors_rule": [],
+                        "grant": [],
+                        "lifecycle_rule": [],
+                        "logging": [],
+                        "object_lock_configuration": [],
+                        "replication_configuration": [],
+                        "server_side_encryption_configuration": [],
+                        "tags_all": {},
+                        "versioning": [],
+                        "website": []
+                    }
+                },
+                {
+                    "address": "aws_s3_bucket_object.test",
+                    "mode": "managed",
+                    "type": "aws_s3_bucket_object",
+                    "name": "test",
+                    "provider_name": "registry.opentofu.org/hashicorp/aws",
+                    "schema_version": 0,
+                    "values": {
+                        "acl": "private",
+                        "cache_control": null,
+                        "content": null,
+                        "content_base64": null,
+                        "content_disposition": null,
+                        "content_encoding": null,
+                        "content_language": null,
+                        "force_destroy": false,
+                        "key": "test",
+                        "metadata": null,
+                        "object_lock_legal_hold_status": null,
+                        "object_lock_mode": null,
+                        "object_lock_retain_until_date": null,
+                        "region": "us-east-1",
+                        "source": "test.txt",
+                        "source_hash": null,
+                        "tags": null,
+                        "website_redirect": null
+                    },
+                    "sensitive_values": {
+                        "tags_all": {}
+                    }
+                },
+                {
+                    "address": "aws_sqs_queue.test_queue",
+                    "mode": "managed",
+                    "type": "aws_sqs_queue",
+                    "name": "test_queue",
+                    "provider_name": "registry.opentofu.org/hashicorp/aws",
+                    "schema_version": 0,
+                    "values": {
+                        "content_based_deduplication": false,
+                        "delay_seconds": 0,
+                        "fifo_queue": false,
+                        "kms_master_key_id": null,
+                        "max_message_size": 262144,
+                        "message_retention_seconds": 345600,
+                        "name": "test-queue",
+                        "receive_wait_time_seconds": 0,
+                        "region": "us-east-1",
+                        "tags": null,
+                        "timeouts": null,
+                        "visibility_timeout_seconds": 30
+                    },
+                    "sensitive_values": {
+                        "tags_all": {}
+                    }
+                }
+            ]
+        }
+    },
+    "resource_changes": [
+        {
+            "address": "aws_iam_role.iam_for_lambda",
+            "mode": "managed",
+            "type": "aws_iam_role",
+            "name": "iam_for_lambda",
+            "provider_name": "registry.opentofu.org/hashicorp/aws",
+            "change": {
+                "actions": [
+                    "create"
+                ],
+                "before": null,
+                "after": {
+                    "assume_role_policy": "{\"Statement\":[{\"Action\":\"sts:AssumeRole\",\"Effect\":\"Allow\",\"Principal\":{\"Service\":\"lambda.amazonaws.com\"}}],\"Version\":\"2012-10-17\"}",
+                    "description": null,
+                    "force_detach_policies": false,
+                    "max_session_duration": 3600,
+                    "name": "iam_for_lambda",
+                    "path": "/",
+                    "permissions_boundary": null,
+                    "tags": null
+                },
+                "after_unknown": {
+                    "arn": true,
+                    "create_date": true,
+                    "id": true,
+                    "inline_policy": true,
+                    "managed_policy_arns": true,
+                    "name_prefix": true,
+                    "tags_all": true,
+                    "unique_id": true
+                },
+                "before_sensitive": false,
+                "after_sensitive": {
+                    "inline_policy": [],
+                    "managed_policy_arns": [],
+                    "tags_all": {}
+                }
+            }
+        },
+        {
+            "address": "aws_lambda_function.test_lambda",
+            "mode": "managed",
+            "type": "aws_lambda_function",
+            "name": "test_lambda",
+            "provider_name": "registry.opentofu.org/hashicorp/aws",
+            "change": {
+                "actions": [
+                    "create"
+                ],
+                "before": null,
+                "after": {
+                    "capacity_provider_config": [],
+                    "code_signing_config_arn": null,
+                    "dead_letter_config": [],
+                    "description": null,
+                    "durable_config": [],
+                    "environment": [],
+                    "file_system_config": [],
+                    "filename": "./lambda_function.zip",
+                    "function_name": "test_lambda",
+                    "handler": "lambda_function.handler",
+                    "image_config": [],
+                    "image_uri": null,
+                    "kms_key_arn": null,
+                    "layers": null,
+                    "memory_size": 128,
+                    "package_type": "Zip",
+                    "publish": false,
+                    "publish_to": null,
+                    "region": "us-east-1",
+                    "replace_security_groups_on_destroy": null,
+                    "replacement_security_group_ids": null,
+                    "reserved_concurrent_executions": -1,
+                    "runtime": "python3.9",
+                    "s3_bucket": null,
+                    "s3_key": null,
+                    "s3_object_version": null,
+                    "skip_destroy": false,
+                    "snap_start": [],
+                    "source_code_hash": "MfvryqAyOW4HhLEAzyWQRVN2CAxTTlO2tzUyrokB1c4=",
+                    "source_kms_key_arn": null,
+                    "tags": null,
+                    "tenancy_config": [],
+                    "timeout": 3,
+                    "timeouts": null,
+                    "vpc_config": []
+                },
+                "after_unknown": {
+                    "architectures": true,
+                    "arn": true,
+                    "capacity_provider_config": [],
+                    "code_sha256": true,
+                    "dead_letter_config": [],
+                    "durable_config": [],
+                    "environment": [],
+                    "ephemeral_storage": true,
+                    "file_system_config": [],
+                    "id": true,
+                    "image_config": [],
+                    "invoke_arn": true,
+                    "last_modified": true,
+                    "logging_config": true,
+                    "qualified_arn": true,
+                    "qualified_invoke_arn": true,
+                    "response_streaming_invoke_arn": true,
+                    "role": true,
+                    "signing_job_arn": true,
+                    "signing_profile_version_arn": true,
+                    "snap_start": [],
+                    "source_code_size": true,
+                    "tags_all": true,
+                    "tenancy_config": [],
+                    "tracing_config": true,
+                    "version": true,
+                    "vpc_config": []
+                },
+                "before_sensitive": false,
+                "after_sensitive": {
+                    "architectures": [],
+                    "capacity_provider_config": [],
+                    "dead_letter_config": [],
+                    "durable_config": [],
+                    "environment": [],
+                    "ephemeral_storage": [],
+                    "file_system_config": [],
+                    "image_config": [],
+                    "logging_config": [],
+                    "snap_start": [],
+                    "tags_all": {},
+                    "tenancy_config": [],
+                    "tracing_config": [],
+                    "vpc_config": []
+                }
+            }
+        },
+        {
+            "address": "aws_s3_bucket.test",
+            "mode": "managed",
+            "type": "aws_s3_bucket",
+            "name": "test",
+            "provider_name": "registry.opentofu.org/hashicorp/aws",
+            "change": {
+                "actions": [
+                    "create"
+                ],
+                "before": null,
+                "after": {
+                    "bucket": "test",
+                    "force_destroy": false,
+                    "region": "us-east-1",
+                    "tags": null,
+                    "timeouts": null
+                },
+                "after_unknown": {
+                    "acceleration_status": true,
+                    "acl": true,
+                    "arn": true,
+                    "bucket_domain_name": true,
+                    "bucket_prefix": true,
+                    "bucket_region": true,
+                    "bucket_regional_domain_name": true,
+                    "cors_rule": true,
+                    "grant": true,
+                    "hosted_zone_id": true,
+                    "id": true,
+                    "lifecycle_rule": true,
+                    "logging": true,
+                    "object_lock_configuration": true,
+                    "object_lock_enabled": true,
+                    "policy": true,
+                    "replication_configuration": true,
+                    "request_payer": true,
+                    "server_side_encryption_configuration": true,
+                    "tags_all": true,
+                    "versioning": true,
+                    "website": true,
+                    "website_domain": true,
+                    "website_endpoint": true
+                },
+                "before_sensitive": false,
+                "after_sensitive": {
+                    "cors_rule": [],
+                    "grant": [],
+                    "lifecycle_rule": [],
+                    "logging": [],
+                    "object_lock_configuration": [],
+                    "replication_configuration": [],
+                    "server_side_encryption_configuration": [],
+                    "tags_all": {},
+                    "versioning": [],
+                    "website": []
+                }
+            }
+        },
+        {
+            "address": "aws_s3_bucket_object.test",
+            "mode": "managed",
+            "type": "aws_s3_bucket_object",
+            "name": "test",
+            "provider_name": "registry.opentofu.org/hashicorp/aws",
+            "change": {
+                "actions": [
+                    "create"
+                ],
+                "before": null,
+                "after": {
+                    "acl": "private",
+                    "cache_control": null,
+                    "content": null,
+                    "content_base64": null,
+                    "content_disposition": null,
+                    "content_encoding": null,
+                    "content_language": null,
+                    "force_destroy": false,
+                    "key": "test",
+                    "metadata": null,
+                    "object_lock_legal_hold_status": null,
+                    "object_lock_mode": null,
+                    "object_lock_retain_until_date": null,
+                    "region": "us-east-1",
+                    "source": "test.txt",
+                    "source_hash": null,
+                    "tags": null,
+                    "website_redirect": null
+                },
+                "after_unknown": {
+                    "arn": true,
+                    "bucket": true,
+                    "bucket_key_enabled": true,
+                    "content_type": true,
+                    "etag": true,
+                    "id": true,
+                    "kms_key_id": true,
+                    "server_side_encryption": true,
+                    "storage_class": true,
+                    "tags_all": true,
+                    "version_id": true
+                },
+                "before_sensitive": false,
+                "after_sensitive": {
+                    "tags_all": {}
+                }
+            }
+        },
+        {
+            "address": "aws_sqs_queue.test_queue",
+            "mode": "managed",
+            "type": "aws_sqs_queue",
+            "name": "test_queue",
+            "provider_name": "registry.opentofu.org/hashicorp/aws",
+            "change": {
+                "actions": [
+                    "create"
+                ],
+                "before": null,
+                "after": {
+                    "content_based_deduplication": false,
+                    "delay_seconds": 0,
+                    "fifo_queue": false,
+                    "kms_master_key_id": null,
+                    "max_message_size": 262144,
+                    "message_retention_seconds": 345600,
+                    "name": "test-queue",
+                    "receive_wait_time_seconds": 0,
+                    "region": "us-east-1",
+                    "tags": null,
+                    "timeouts": null,
+                    "visibility_timeout_seconds": 30
+                },
+                "after_unknown": {
+                    "arn": true,
+                    "deduplication_scope": true,
+                    "fifo_throughput_limit": true,
+                    "id": true,
+                    "kms_data_key_reuse_period_seconds": true,
+                    "name_prefix": true,
+                    "policy": true,
+                    "redrive_allow_policy": true,
+                    "redrive_policy": true,
+                    "sqs_managed_sse_enabled": true,
+                    "tags_all": true,
+                    "url": true
+                },
+                "before_sensitive": false,
+                "after_sensitive": {
+                    "tags_all": {}
+                }
+            }
+        }
+    ],
+    "prior_state": {
+        "format_version": "1.0",
+        "terraform_version": "1.11.4",
+        "values": {
+            "root_module": {
+                "resources": [
+                    {
+                        "address": "data.archive_file.lambda_zip",
+                        "mode": "data",
+                        "type": "archive_file",
+                        "name": "lambda_zip",
+                        "provider_name": "registry.opentofu.org/hashicorp/archive",
+                        "schema_version": 0,
+                        "values": {
+                            "exclude_symlink_directories": null,
+                            "excludes": null,
+                            "id": "9dfe170902bc4bba82ed16a4ec52d1825d48f6e5",
+                            "output_base64sha256": "MfvryqAyOW4HhLEAzyWQRVN2CAxTTlO2tzUyrokB1c4=",
+                            "output_base64sha512": "Ao3p8b66QZDoobnBa5zsy8CNVGlZc3fKVsKE10hs6vf1T/BjrfbDokNg8HOItEnCRccXm1Os79zwDuO8iU/RMg==",
+                            "output_file_mode": null,
+                            "output_md5": "44e9a8a3d0993f6d8e56f98b50dec2fd",
+                            "output_path": "./lambda_function.zip",
+                            "output_sha": "9dfe170902bc4bba82ed16a4ec52d1825d48f6e5",
+                            "output_sha256": "31fbebcaa032396e0784b100cf2590455376080c534e53b6b73532ae8901d5ce",
+                            "output_sha512": "028de9f1beba4190e8a1b9c16b9ceccbc08d5469597377ca56c284d7486ceaf7f54ff063adf6c3a24360f07388b449c245c7179b53acefdcf00ee3bc894fd132",
+                            "output_size": 272,
+                            "source": [],
+                            "source_content": null,
+                            "source_content_filename": null,
+                            "source_dir": null,
+                            "source_file": "./lambda_function.py",
+                            "type": "zip"
+                        },
+                        "sensitive_values": {
+                            "source": []
+                        }
+                    }
+                ]
+            }
+        }
+    },
+    "configuration": {
+        "provider_config": {
+            "archive": {
+                "name": "archive",
+                "full_name": "registry.opentofu.org/hashicorp/archive"
+            },
+            "aws": {
+                "name": "aws",
+                "full_name": "registry.opentofu.org/hashicorp/aws",
+                "version_constraint": "6.30.0",
+                "expressions": {
+                    "region": {
+                        "constant_value": "us-east-1"
+                    }
+                }
+            }
+        },
+        "root_module": {
+            "resources": [
+                {
+                    "address": "aws_iam_role.iam_for_lambda",
+                    "mode": "managed",
+                    "type": "aws_iam_role",
+                    "name": "iam_for_lambda",
+                    "provider_config_key": "aws",
+                    "expressions": {
+                        "assume_role_policy": {},
+                        "name": {
+                            "constant_value": "iam_for_lambda"
+                        }
+                    },
+                    "schema_version": 0
+                },
+                {
+                    "address": "aws_lambda_function.test_lambda",
+                    "mode": "managed",
+                    "type": "aws_lambda_function",
+                    "name": "test_lambda",
+                    "provider_config_key": "aws",
+                    "expressions": {
+                        "filename": {
+                            "references": [
+                                "data.archive_file.lambda_zip.output_path",
+                                "data.archive_file.lambda_zip"
+                            ]
+                        },
+                        "function_name": {
+                            "constant_value": "test_lambda"
+                        },
+                        "handler": {
+                            "constant_value": "lambda_function.handler"
+                        },
+                        "role": {
+                            "references": [
+                                "aws_iam_role.iam_for_lambda.arn",
+                                "aws_iam_role.iam_for_lambda"
+                            ]
+                        },
+                        "runtime": {
+                            "constant_value": "python3.9"
+                        },
+                        "source_code_hash": {
+                            "references": [
+                                "data.archive_file.lambda_zip.output_base64sha256",
+                                "data.archive_file.lambda_zip"
+                            ]
+                        }
+                    },
+                    "schema_version": 0
+                },
+                {
+                    "address": "aws_s3_bucket.test",
+                    "mode": "managed",
+                    "type": "aws_s3_bucket",
+                    "name": "test",
+                    "provider_config_key": "aws",
+                    "expressions": {
+                        "bucket": {
+                            "constant_value": "test"
+                        }
+                    },
+                    "schema_version": 0
+                },
+                {
+                    "address": "aws_s3_bucket_object.test",
+                    "mode": "managed",
+                    "type": "aws_s3_bucket_object",
+                    "name": "test",
+                    "provider_config_key": "aws",
+                    "expressions": {
+                        "bucket": {
+                            "references": [
+                                "aws_s3_bucket.test.id",
+                                "aws_s3_bucket.test"
+                            ]
+                        },
+                        "key": {
+                            "constant_value": "test"
+                        },
+                        "source": {
+                            "constant_value": "test.txt"
+                        }
+                    },
+                    "schema_version": 0
+                },
+                {
+                    "address": "aws_sqs_queue.test_queue",
+                    "mode": "managed",
+                    "type": "aws_sqs_queue",
+                    "name": "test_queue",
+                    "provider_config_key": "aws",
+                    "expressions": {
+                        "name": {
+                            "constant_value": "test-queue"
+                        }
+                    },
+                    "schema_version": 0
+                },
+                {
+                    "address": "data.archive_file.lambda_zip",
+                    "mode": "data",
+                    "type": "archive_file",
+                    "name": "lambda_zip",
+                    "provider_config_key": "archive",
+                    "expressions": {
+                        "output_path": {
+                            "references": [
+                                "path.module"
+                            ]
+                        },
+                        "source_file": {
+                            "references": [
+                                "path.module"
+                            ]
+                        },
+                        "type": {
+                            "constant_value": "zip"
+                        }
+                    },
+                    "schema_version": 0
+                }
+            ]
+        }
+    },
+    "relevant_attributes": [
+        {
+            "resource": "aws_iam_role.iam_for_lambda",
+            "attribute": [
+                "arn"
+            ]
+        },
+        {
+            "resource": "aws_s3_bucket.test",
+            "attribute": [
+                "id"
+            ]
+        },
+        {
+            "resource": "data.archive_file.lambda_zip",
+            "attribute": [
+                "output_path"
+            ]
+        },
+        {
+            "resource": "data.archive_file.lambda_zip",
+            "attribute": [
+                "output_base64sha256"
+            ]
+        }
+    ],
+    "timestamp": "2026-02-02T22:35:21Z",
+    "errored": false
+}

@@ -355,7 +355,7 @@ function SvgPage() {
                             y1={line.y1}
                             x2={line.x2}
                             y2={line.y2}
-                            stroke="#333"
+                            stroke="#1a1a1aff"
                             strokeWidth={2}
                             hasArrow={true}
                             cursor={mode === 'eraser' ? 'pointer' : 'default'}
