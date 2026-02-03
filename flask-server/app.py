@@ -5,6 +5,7 @@ import json
 from pprint import pprint
 import os
 from collections import defaultdict
+import traceback
 
 app = Flask(__name__)
 CORS(app)  # Enable CORS for all routes
@@ -119,11 +120,12 @@ def get_graph():
         else:
             nodes[key]['edges'] = []
     return jsonify(nodes)
-    
+
+#i want to traverse all nodes in this graph to identify all resources and aws iam policy documents
 @app.route('/api/graph2')
 def get_graph2():
     # this uses dot to dict script
-    adjacency_list = defaultdict(list)
+    adjacency_list = defaultdict(list) #all edges
     
     current_dir = os.path.dirname(os.path.abspath(__file__))
     file_path = os.path.join(current_dir, 'graph.dot')
@@ -141,11 +143,54 @@ def get_graph2():
             targets = target.split(" ")
             #gnarly
             adjacency_list[sources[1].replace("\"", "").replace("\\","")].append(targets[1].replace("\"", "").replace("\\",""))
+        print(adjacency_list)
+    except Exception as e:
+        traceback.print_exc()
+        return {"error": str(e), "trace": traceback.format_exc()}
                 
-        return jsonify(dict(adjacency_list))
+    current_dir = os.path.dirname(os.path.abspath(__file__))
+    file_path = os.path.join(current_dir, 'plan-larger.json')
+
+    try:
+        with open(file_path) as json_data:
+            plan = json.load(json_data)
+
+        resource_changes = plan['resource_changes'] # all nodes
+
+        nodes = defaultdict(dict)
+
+        for resource_change in resource_changes:
+            address = resource_change['address'].replace('[0]', '')
+            nodes[address] = resource_change
+
+
+        def traverse(headnode,address,visited):
+            print(address)
+            if address in visited:
+                return
+            visited.add(address)
+            if address in adjacency_list:
+                for edge in adjacency_list[address]:
+                    if edge in nodes:
+                        headnode['edges'].append(edge)
+                    elif edge.startswith("provider"):
+                        continue
+                    else:
+                        traverse(headnode,edge,visited)                
+
+        #from a node, traverse the adj list, untill dead end or you hit another resource
+        for address,node in nodes.items():
+            headnode = node
+            node['edges'] = []
+            visited = set([])
+            traverse(headnode,address,visited)
+
+    
+        return jsonify(nodes)
 
     except Exception as e:
-        return {"error": str(e)}
+        traceback.print_exc()
+        return {"error": str(e), "trace": traceback.format_exc()}
     
 
 if __name__ == '__main__':

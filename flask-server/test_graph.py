@@ -1,11 +1,11 @@
 import requests
 import json
 import sys
-from app import get_graph
+from app import get_graph2
 
 def test_get_graph():
     try:
-        get_graph()
+        response = get_graph2()
         
         data = response.json()
         
