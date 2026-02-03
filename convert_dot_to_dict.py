@@ -12,10 +12,6 @@ def parse_dot_edges(file_path):
     """
     adjacency_list = defaultdict(list)
     
-    # Edge regex: "[root] ... (expand)" -> "[root] ..."
-    # This matches the quoted strings on either side of the arrow
-    edge_pattern = re.compile(r'^\s*"(.+?)"\s*->\s*"(.+?)"')
-    
     try:
         with open(file_path, 'r') as f:
             lines = f.readlines()

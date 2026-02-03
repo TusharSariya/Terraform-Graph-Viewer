@@ -4,6 +4,7 @@ from terraformPlan import TerraformPlan
 import json
 from pprint import pprint
 import os
+from collections import defaultdict
 
 app = Flask(__name__)
 CORS(app)  # Enable CORS for all routes
@@ -38,6 +39,7 @@ def get_plan():
 
 @app.route('/api/graph')
 def get_graph():
+    # this uses tofu graph
     # Load the plan using the object model
     def configRecursion(baseaddress,module):
         mystr = "module"
@@ -117,6 +119,33 @@ def get_graph():
         else:
             nodes[key]['edges'] = []
     return jsonify(nodes)
+    
+@app.route('/api/graph2')
+def get_graph2():
+    # this uses dot to dict script
+    adjacency_list = defaultdict(list)
+    
+    current_dir = os.path.dirname(os.path.abspath(__file__))
+    file_path = os.path.join(current_dir, 'graph.dot')
+    try:
+        with open(file_path, 'r') as f:
+            lines = f.readlines()
+            
+        for line in lines:
+            if "->" not in line:
+                continue
+            strings = line.split("->")
+            source = strings[0].strip()
+            target = strings[1].strip()
+            sources = source.split(" ")
+            targets = target.split(" ")
+            #gnarly
+            adjacency_list[sources[1].replace("\"", "").replace("\\","")].append(targets[1].replace("\"", "").replace("\\",""))
+                
+        return jsonify(dict(adjacency_list))
+
+    except Exception as e:
+        return {"error": str(e)}
     
 
 if __name__ == '__main__':
