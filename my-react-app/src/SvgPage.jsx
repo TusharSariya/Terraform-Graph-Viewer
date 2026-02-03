@@ -2,13 +2,15 @@ import { useState, useEffect, useRef } from 'react';
 import LambdaIcon from './assets/svg/Compute/Lambda.svg';
 import SQSIcon from './assets/svg/App-Integration/Simple-Queue-Service.svg';
 import S3Icon from './assets/svg/Storage/Simple-Storage-Service.svg';
+import IAMIcon from './assets/more-icons/Resource-Icons_07312025/Res_Security-Identity-Compliance/Res_AWS-Identity-Access-Management_Role_48.svg';
 import RoughLine from './RoughLine';
 
 
 const iconMap = {
     "aws_sqs_queue": SQSIcon,
     "aws_s3_bucket": S3Icon,
-    "aws_lambda_function": LambdaIcon
+    "aws_lambda_function": LambdaIcon,
+    "aws_iam_role": IAMIcon
 }
 
 
