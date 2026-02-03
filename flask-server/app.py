@@ -79,7 +79,7 @@ def get_graph():
     nodes = {}
 
     current_dir = os.path.dirname(os.path.abspath(__file__))
-    file_path = os.path.join(current_dir, 'plan-large.json')
+    file_path = os.path.join(current_dir, 'plan-larger.json')
 
     with open(file_path) as json_data:
         plan = json.load(json_data)
