@@ -51,12 +51,16 @@ def get_graph():
                 for key,value in expressions.items():
                     if 'references' in value:
                         for ref in value['references']:
-                            if ref not in edges:
-                                edges[ref] = []
-                            if baseaddress is None:
-                                edges[ref].append(address)
+                            if baseaddress is not None:
+                                fullref = baseaddress+ref
                             else:
-                                edges[ref].append(baseaddress+"."+address)
+                                fullref = ref
+                            if fullref not in edges:
+                                edges[fullref] = []
+                            if baseaddress is None:
+                                edges[fullref].append(address)
+                            else:
+                                edges[fullref].append(baseaddress+address)
             
         
         if "module_calls" in module[mystr]:
@@ -70,6 +74,8 @@ def get_graph():
 
     edges = {}
 
+    nodes = {}
+
     current_dir = os.path.dirname(os.path.abspath(__file__))
     file_path = os.path.join(current_dir, 'plan-large.json')
 
@@ -80,12 +86,25 @@ def get_graph():
 
     configRecursion(None,configuration)
 
-    print(edges)
-
     resource_changes = plan['resource_changes'] # all nodes
 
+    for resource_change in resource_changes:
+        address = resource_change['address'].replace('[0]', '')
+        nodes[address] = resource_change
+
+    for key,value in edges.items():
+        key = key.replace('[0]', '')
+        if key in nodes:
+            nodes[key]['edges'] = value
+        
+    temp_json = {
+        "nodes": nodes,
+        "edges": edges
+    }
+
     #rint(plan)
-    return jsonify(plan)
+    #return jsonify(temp_json)
+    return jsonify(nodes)
     
 
 if __name__ == '__main__':
