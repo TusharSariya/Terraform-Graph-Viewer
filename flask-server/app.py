@@ -186,6 +186,22 @@ def get_graph2():
             visited = set([])
             traverse(headnode,address,visited)
 
+        # Post-processing: Remove self-references and duplicates
+        for address, node in nodes.items():
+            unique_edges = set(node['edges'])
+            if address in unique_edges:
+                unique_edges.remove(address)
+            node['edges'] = list(unique_edges)
+
+        # Post-processing: Enforce bidirectionality
+        # If A -> B, ensure B -> A
+        for source, node in nodes.items():
+            for target in node['edges']:
+                if target in nodes:
+                    target_edges = nodes[target]['edges']
+                    if source not in target_edges:
+                        target_edges.append(source)
+
     
         return jsonify(nodes)
 
