@@ -94,8 +94,20 @@ def get_graph():
 
     for key,value in edges.items():
         key = key.replace('[0]', '')
+        if key not in nodes:
+            nodes[key] = {}
         if key in nodes:
-            nodes[key]['edges'] = value
+            if 'edges' not in nodes[key]:
+                nodes[key]['edges'] = []
+            # print(nodes[key]['edges'] )
+            # print(value)
+            nodes[key]['edges'] = nodes[key]['edges'] + value
+        for val in value:
+            val = val.replace('[0]', '')
+            if val in nodes:
+                if 'edges' not in nodes[val]:
+                    nodes[val]['edges'] = []
+                nodes[val]['edges'].append(key)
         
     temp_json = {
         "nodes": nodes,
