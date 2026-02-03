@@ -12,6 +12,7 @@ import GraphControls from './GraphControls';
 
 import useGraphData from './hooks/useGraphData';
 import useGraphInteraction from './hooks/useGraphInteraction';
+import useGraphLayout from './hooks/useGraphLayout';
 
 const iconMap = {
     "aws_sqs_queue": SQSIcon,
@@ -26,6 +27,10 @@ function SvgPage() {
     const [dimensions, setDimensions] = useState({ width: window.innerWidth, height: window.innerHeight });
 
     const { shapes, setShapes } = useGraphData();
+
+    // Auto-layout the graph
+    useGraphLayout(shapes, setShapes, dimensions);
+
     const {
         viewTransform,
         isPanning,
