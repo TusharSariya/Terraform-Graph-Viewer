@@ -125,7 +125,7 @@ def get_graph():
 @app.route('/api/graph2')
 def get_graph2():
     # this uses dot to dict script
-    adjacency_list = defaultdict(list) #all edges
+    adjacency_list = defaultdict(set) #all edges
     
     current_dir = os.path.dirname(os.path.abspath(__file__))
     file_path = os.path.join(current_dir, 'graph.dot')
@@ -142,8 +142,11 @@ def get_graph2():
             sources = source.split(" ")
             targets = target.split(" ")
             #gnarly
-            adjacency_list[sources[1].replace("\"", "").replace("\\","")].append(targets[1].replace("\"", "").replace("\\",""))
-        print(adjacency_list)
+            adjacency_list[sources[1].replace("\"", "").replace("\\","")].add(targets[1].replace("\"", "").replace("\\",""))
+            #adjacency_list[targets[1].replace("\"", "").replace("\\","")].add(sources[1].replace("\"", "").replace("\\",""))
+        
+        for key,value in adjacency_list.items():
+            adjacency_list[key] = list(value)
     except Exception as e:
         traceback.print_exc()
         return {"error": str(e), "trace": traceback.format_exc()}
@@ -165,7 +168,6 @@ def get_graph2():
 
 
         def traverse(headnode,address,visited):
-            print(address)
             if address in visited:
                 return
             visited.add(address)
@@ -173,7 +175,7 @@ def get_graph2():
                 for edge in adjacency_list[address]:
                     if edge in nodes:
                         headnode['edges'].append(edge)
-                    elif edge.startswith("provider"):
+                    elif edge.startswith("provider"): #this technically skips potential connections
                         continue
                     else:
                         traverse(headnode,edge,visited)                
