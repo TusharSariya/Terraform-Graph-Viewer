@@ -94,28 +94,26 @@ def get_graph():
 
     for key,value in edges.items():
         key = key.replace('[0]', '')
-        if key not in nodes:
-            nodes[key] = {}
         if key in nodes:
             if 'edges' not in nodes[key]:
-                nodes[key]['edges'] = []
+                nodes[key]['edges'] = set([])
             # print(nodes[key]['edges'] )
             # print(value)
-            nodes[key]['edges'] = nodes[key]['edges'] + value
+            nodes[key]['edges'].update(value)
         for val in value:
             val = val.replace('[0]', '')
             if val in nodes:
                 if 'edges' not in nodes[val]:
-                    nodes[val]['edges'] = []
-                nodes[val]['edges'].append(key)
+                    nodes[val]['edges'] = set([])
+                nodes[val]['edges'].add(key)
         
-    temp_json = {
-        "nodes": nodes,
-        "edges": edges
-    }
 
-    #rint(plan)
-    #return jsonify(temp_json)
+    # make edges set back into a list
+    for key,value in nodes.items():
+        if 'edges' in nodes[key]:
+            nodes[key]['edges'] = list(nodes[key]['edges'])
+        else:
+            nodes[key]['edges'] = []
     return jsonify(nodes)
     
 
