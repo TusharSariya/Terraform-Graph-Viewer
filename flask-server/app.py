@@ -51,6 +51,8 @@ def get_graph():
                 for key,value in expressions.items():
                     if 'references' in value:
                         for ref in value['references']:
+                            if ref.startswith("var"):
+                                continue
                             if baseaddress is not None:
                                 fullref = baseaddress+ref
                             else:
