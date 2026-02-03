@@ -1,6 +1,15 @@
 import { useState, useEffect, useRef } from 'react';
 import LambdaIcon from './assets/svg/Compute/Lambda.svg';
+import SQSIcon from './assets/svg/App-Integration/Simple-Queue-Service.svg';
+import S3Icon from './assets/svg/Storage/Simple-Storage-Service.svg';
 import RoughLine from './RoughLine';
+
+
+const iconMap = {
+    "aws_sqs_queue": SQSIcon,
+    "aws_s3_bucket": S3Icon,
+    "aws_lambda_function": LambdaIcon
+}
 
 
 function terraformShapes(data) {
@@ -14,7 +23,8 @@ function terraformShapes(data) {
             size: 40,
             color: 'red',
             name: key,
-            edges: value.edges
+            edges: value.edges,
+            type: value.type
         })
     }
 
@@ -359,7 +369,7 @@ function SvgPage() {
                     {Object.values(shapes).map((shape) => (
                         <g key={`group-${shape.id}`}>
                             <image
-                                href={LambdaIcon}
+                                href={iconMap[shape.type] || LambdaIcon}
                                 x={shape.x}
                                 y={shape.y}
                                 width={shape.size}
