@@ -3,14 +3,16 @@ import LambdaIcon from './assets/svg/Compute/Lambda.svg';
 import SQSIcon from './assets/svg/App-Integration/Simple-Queue-Service.svg';
 import S3Icon from './assets/svg/Storage/Simple-Storage-Service.svg';
 import IAMIcon from './assets/more-icons/Resource-Icons_07312025/Res_Security-Identity-Compliance/Res_AWS-Identity-Access-Management_Role_48.svg';
-import RoughLine from './RoughLine';
+import AWSIcon from './assets/more-icons/Architecture-Group-Icons_07312025/AWS-Cloud_32.svg'
+
 
 
 const iconMap = {
     "aws_sqs_queue": SQSIcon,
     "aws_s3_bucket": S3Icon,
     "aws_lambda_function": LambdaIcon,
-    "aws_iam_role": IAMIcon
+    "aws_iam_role": IAMIcon,
+    "aws_cloud": AWSIcon
 }
 
 
@@ -76,32 +78,6 @@ function SvgPage() {
             .then(shapes => { setShapes(shapes); console.log("Shapes: ", shapes) })
             .catch(err => console.error("Error fetching data:", err))
     }, [])
-
-    //creates rectangles in random places
-    useEffect(() => {
-        const newShapes = [];
-        const bounds = { w: 2000, h: 2000 };
-
-        for (let i = 0; i < 10; i++) {
-            const size = 40;
-            const x = Math.random() * (bounds.w / 2);
-            const y = Math.random() * (bounds.h / 2);
-            const color = `hsl(${Math.random() * 360}, 70%, 50%)`;
-            const name = shapeNames[Math.floor(Math.random() * shapeNames.length)] + "-" + (i + 1);
-
-            newShapes.push({
-                id: i,
-                x,
-                y,
-                size,
-                color,
-                name,
-                showLabel: false // Default to hidden
-            });
-        }
-
-        //setShapes(newShapes);
-    }, []);
 
     const getSVGPoint = (clientX, clientY) => {
         const svg = svgRef.current;
@@ -368,10 +344,30 @@ function SvgPage() {
                     )}
 
                     {/* Lambda Icons */}
+                    {/* Layer 1: Edges (Background) */}
+                    {Object.values(shapes).map((shape) => (
+                        shape.showLabel && shape.edges && shape.edges.map(edge => {
+                            const depShape = shapes[edge];
+                            if (!depShape) return null;
+                            return (
+                                <line
+                                    key={`conn-${shape.id}-${depShape.id}`}
+                                    x1={shape.x + shape.size / 2}
+                                    y1={shape.y + shape.size / 2}
+                                    x2={depShape.x + depShape.size / 2}
+                                    y2={depShape.y + depShape.size / 2}
+                                    stroke="#333"
+                                    strokeWidth={1}
+                                />
+                            );
+                        })
+                    ))}
+
+                    {/* Layer 2: Nodes (Foreground) */}
                     {Object.values(shapes).map((shape) => (
                         <g key={`group-${shape.id}`}>
                             <image
-                                href={iconMap[shape.type] || LambdaIcon}
+                                href={iconMap[shape.type] || AWSIcon}
                                 x={shape.x}
                                 y={shape.y}
                                 width={shape.size}
@@ -383,22 +379,6 @@ function SvgPage() {
                                     filter: draggingShapeId === shape.id ? 'drop-shadow(0 0 5px white)' : 'none'
                                 }}
                             />
-                            {shape.showLabel && shape.edges && shape.edges.map(edge => {
-                                const depShape = shapes[edge];
-                                if (!depShape) return null;
-                                return (
-                                    <RoughLine
-                                        key={`conn-${shape.id}-${depShape.id}`}
-                                        x1={shape.x + shape.size / 2}
-                                        y1={shape.y + shape.size / 2}
-                                        x2={depShape.x + depShape.size / 2}
-                                        y2={depShape.y + depShape.size / 2}
-                                        stroke="#ccc"
-                                        strokeWidth={1}
-                                        hasArrow={true}
-                                    />
-                                );
-                            })}
 
                             {shape.showLabel && (
                                 <text
