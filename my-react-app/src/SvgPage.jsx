@@ -4,44 +4,22 @@ import RoughLine from './RoughLine';
 
 
 function terraformShapes(data) {
+    console.log("data", data);
     const shapes = {};
-    for (let i = 0; i < data.resource_changes.length; i++) {
-        const shape = data.resource_changes[i];
-        shapes[shape.address] = ({
-            id: shape.address,
+
+    for (const [key, value] of Object.entries(data)) {
+        console.log(`${key}: ${value}`);
+        shapes[key] = ({
+            id: key,
             x: Math.random() * 100,
             y: Math.random() * 100,
             size: 40,
             color: 'red',
-            name: shape.address
+            name: key
         })
     }
 
-    for (let i = 0; i < data.configuration.root_module.resources.length; i++) {
-        const shape = data.configuration.root_module.resources[i];
-        const address = shape.address;
-        const expressions = shape.expressions;
-        for (var key in expressions) {
-            const expression = expressions[key];
-
-            if (expression.references) {
-                for (var j = 0; j < expression.references.length; j++) {
-                    const reference = expression.references[j];
-
-                    if (shapes[address]) {
-                        if (!shapes[address].dependencies) {
-                            shapes[address].dependencies = [];
-                        }
-                        // Avoid duplicates
-                        if (!shapes[address].dependencies.includes(reference)) {
-                            shapes[address].dependencies.push(reference);
-                        }
-                    }
-                }
-            }
-
-        }
-    }
+    console.log("shapes", shapes);
 
     return shapes;
 }
@@ -83,7 +61,7 @@ function SvgPage() {
     }, []);
 
     useEffect(() => {
-        fetch('http://localhost:8000/api/plan')
+        fetch('http://localhost:8000/api/graph')
             .then(res => res.json())
             .then(jsonData => { console.log("Fetched Data:", jsonData); return terraformShapes(jsonData) })
             .then(shapes => { setShapes(shapes); console.log("Shapes: ", shapes) })
