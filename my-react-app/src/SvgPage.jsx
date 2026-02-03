@@ -70,7 +70,7 @@ function SvgPage() {
     }, []);
 
     useEffect(() => {
-        fetch('http://localhost:8000/api/graph')
+        fetch('http://localhost:8000/api/graph2')
             .then(res => res.json())
             .then(jsonData => { console.log("Fetched Data:", jsonData); return terraformShapes(jsonData) })
             .then(shapes => { setShapes(shapes); console.log("Shapes: ", shapes) })

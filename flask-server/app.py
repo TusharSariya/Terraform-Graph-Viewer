@@ -143,7 +143,6 @@ def get_graph2():
             targets = target.split(" ")
             #gnarly
             adjacency_list[sources[1].replace("\"", "").replace("\\","")].add(targets[1].replace("\"", "").replace("\\",""))
-            #adjacency_list[targets[1].replace("\"", "").replace("\\","")].add(sources[1].replace("\"", "").replace("\\",""))
         
         for key,value in adjacency_list.items():
             adjacency_list[key] = list(value)
