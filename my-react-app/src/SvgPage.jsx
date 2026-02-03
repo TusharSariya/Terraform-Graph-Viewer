@@ -4,22 +4,19 @@ import RoughLine from './RoughLine';
 
 
 function terraformShapes(data) {
-    console.log("data", data);
     const shapes = {};
 
     for (const [key, value] of Object.entries(data)) {
-        console.log(`${key}: ${value}`);
         shapes[key] = ({
             id: key,
             x: Math.random() * 100,
             y: Math.random() * 100,
             size: 40,
             color: 'red',
-            name: key
+            name: key,
+            edges: value.edges
         })
     }
-
-    console.log("shapes", shapes);
 
     return shapes;
 }
@@ -374,12 +371,12 @@ function SvgPage() {
                                     filter: draggingShapeId === shape.id ? 'drop-shadow(0 0 5px white)' : 'none'
                                 }}
                             />
-                            {shape.showLabel && shape.dependencies && shape.dependencies.map(depId => {
-                                const depShape = shapes[depId];
+                            {shape.showLabel && shape.edges && shape.edges.map(edge => {
+                                const depShape = shapes[edge];
                                 if (!depShape) return null;
                                 return (
                                     <RoughLine
-                                        key={`conn-${shape.id}-${depId}`}
+                                        key={`conn-${shape.id}-${depShape.id}`}
                                         x1={shape.x + shape.size / 2}
                                         y1={shape.y + shape.size / 2}
                                         x2={depShape.x + depShape.size / 2}
