@@ -21,34 +21,20 @@ def parse_dot_edges(file_path):
             lines = f.readlines()
             
         for line in lines:
-            print(line)
-            line = line.strip()
-            match = edge_pattern.match(line)
-            if match:
-                source = match.group(1)
-                target = match.group(2)
-                
-                source = clean_id(source)
-                target = clean_id(target)
-                
-                adjacency_list[source].append(target)
+            if "->" not in line:
+                continue
+            strings = line.split("->")
+            source = strings[0].strip()
+            target = strings[1].strip()
+            sources = source.split(" ")
+            targets = target.split(" ")
+            #gnarly
+            adjacency_list[sources[1].replace("\"", "").replace("\\","")].append(targets[1].replace("\"", "").replace("\\",""))
                 
         return dict(adjacency_list)
 
     except Exception as e:
         return {"error": str(e)}
-
-def clean_id(node_id):
-    """
-    Helper to remove extra Terraform metadata from the ID strings
-    Example: "[root] aws_s3_bucket.test (expand)" -> "aws_s3_bucket.test"
-    """
-    # Remove [root] prefix
-    s = node_id.replace("[root] ", "")
-    # Remove suffixes like (expand), (close), (expand, input)
-    # Matches parenthesis at the end of the string
-    s = re.sub(r'\s*\([^)]*\)$', '', s)
-    return s.strip()
 
 if __name__ == "__main__":
     # Look for graph.dot in obvious places if not provided
