@@ -8,6 +8,7 @@ from collections import defaultdict
 import traceback
 from deepdiff import DeepDiff
 import re
+import tempfile
 
 
 app = Flask(__name__)
@@ -146,6 +147,12 @@ def get_adjacency_list_from_dot():
     for key,value in adjacency_list.items():
         adjacency_list[key] = list(value)
         
+    # Save to file in current directory
+    output_path = os.path.join(current_dir, 'adjacency_list.json')
+    with open(output_path, 'w') as f:
+        json.dump(adjacency_list, f, indent=4)
+    print(f"Saved adjacency_list to {output_path}")
+
     return adjacency_list
 
 
@@ -167,10 +174,16 @@ def load_plan_and_nodes():
         if "resources" not in nodes[path]:
             nodes[path]["resources"] = []
         nodes[path]["resources"].append(resource_change)
+
+    output_path = os.path.join(current_dir, 'nodes.json')
+    with open(output_path, 'w') as f:
+        json.dump(nodes, f, indent=4)
+    print(f"Saved nodes to {output_path}")
     return nodes
 
 
 def build_new_edges(nodes, newedges):
+    current_dir = os.path.dirname(os.path.abspath(__file__))
 
     def traverse_new(headnode,path,visited):
         if path in visited:
@@ -191,12 +204,22 @@ def build_new_edges(nodes, newedges):
         visited = set([])
         traverse_new(node,path,visited)
 
+    output_path = os.path.join(current_dir, 'nodes-newedges.json')
+    with open(output_path, 'w') as f:
+        json.dump(nodes, f, indent=4)
+    print(f"Saved nodes to {output_path}")
+
     # Post-processing: Remove self-references and duplicates
     for address, node in nodes.items():
         unique_edges = set(node['edges_new'])
         if address in unique_edges:
             unique_edges.remove(address)
         node['edges_new'] = list(unique_edges)
+
+    output_path = os.path.join(current_dir, 'nodes-newedges-unique.json')
+    with open(output_path, 'w') as f:
+        json.dump(nodes, f, indent=4)
+    print(f"Saved nodes to {output_path}")
 
     # Post-processing: Enforce bidirectionality
     # If A -> B, ensure B -> A
@@ -206,6 +229,10 @@ def build_new_edges(nodes, newedges):
                 target_edges = nodes[target]['edges_new']
                 if source not in target_edges:
                     target_edges.append(source)
+    output_path = os.path.join(current_dir, 'nodes-newedges-bidirectional.json')
+    with open(output_path, 'w') as f:
+        json.dump(nodes, f, indent=4)
+    print(f"Saved nodes to {output_path}")
     return nodes
 
 def compute_resource_diffs(nodes):
@@ -267,11 +294,10 @@ def build_existing_edges(nodes):
                     resource['change'] = {}
                     resource['change']['actions'] = ['existing']
                     nodes[path]["resources"].append(resource)
-                address = resource['address']
                 if "depends_on" in resource:
-                    existingedges[address].update(resource["depends_on"])
+                    existingedges[path].update(resource["depends_on"])
                     for edge in resource["depends_on"]:
-                        existingedges[edge].add(address)
+                        existingedges[edge].add(path)
         if "child_modules" in module:
             for module in module["child_modules"]:
                 existingeRecursion(module)
@@ -322,8 +348,9 @@ def get_graph2():
 
         nodes = build_new_edges(nodes, newedges)
         print(nodes)
+        print("built new edges")
         print("\n\n\n\n\n")
-        nodes =compute_resource_diffs(nodes)
+        nodes = compute_resource_diffs(nodes)
         print(nodes)
         print("computed diffs")
         print("\n\n\n\n\n")

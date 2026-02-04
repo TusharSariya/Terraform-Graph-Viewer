@@ -1,0 +1,1389 @@
+{
+    "aws_s3_bucket.test": {
+        "resources": [
+            {
+                "address": "aws_s3_bucket.test",
+                "mode": "managed",
+                "type": "aws_s3_bucket",
+                "name": "test",
+                "provider_name": "registry.opentofu.org/hashicorp/aws",
+                "change": {
+                    "actions": [
+                        "no-op"
+                    ],
+                    "before": {
+                        "acceleration_status": "",
+                        "acl": null,
+                        "arn": "arn:aws:s3:::test-20260204134234564900000001",
+                        "bucket": "test-20260204134234564900000001",
+                        "bucket_domain_name": "test-20260204134234564900000001.s3.amazonaws.com",
+                        "bucket_prefix": "test-",
+                        "bucket_region": "us-east-1",
+                        "bucket_regional_domain_name": "test-20260204134234564900000001.s3.us-east-1.amazonaws.com",
+                        "cors_rule": [],
+                        "force_destroy": false,
+                        "grant": [
+                            {
+                                "id": "ac6a8f53167518da914d2d596ad22d566934f7c710c1a34fd5f8b7785f251a1f",
+                                "permissions": [
+                                    "FULL_CONTROL"
+                                ],
+                                "type": "CanonicalUser",
+                                "uri": ""
+                            }
+                        ],
+                        "hosted_zone_id": "Z3AQBSTGFYJSTF",
+                        "id": "test-20260204134234564900000001",
+                        "lifecycle_rule": [],
+                        "logging": [],
+                        "object_lock_configuration": [],
+                        "object_lock_enabled": false,
+                        "policy": "",
+                        "region": "us-east-1",
+                        "replication_configuration": [],
+                        "request_payer": "BucketOwner",
+                        "server_side_encryption_configuration": [
+                            {
+                                "rule": [
+                                    {
+                                        "apply_server_side_encryption_by_default": [
+                                            {
+                                                "kms_master_key_id": "",
+                                                "sse_algorithm": "AES256"
+                                            }
+                                        ],
+                                        "bucket_key_enabled": false
+                                    }
+                                ]
+                            }
+                        ],
+                        "tags": {},
+                        "tags_all": {},
+                        "timeouts": null,
+                        "versioning": [
+                            {
+                                "enabled": false,
+                                "mfa_delete": false
+                            }
+                        ],
+                        "website": [],
+                        "website_domain": null,
+                        "website_endpoint": null
+                    },
+                    "after": {
+                        "acceleration_status": "",
+                        "acl": null,
+                        "arn": "arn:aws:s3:::test-20260204134234564900000001",
+                        "bucket": "test-20260204134234564900000001",
+                        "bucket_domain_name": "test-20260204134234564900000001.s3.amazonaws.com",
+                        "bucket_prefix": "test-",
+                        "bucket_region": "us-east-1",
+                        "bucket_regional_domain_name": "test-20260204134234564900000001.s3.us-east-1.amazonaws.com",
+                        "cors_rule": [],
+                        "force_destroy": false,
+                        "grant": [
+                            {
+                                "id": "ac6a8f53167518da914d2d596ad22d566934f7c710c1a34fd5f8b7785f251a1f",
+                                "permissions": [
+                                    "FULL_CONTROL"
+                                ],
+                                "type": "CanonicalUser",
+                                "uri": ""
+                            }
+                        ],
+                        "hosted_zone_id": "Z3AQBSTGFYJSTF",
+                        "id": "test-20260204134234564900000001",
+                        "lifecycle_rule": [],
+                        "logging": [],
+                        "object_lock_configuration": [],
+                        "object_lock_enabled": false,
+                        "policy": "",
+                        "region": "us-east-1",
+                        "replication_configuration": [],
+                        "request_payer": "BucketOwner",
+                        "server_side_encryption_configuration": [
+                            {
+                                "rule": [
+                                    {
+                                        "apply_server_side_encryption_by_default": [
+                                            {
+                                                "kms_master_key_id": "",
+                                                "sse_algorithm": "AES256"
+                                            }
+                                        ],
+                                        "bucket_key_enabled": false
+                                    }
+                                ]
+                            }
+                        ],
+                        "tags": {},
+                        "tags_all": {},
+                        "timeouts": null,
+                        "versioning": [
+                            {
+                                "enabled": false,
+                                "mfa_delete": false
+                            }
+                        ],
+                        "website": [],
+                        "website_domain": null,
+                        "website_endpoint": null
+                    },
+                    "after_unknown": {},
+                    "before_sensitive": {
+                        "cors_rule": [],
+                        "grant": [
+                            {
+                                "permissions": [
+                                    false
+                                ]
+                            }
+                        ],
+                        "lifecycle_rule": [],
+                        "logging": [],
+                        "object_lock_configuration": [],
+                        "replication_configuration": [],
+                        "server_side_encryption_configuration": [
+                            {
+                                "rule": [
+                                    {
+                                        "apply_server_side_encryption_by_default": [
+                                            {}
+                                        ]
+                                    }
+                                ]
+                            }
+                        ],
+                        "tags": {},
+                        "tags_all": {},
+                        "versioning": [
+                            {}
+                        ],
+                        "website": []
+                    },
+                    "after_sensitive": {
+                        "cors_rule": [],
+                        "grant": [
+                            {
+                                "permissions": [
+                                    false
+                                ]
+                            }
+                        ],
+                        "lifecycle_rule": [],
+                        "logging": [],
+                        "object_lock_configuration": [],
+                        "replication_configuration": [],
+                        "server_side_encryption_configuration": [
+                            {
+                                "rule": [
+                                    {
+                                        "apply_server_side_encryption_by_default": [
+                                            {}
+                                        ]
+                                    }
+                                ]
+                            }
+                        ],
+                        "tags": {},
+                        "tags_all": {},
+                        "versioning": [
+                            {}
+                        ],
+                        "website": []
+                    }
+                }
+            }
+        ],
+        "edges_new": [
+            "module.lambda-reader.aws_iam_role_policy.additional_inline",
+            "module.lambda-writer.aws_iam_role_policy.additional_inline"
+        ]
+    },
+    "aws_s3_bucket_object.test": {
+        "resources": [
+            {
+                "address": "aws_s3_bucket_object.test",
+                "mode": "managed",
+                "type": "aws_s3_bucket_object",
+                "name": "test",
+                "provider_name": "registry.opentofu.org/hashicorp/aws",
+                "change": {
+                    "actions": [
+                        "no-op"
+                    ],
+                    "before": {
+                        "acl": "private",
+                        "arn": "arn:aws:s3:::test-20260204134234564900000001/test",
+                        "bucket": "test-20260204134234564900000001",
+                        "bucket_key_enabled": false,
+                        "cache_control": "",
+                        "content": null,
+                        "content_base64": null,
+                        "content_disposition": "",
+                        "content_encoding": "",
+                        "content_language": "",
+                        "content_type": "application/octet-stream",
+                        "etag": "54928412d8f66ea643e17700d8e5efa6",
+                        "force_destroy": false,
+                        "id": "test-20260204134234564900000001/test",
+                        "key": "test",
+                        "kms_key_id": null,
+                        "metadata": {},
+                        "object_lock_legal_hold_status": "",
+                        "object_lock_mode": "",
+                        "object_lock_retain_until_date": "",
+                        "region": "us-east-1",
+                        "server_side_encryption": "AES256",
+                        "source": "./test.txt",
+                        "source_hash": null,
+                        "storage_class": "STANDARD",
+                        "tags": {},
+                        "tags_all": {},
+                        "version_id": "",
+                        "website_redirect": ""
+                    },
+                    "after": {
+                        "acl": "private",
+                        "arn": "arn:aws:s3:::test-20260204134234564900000001/test",
+                        "bucket": "test-20260204134234564900000001",
+                        "bucket_key_enabled": false,
+                        "cache_control": "",
+                        "content": null,
+                        "content_base64": null,
+                        "content_disposition": "",
+                        "content_encoding": "",
+                        "content_language": "",
+                        "content_type": "application/octet-stream",
+                        "etag": "54928412d8f66ea643e17700d8e5efa6",
+                        "force_destroy": false,
+                        "id": "test-20260204134234564900000001/test",
+                        "key": "test",
+                        "kms_key_id": null,
+                        "metadata": {},
+                        "object_lock_legal_hold_status": "",
+                        "object_lock_mode": "",
+                        "object_lock_retain_until_date": "",
+                        "region": "us-east-1",
+                        "server_side_encryption": "AES256",
+                        "source": "./test.txt",
+                        "source_hash": null,
+                        "storage_class": "STANDARD",
+                        "tags": {},
+                        "tags_all": {},
+                        "version_id": "",
+                        "website_redirect": ""
+                    },
+                    "after_unknown": {},
+                    "before_sensitive": {
+                        "metadata": {},
+                        "tags": {},
+                        "tags_all": {}
+                    },
+                    "after_sensitive": {
+                        "metadata": {},
+                        "tags": {},
+                        "tags_all": {}
+                    }
+                }
+            }
+        ],
+        "edges_new": []
+    },
+    "aws_sqs_queue.test_queue": {
+        "resources": [
+            {
+                "address": "aws_sqs_queue.test_queue",
+                "mode": "managed",
+                "type": "aws_sqs_queue",
+                "name": "test_queue",
+                "provider_name": "registry.opentofu.org/hashicorp/aws",
+                "change": {
+                    "actions": [
+                        "no-op"
+                    ],
+                    "before": {
+                        "arn": "arn:aws:sqs:us-east-1:992382747916:test-queue",
+                        "content_based_deduplication": false,
+                        "deduplication_scope": "",
+                        "delay_seconds": 0,
+                        "fifo_queue": false,
+                        "fifo_throughput_limit": "",
+                        "id": "https://sqs.us-east-1.amazonaws.com/992382747916/test-queue",
+                        "kms_data_key_reuse_period_seconds": 300,
+                        "kms_master_key_id": "",
+                        "max_message_size": 262144,
+                        "message_retention_seconds": 345600,
+                        "name": "test-queue",
+                        "name_prefix": "",
+                        "policy": "",
+                        "receive_wait_time_seconds": 0,
+                        "redrive_allow_policy": "",
+                        "redrive_policy": "",
+                        "region": "us-east-1",
+                        "sqs_managed_sse_enabled": true,
+                        "tags": {},
+                        "tags_all": {},
+                        "timeouts": null,
+                        "url": "https://sqs.us-east-1.amazonaws.com/992382747916/test-queue",
+                        "visibility_timeout_seconds": 30
+                    },
+                    "after": {
+                        "arn": "arn:aws:sqs:us-east-1:992382747916:test-queue",
+                        "content_based_deduplication": false,
+                        "deduplication_scope": "",
+                        "delay_seconds": 0,
+                        "fifo_queue": false,
+                        "fifo_throughput_limit": "",
+                        "id": "https://sqs.us-east-1.amazonaws.com/992382747916/test-queue",
+                        "kms_data_key_reuse_period_seconds": 300,
+                        "kms_master_key_id": "",
+                        "max_message_size": 262144,
+                        "message_retention_seconds": 345600,
+                        "name": "test-queue",
+                        "name_prefix": "",
+                        "policy": "",
+                        "receive_wait_time_seconds": 0,
+                        "redrive_allow_policy": "",
+                        "redrive_policy": "",
+                        "region": "us-east-1",
+                        "sqs_managed_sse_enabled": true,
+                        "tags": {},
+                        "tags_all": {},
+                        "timeouts": null,
+                        "url": "https://sqs.us-east-1.amazonaws.com/992382747916/test-queue",
+                        "visibility_timeout_seconds": 30
+                    },
+                    "after_unknown": {},
+                    "before_sensitive": {
+                        "tags": {},
+                        "tags_all": {}
+                    },
+                    "after_sensitive": {
+                        "tags": {},
+                        "tags_all": {}
+                    }
+                }
+            }
+        ],
+        "edges_new": [
+            "module.lambda-reader.aws_iam_role_policy.additional_inline",
+            "module.lambda-writer.aws_iam_role_policy.additional_inline"
+        ]
+    },
+    "module.lambda-reader.data.aws_iam_policy_document.logs": {
+        "resources": [
+            {
+                "address": "module.lambda-reader.data.aws_iam_policy_document.logs[0]",
+                "module_address": "module.lambda-reader",
+                "mode": "data",
+                "type": "aws_iam_policy_document",
+                "name": "logs",
+                "index": 0,
+                "provider_name": "registry.opentofu.org/hashicorp/aws",
+                "change": {
+                    "actions": [
+                        "read"
+                    ],
+                    "before": null,
+                    "after": {
+                        "override_json": null,
+                        "override_policy_documents": null,
+                        "policy_id": null,
+                        "source_json": null,
+                        "source_policy_documents": null,
+                        "statement": [
+                            {
+                                "actions": [
+                                    "logs:CreateLogGroup",
+                                    "logs:CreateLogStream",
+                                    "logs:PutLogEvents"
+                                ],
+                                "condition": [],
+                                "effect": "Allow",
+                                "not_actions": null,
+                                "not_principals": [],
+                                "not_resources": null,
+                                "principals": [],
+                                "resources": [
+                                    null,
+                                    null
+                                ],
+                                "sid": null
+                            }
+                        ],
+                        "version": null
+                    },
+                    "after_unknown": {
+                        "id": true,
+                        "json": true,
+                        "minified_json": true,
+                        "statement": [
+                            {
+                                "actions": [
+                                    false,
+                                    false,
+                                    false
+                                ],
+                                "condition": [],
+                                "not_principals": [],
+                                "principals": [],
+                                "resources": [
+                                    true,
+                                    true
+                                ]
+                            }
+                        ]
+                    },
+                    "before_sensitive": false,
+                    "after_sensitive": {
+                        "statement": [
+                            {
+                                "actions": [
+                                    false,
+                                    false,
+                                    false
+                                ],
+                                "condition": [],
+                                "not_principals": [],
+                                "principals": [],
+                                "resources": [
+                                    false,
+                                    false
+                                ]
+                            }
+                        ]
+                    }
+                },
+                "action_reason": "read_because_config_unknown"
+            }
+        ],
+        "edges_new": [
+            "module.lambda-reader.aws_cloudwatch_log_group.lambda",
+            "module.lambda-reader.aws_lambda_function.this",
+            "module.lambda-reader.aws_iam_role_policy.logs"
+        ]
+    },
+    "module.lambda-reader.aws_cloudwatch_log_group.lambda": {
+        "resources": [
+            {
+                "address": "module.lambda-reader.aws_cloudwatch_log_group.lambda[0]",
+                "module_address": "module.lambda-reader",
+                "mode": "managed",
+                "type": "aws_cloudwatch_log_group",
+                "name": "lambda",
+                "index": 0,
+                "provider_name": "registry.opentofu.org/hashicorp/aws",
+                "change": {
+                    "actions": [
+                        "create"
+                    ],
+                    "before": null,
+                    "after": {
+                        "kms_key_id": null,
+                        "name": "/aws/lambda/test-reader",
+                        "region": "us-east-1",
+                        "retention_in_days": 0,
+                        "skip_destroy": false,
+                        "tags": null
+                    },
+                    "after_unknown": {
+                        "arn": true,
+                        "deletion_protection_enabled": true,
+                        "id": true,
+                        "log_group_class": true,
+                        "name_prefix": true,
+                        "tags_all": true
+                    },
+                    "before_sensitive": false,
+                    "after_sensitive": {
+                        "tags_all": {}
+                    }
+                }
+            }
+        ],
+        "edges_new": [
+            "module.lambda-reader.aws_lambda_function.this",
+            "module.lambda-reader.data.aws_iam_policy_document.logs"
+        ]
+    },
+    "module.lambda-reader.aws_iam_role.lambda": {
+        "resources": [
+            {
+                "address": "module.lambda-reader.aws_iam_role.lambda[0]",
+                "module_address": "module.lambda-reader",
+                "mode": "managed",
+                "type": "aws_iam_role",
+                "name": "lambda",
+                "index": 0,
+                "provider_name": "registry.opentofu.org/hashicorp/aws",
+                "change": {
+                    "actions": [
+                        "create"
+                    ],
+                    "before": null,
+                    "after": {
+                        "assume_role_policy": "{\"Statement\":[{\"Action\":\"sts:AssumeRole\",\"Effect\":\"Allow\",\"Principal\":{\"Service\":\"lambda.amazonaws.com\"}}],\"Version\":\"2012-10-17\"}",
+                        "description": null,
+                        "force_detach_policies": true,
+                        "max_session_duration": 3600,
+                        "name": "test-reader",
+                        "path": "/",
+                        "permissions_boundary": null,
+                        "tags": null
+                    },
+                    "after_unknown": {
+                        "arn": true,
+                        "create_date": true,
+                        "id": true,
+                        "inline_policy": true,
+                        "managed_policy_arns": true,
+                        "name_prefix": true,
+                        "tags_all": true,
+                        "unique_id": true
+                    },
+                    "before_sensitive": false,
+                    "after_sensitive": {
+                        "inline_policy": [],
+                        "managed_policy_arns": [],
+                        "tags_all": {}
+                    }
+                }
+            }
+        ],
+        "edges_new": [
+            "module.lambda-reader.aws_lambda_function.this",
+            "module.lambda-reader.aws_iam_role_policy.additional_inline",
+            "module.lambda-reader.aws_iam_role_policy.logs"
+        ]
+    },
+    "module.lambda-reader.aws_iam_role_policy.additional_inline": {
+        "resources": [
+            {
+                "address": "module.lambda-reader.aws_iam_role_policy.additional_inline[0]",
+                "module_address": "module.lambda-reader",
+                "mode": "managed",
+                "type": "aws_iam_role_policy",
+                "name": "additional_inline",
+                "index": 0,
+                "provider_name": "registry.opentofu.org/hashicorp/aws",
+                "change": {
+                    "actions": [
+                        "create"
+                    ],
+                    "before": null,
+                    "after": {
+                        "name": "test-reader-inline",
+                        "policy": "{\"Version\":\"2012-10-17\",\"Statement\":[{\"Action\":\"s3:GetObject\",\"Effect\":\"Allow\",\"Resource\":[\"arn:aws:s3:::test-20260204134234564900000001/*\",\"arn:aws:s3:::test-20260204134234564900000001\"],\"Sid\":\"s3\"},{\"Action\":[\"sqs:ReceiveMessage\",\"sqs:GetQueueAttributes\",\"sqs:DeleteMessage\"],\"Effect\":\"Allow\",\"Resource\":\"arn:aws:sqs:us-east-1:992382747916:test-queue\",\"Sid\":\"sqs\"}]}",
+                        "role": "test-reader"
+                    },
+                    "after_unknown": {
+                        "id": true,
+                        "name_prefix": true
+                    },
+                    "before_sensitive": false,
+                    "after_sensitive": {}
+                }
+            }
+        ],
+        "edges_new": [
+            "module.lambda-reader.aws_iam_role.lambda",
+            "aws_sqs_queue.test_queue",
+            "aws_s3_bucket.test",
+            "module.lambda-reader.aws_lambda_function.this"
+        ]
+    },
+    "module.lambda-reader.aws_iam_role_policy.logs": {
+        "resources": [
+            {
+                "address": "module.lambda-reader.aws_iam_role_policy.logs[0]",
+                "module_address": "module.lambda-reader",
+                "mode": "managed",
+                "type": "aws_iam_role_policy",
+                "name": "logs",
+                "index": 0,
+                "provider_name": "registry.opentofu.org/hashicorp/aws",
+                "change": {
+                    "actions": [
+                        "create"
+                    ],
+                    "before": null,
+                    "after": {
+                        "name": "test-reader-logs",
+                        "role": "test-reader"
+                    },
+                    "after_unknown": {
+                        "id": true,
+                        "name_prefix": true,
+                        "policy": true
+                    },
+                    "before_sensitive": false,
+                    "after_sensitive": {}
+                }
+            }
+        ],
+        "edges_new": [
+            "module.lambda-reader.data.aws_iam_policy_document.logs",
+            "module.lambda-reader.aws_iam_role.lambda",
+            "module.lambda-reader.aws_lambda_function.this"
+        ]
+    },
+    "module.lambda-reader.aws_lambda_function.this": {
+        "resources": [
+            {
+                "address": "module.lambda-reader.aws_lambda_function.this[0]",
+                "module_address": "module.lambda-reader",
+                "mode": "managed",
+                "type": "aws_lambda_function",
+                "name": "this",
+                "index": 0,
+                "provider_name": "registry.opentofu.org/hashicorp/aws",
+                "change": {
+                    "actions": [
+                        "create"
+                    ],
+                    "before": null,
+                    "after": {
+                        "capacity_provider_config": [],
+                        "code_signing_config_arn": null,
+                        "dead_letter_config": [],
+                        "description": "",
+                        "durable_config": [],
+                        "environment": [],
+                        "ephemeral_storage": [
+                            {
+                                "size": 512
+                            }
+                        ],
+                        "file_system_config": [],
+                        "filename": "builds/9c36e723854b07d30831934c1e09ec90731e68f335c47261ea580080b50210e8.zip",
+                        "function_name": "test-reader",
+                        "handler": "index.handler",
+                        "image_config": [],
+                        "image_uri": null,
+                        "kms_key_arn": null,
+                        "layers": null,
+                        "logging_config": [
+                            {
+                                "application_log_level": null,
+                                "log_format": "Text",
+                                "system_log_level": null
+                            }
+                        ],
+                        "memory_size": 128,
+                        "package_type": "Zip",
+                        "publish": false,
+                        "publish_to": null,
+                        "region": "us-east-1",
+                        "replace_security_groups_on_destroy": null,
+                        "replacement_security_group_ids": null,
+                        "reserved_concurrent_executions": -1,
+                        "runtime": "python3.13",
+                        "s3_bucket": null,
+                        "s3_key": null,
+                        "s3_object_version": null,
+                        "skip_destroy": false,
+                        "snap_start": [],
+                        "source_code_hash": "5K3Nf4dO5oHN5xW+AG/jnO7fvGmyFTG50dlm8L467tU=",
+                        "source_kms_key_arn": null,
+                        "tags": null,
+                        "tenancy_config": [],
+                        "timeout": 3,
+                        "timeouts": null,
+                        "vpc_config": []
+                    },
+                    "after_unknown": {
+                        "architectures": true,
+                        "arn": true,
+                        "capacity_provider_config": [],
+                        "code_sha256": true,
+                        "dead_letter_config": [],
+                        "durable_config": [],
+                        "environment": [],
+                        "ephemeral_storage": [
+                            {}
+                        ],
+                        "file_system_config": [],
+                        "id": true,
+                        "image_config": [],
+                        "invoke_arn": true,
+                        "last_modified": true,
+                        "logging_config": [
+                            {
+                                "log_group": true
+                            }
+                        ],
+                        "qualified_arn": true,
+                        "qualified_invoke_arn": true,
+                        "response_streaming_invoke_arn": true,
+                        "role": true,
+                        "signing_job_arn": true,
+                        "signing_profile_version_arn": true,
+                        "snap_start": [],
+                        "source_code_size": true,
+                        "tags_all": true,
+                        "tenancy_config": [],
+                        "tracing_config": true,
+                        "version": true,
+                        "vpc_config": []
+                    },
+                    "before_sensitive": false,
+                    "after_sensitive": {
+                        "architectures": [],
+                        "capacity_provider_config": [],
+                        "dead_letter_config": [],
+                        "durable_config": [],
+                        "environment": [],
+                        "ephemeral_storage": [
+                            {}
+                        ],
+                        "file_system_config": [],
+                        "image_config": [],
+                        "logging_config": [
+                            {}
+                        ],
+                        "snap_start": [],
+                        "tags_all": {},
+                        "tenancy_config": [],
+                        "tracing_config": [],
+                        "vpc_config": []
+                    }
+                }
+            }
+        ],
+        "edges_new": [
+            "module.lambda-reader.aws_iam_role.lambda",
+            "module.lambda-reader.aws_iam_role_policy.additional_inline",
+            "module.lambda-reader.null_resource.archive",
+            "module.lambda-reader.aws_iam_role_policy.logs",
+            "module.lambda-reader.data.aws_iam_policy_document.logs",
+            "module.lambda-reader.aws_cloudwatch_log_group.lambda",
+            "module.lambda-reader.local_file.archive_plan"
+        ]
+    },
+    "module.lambda-reader.local_file.archive_plan": {
+        "resources": [
+            {
+                "address": "module.lambda-reader.local_file.archive_plan[0]",
+                "module_address": "module.lambda-reader",
+                "mode": "managed",
+                "type": "local_file",
+                "name": "archive_plan",
+                "index": 0,
+                "provider_name": "registry.opentofu.org/hashicorp/local",
+                "change": {
+                    "actions": [
+                        "create"
+                    ],
+                    "before": null,
+                    "after": {
+                        "content": "{\"filename\": \"builds/9c36e723854b07d30831934c1e09ec90731e68f335c47261ea580080b50210e8.zip\", \"runtime\": \"python3.13\", \"artifacts_dir\": \"builds\", \"build_plan\": [[[\"zip\", \"lambda_function.py\", null]]], \"quiet\": \"true\"}",
+                        "content_base64": null,
+                        "directory_permission": "0755",
+                        "file_permission": "0644",
+                        "filename": "builds/9c36e723854b07d30831934c1e09ec90731e68f335c47261ea580080b50210e8.plan.json",
+                        "sensitive_content": null,
+                        "source": null
+                    },
+                    "after_unknown": {
+                        "content_base64sha256": true,
+                        "content_base64sha512": true,
+                        "content_md5": true,
+                        "content_sha1": true,
+                        "content_sha256": true,
+                        "content_sha512": true,
+                        "id": true
+                    },
+                    "before_sensitive": false,
+                    "after_sensitive": {
+                        "content": true,
+                        "sensitive_content": true
+                    }
+                }
+            }
+        ],
+        "edges_new": [
+            "module.lambda-reader.aws_lambda_function.this",
+            "module.lambda-reader.null_resource.archive"
+        ]
+    },
+    "module.lambda-reader.null_resource.archive": {
+        "resources": [
+            {
+                "address": "module.lambda-reader.null_resource.archive[0]",
+                "module_address": "module.lambda-reader",
+                "mode": "managed",
+                "type": "null_resource",
+                "name": "archive",
+                "index": 0,
+                "provider_name": "registry.opentofu.org/hashicorp/null",
+                "change": {
+                    "actions": [
+                        "create"
+                    ],
+                    "before": null,
+                    "after": {
+                        "triggers": {
+                            "filename": "builds/9c36e723854b07d30831934c1e09ec90731e68f335c47261ea580080b50210e8.zip",
+                            "timestamp": "1770212317846617000"
+                        }
+                    },
+                    "after_unknown": {
+                        "id": true,
+                        "triggers": {}
+                    },
+                    "before_sensitive": false,
+                    "after_sensitive": {
+                        "triggers": {}
+                    }
+                }
+            }
+        ],
+        "edges_new": [
+            "module.lambda-reader.local_file.archive_plan",
+            "module.lambda-reader.aws_lambda_function.this"
+        ]
+    },
+    "module.lambda-writer.aws_cloudwatch_log_group.lambda": {
+        "resources": [
+            {
+                "address": "module.lambda-writer.aws_cloudwatch_log_group.lambda[0]",
+                "module_address": "module.lambda-writer",
+                "mode": "managed",
+                "type": "aws_cloudwatch_log_group",
+                "name": "lambda",
+                "index": 0,
+                "provider_name": "registry.opentofu.org/hashicorp/aws",
+                "change": {
+                    "actions": [
+                        "no-op"
+                    ],
+                    "before": {
+                        "arn": "arn:aws:logs:us-east-1:992382747916:log-group:/aws/lambda/test-writer",
+                        "deletion_protection_enabled": false,
+                        "id": "/aws/lambda/test-writer",
+                        "kms_key_id": "",
+                        "log_group_class": "STANDARD",
+                        "name": "/aws/lambda/test-writer",
+                        "name_prefix": "",
+                        "region": "us-east-1",
+                        "retention_in_days": 0,
+                        "skip_destroy": false,
+                        "tags": {},
+                        "tags_all": {}
+                    },
+                    "after": {
+                        "arn": "arn:aws:logs:us-east-1:992382747916:log-group:/aws/lambda/test-writer",
+                        "deletion_protection_enabled": false,
+                        "id": "/aws/lambda/test-writer",
+                        "kms_key_id": "",
+                        "log_group_class": "STANDARD",
+                        "name": "/aws/lambda/test-writer",
+                        "name_prefix": "",
+                        "region": "us-east-1",
+                        "retention_in_days": 0,
+                        "skip_destroy": false,
+                        "tags": {},
+                        "tags_all": {}
+                    },
+                    "after_unknown": {},
+                    "before_sensitive": {
+                        "tags": {},
+                        "tags_all": {}
+                    },
+                    "after_sensitive": {
+                        "tags": {},
+                        "tags_all": {}
+                    }
+                }
+            }
+        ],
+        "edges_new": []
+    },
+    "module.lambda-writer.aws_iam_role.lambda": {
+        "resources": [
+            {
+                "address": "module.lambda-writer.aws_iam_role.lambda[0]",
+                "module_address": "module.lambda-writer",
+                "mode": "managed",
+                "type": "aws_iam_role",
+                "name": "lambda",
+                "index": 0,
+                "provider_name": "registry.opentofu.org/hashicorp/aws",
+                "change": {
+                    "actions": [
+                        "no-op"
+                    ],
+                    "before": {
+                        "arn": "arn:aws:iam::992382747916:role/test-writer",
+                        "assume_role_policy": "{\"Statement\":[{\"Action\":\"sts:AssumeRole\",\"Effect\":\"Allow\",\"Principal\":{\"Service\":\"lambda.amazonaws.com\"}}],\"Version\":\"2012-10-17\"}",
+                        "create_date": "2026-02-04T13:38:45Z",
+                        "description": "",
+                        "force_detach_policies": true,
+                        "id": "test-writer",
+                        "inline_policy": [
+                            {
+                                "name": "test-writer-inline",
+                                "policy": "{\"Version\":\"2012-10-17\",\"Statement\":[{\"Action\":\"sqs:SendMessage\",\"Effect\":\"Allow\",\"Resource\":\"arn:aws:sqs:us-east-1:992382747916:test-queue\",\"Sid\":\"sqs\"}]}"
+                            },
+                            {
+                                "name": "test-writer-logs",
+                                "policy": "{\"Version\":\"2012-10-17\",\"Statement\":[{\"Action\":[\"logs:PutLogEvents\",\"logs:CreateLogStream\",\"logs:CreateLogGroup\"],\"Effect\":\"Allow\",\"Resource\":[\"arn:aws:logs:us-east-1:992382747916:log-group:/aws/lambda/test-writer:*:*\",\"arn:aws:logs:us-east-1:992382747916:log-group:/aws/lambda/test-writer:*\"]}]}"
+                            }
+                        ],
+                        "managed_policy_arns": [],
+                        "max_session_duration": 3600,
+                        "name": "test-writer",
+                        "name_prefix": "",
+                        "path": "/",
+                        "permissions_boundary": "",
+                        "tags": {},
+                        "tags_all": {},
+                        "unique_id": "AROA6ODU7AUGMFX4LLIM4"
+                    },
+                    "after": {
+                        "arn": "arn:aws:iam::992382747916:role/test-writer",
+                        "assume_role_policy": "{\"Statement\":[{\"Action\":\"sts:AssumeRole\",\"Effect\":\"Allow\",\"Principal\":{\"Service\":\"lambda.amazonaws.com\"}}],\"Version\":\"2012-10-17\"}",
+                        "create_date": "2026-02-04T13:38:45Z",
+                        "description": "",
+                        "force_detach_policies": true,
+                        "id": "test-writer",
+                        "inline_policy": [
+                            {
+                                "name": "test-writer-inline",
+                                "policy": "{\"Version\":\"2012-10-17\",\"Statement\":[{\"Action\":\"sqs:SendMessage\",\"Effect\":\"Allow\",\"Resource\":\"arn:aws:sqs:us-east-1:992382747916:test-queue\",\"Sid\":\"sqs\"}]}"
+                            },
+                            {
+                                "name": "test-writer-logs",
+                                "policy": "{\"Version\":\"2012-10-17\",\"Statement\":[{\"Action\":[\"logs:PutLogEvents\",\"logs:CreateLogStream\",\"logs:CreateLogGroup\"],\"Effect\":\"Allow\",\"Resource\":[\"arn:aws:logs:us-east-1:992382747916:log-group:/aws/lambda/test-writer:*:*\",\"arn:aws:logs:us-east-1:992382747916:log-group:/aws/lambda/test-writer:*\"]}]}"
+                            }
+                        ],
+                        "managed_policy_arns": [],
+                        "max_session_duration": 3600,
+                        "name": "test-writer",
+                        "name_prefix": "",
+                        "path": "/",
+                        "permissions_boundary": "",
+                        "tags": {},
+                        "tags_all": {},
+                        "unique_id": "AROA6ODU7AUGMFX4LLIM4"
+                    },
+                    "after_unknown": {},
+                    "before_sensitive": {
+                        "inline_policy": [
+                            {},
+                            {}
+                        ],
+                        "managed_policy_arns": [],
+                        "tags": {},
+                        "tags_all": {}
+                    },
+                    "after_sensitive": {
+                        "inline_policy": [
+                            {},
+                            {}
+                        ],
+                        "managed_policy_arns": [],
+                        "tags": {},
+                        "tags_all": {}
+                    }
+                }
+            }
+        ],
+        "edges_new": [
+            "module.lambda-writer.aws_iam_role_policy.additional_inline"
+        ]
+    },
+    "module.lambda-writer.aws_iam_role_policy.additional_inline": {
+        "resources": [
+            {
+                "address": "module.lambda-writer.aws_iam_role_policy.additional_inline[0]",
+                "module_address": "module.lambda-writer",
+                "mode": "managed",
+                "type": "aws_iam_role_policy",
+                "name": "additional_inline",
+                "index": 0,
+                "provider_name": "registry.opentofu.org/hashicorp/aws",
+                "change": {
+                    "actions": [
+                        "update"
+                    ],
+                    "before": {
+                        "id": "test-writer:test-writer-inline",
+                        "name": "test-writer-inline",
+                        "name_prefix": "",
+                        "policy": "{\"Version\":\"2012-10-17\",\"Statement\":[{\"Action\":\"sqs:SendMessage\",\"Effect\":\"Allow\",\"Resource\":\"arn:aws:sqs:us-east-1:992382747916:test-queue\",\"Sid\":\"sqs\"}]}",
+                        "role": "test-writer"
+                    },
+                    "after": {
+                        "id": "test-writer:test-writer-inline",
+                        "name": "test-writer-inline",
+                        "name_prefix": "",
+                        "policy": "{\"Version\":\"2012-10-17\",\"Statement\":[{\"Action\":\"s3:PutObject\",\"Effect\":\"Allow\",\"Resource\":[\"arn:aws:s3:::test-20260204134234564900000001/*\",\"arn:aws:s3:::test-20260204134234564900000001\"],\"Sid\":\"s3\"},{\"Action\":\"sqs:SendMessage\",\"Effect\":\"Allow\",\"Resource\":\"arn:aws:sqs:us-east-1:992382747916:test-queue\",\"Sid\":\"sqs\"}]}",
+                        "role": "test-writer"
+                    },
+                    "after_unknown": {},
+                    "before_sensitive": {},
+                    "after_sensitive": {}
+                }
+            }
+        ],
+        "edges_new": [
+            "aws_s3_bucket.test",
+            "module.lambda-writer.aws_iam_role.lambda",
+            "aws_sqs_queue.test_queue"
+        ]
+    },
+    "module.lambda-writer.aws_iam_role_policy.logs": {
+        "resources": [
+            {
+                "address": "module.lambda-writer.aws_iam_role_policy.logs[0]",
+                "module_address": "module.lambda-writer",
+                "mode": "managed",
+                "type": "aws_iam_role_policy",
+                "name": "logs",
+                "index": 0,
+                "provider_name": "registry.opentofu.org/hashicorp/aws",
+                "change": {
+                    "actions": [
+                        "no-op"
+                    ],
+                    "before": {
+                        "id": "test-writer:test-writer-logs",
+                        "name": "test-writer-logs",
+                        "name_prefix": "",
+                        "policy": "{\"Version\":\"2012-10-17\",\"Statement\":[{\"Action\":[\"logs:PutLogEvents\",\"logs:CreateLogStream\",\"logs:CreateLogGroup\"],\"Effect\":\"Allow\",\"Resource\":[\"arn:aws:logs:us-east-1:992382747916:log-group:/aws/lambda/test-writer:*:*\",\"arn:aws:logs:us-east-1:992382747916:log-group:/aws/lambda/test-writer:*\"]}]}",
+                        "role": "test-writer"
+                    },
+                    "after": {
+                        "id": "test-writer:test-writer-logs",
+                        "name": "test-writer-logs",
+                        "name_prefix": "",
+                        "policy": "{\"Version\":\"2012-10-17\",\"Statement\":[{\"Action\":[\"logs:PutLogEvents\",\"logs:CreateLogStream\",\"logs:CreateLogGroup\"],\"Effect\":\"Allow\",\"Resource\":[\"arn:aws:logs:us-east-1:992382747916:log-group:/aws/lambda/test-writer:*:*\",\"arn:aws:logs:us-east-1:992382747916:log-group:/aws/lambda/test-writer:*\"]}]}",
+                        "role": "test-writer"
+                    },
+                    "after_unknown": {},
+                    "before_sensitive": {},
+                    "after_sensitive": {}
+                }
+            }
+        ],
+        "edges_new": []
+    },
+    "module.lambda-writer.aws_lambda_function.this": {
+        "resources": [
+            {
+                "address": "module.lambda-writer.aws_lambda_function.this[0]",
+                "module_address": "module.lambda-writer",
+                "mode": "managed",
+                "type": "aws_lambda_function",
+                "name": "this",
+                "index": 0,
+                "provider_name": "registry.opentofu.org/hashicorp/aws",
+                "change": {
+                    "actions": [
+                        "no-op"
+                    ],
+                    "before": {
+                        "architectures": [
+                            "x86_64"
+                        ],
+                        "arn": "arn:aws:lambda:us-east-1:992382747916:function:test-writer",
+                        "capacity_provider_config": [],
+                        "code_sha256": "5K3Nf4dO5oHN5xW+AG/jnO7fvGmyFTG50dlm8L467tU=",
+                        "code_signing_config_arn": "",
+                        "dead_letter_config": [],
+                        "description": "",
+                        "durable_config": [],
+                        "environment": [],
+                        "ephemeral_storage": [
+                            {
+                                "size": 512
+                            }
+                        ],
+                        "file_system_config": [],
+                        "filename": "builds/9c36e723854b07d30831934c1e09ec90731e68f335c47261ea580080b50210e8.zip",
+                        "function_name": "test-writer",
+                        "handler": "index.handler",
+                        "id": "test-writer",
+                        "image_config": [],
+                        "image_uri": "",
+                        "invoke_arn": "arn:aws:apigateway:us-east-1:lambda:path/2015-03-31/functions/arn:aws:lambda:us-east-1:992382747916:function:test-writer/invocations",
+                        "kms_key_arn": "",
+                        "last_modified": "2026-02-04T13:39:12.816+0000",
+                        "layers": [],
+                        "logging_config": [
+                            {
+                                "application_log_level": "",
+                                "log_format": "Text",
+                                "log_group": "/aws/lambda/test-writer",
+                                "system_log_level": ""
+                            }
+                        ],
+                        "memory_size": 128,
+                        "package_type": "Zip",
+                        "publish": false,
+                        "publish_to": null,
+                        "qualified_arn": "arn:aws:lambda:us-east-1:992382747916:function:test-writer:$LATEST",
+                        "qualified_invoke_arn": "arn:aws:apigateway:us-east-1:lambda:path/2015-03-31/functions/arn:aws:lambda:us-east-1:992382747916:function:test-writer:$LATEST/invocations",
+                        "region": "us-east-1",
+                        "replace_security_groups_on_destroy": null,
+                        "replacement_security_group_ids": null,
+                        "reserved_concurrent_executions": -1,
+                        "response_streaming_invoke_arn": "arn:aws:apigateway:us-east-1:lambda:path/2021-11-15/functions/arn:aws:lambda:us-east-1:992382747916:function:test-writer/response-streaming-invocations",
+                        "role": "arn:aws:iam::992382747916:role/test-writer",
+                        "runtime": "python3.13",
+                        "s3_bucket": null,
+                        "s3_key": null,
+                        "s3_object_version": null,
+                        "signing_job_arn": "",
+                        "signing_profile_version_arn": "",
+                        "skip_destroy": false,
+                        "snap_start": [],
+                        "source_code_hash": "5K3Nf4dO5oHN5xW+AG/jnO7fvGmyFTG50dlm8L467tU=",
+                        "source_code_size": 231,
+                        "source_kms_key_arn": "",
+                        "tags": {},
+                        "tags_all": {},
+                        "tenancy_config": [],
+                        "timeout": 3,
+                        "timeouts": null,
+                        "tracing_config": [
+                            {
+                                "mode": "PassThrough"
+                            }
+                        ],
+                        "version": "$LATEST",
+                        "vpc_config": []
+                    },
+                    "after": {
+                        "architectures": [
+                            "x86_64"
+                        ],
+                        "arn": "arn:aws:lambda:us-east-1:992382747916:function:test-writer",
+                        "capacity_provider_config": [],
+                        "code_sha256": "5K3Nf4dO5oHN5xW+AG/jnO7fvGmyFTG50dlm8L467tU=",
+                        "code_signing_config_arn": "",
+                        "dead_letter_config": [],
+                        "description": "",
+                        "durable_config": [],
+                        "environment": [],
+                        "ephemeral_storage": [
+                            {
+                                "size": 512
+                            }
+                        ],
+                        "file_system_config": [],
+                        "filename": "builds/9c36e723854b07d30831934c1e09ec90731e68f335c47261ea580080b50210e8.zip",
+                        "function_name": "test-writer",
+                        "handler": "index.handler",
+                        "id": "test-writer",
+                        "image_config": [],
+                        "image_uri": "",
+                        "invoke_arn": "arn:aws:apigateway:us-east-1:lambda:path/2015-03-31/functions/arn:aws:lambda:us-east-1:992382747916:function:test-writer/invocations",
+                        "kms_key_arn": "",
+                        "last_modified": "2026-02-04T13:39:12.816+0000",
+                        "layers": [],
+                        "logging_config": [
+                            {
+                                "application_log_level": "",
+                                "log_format": "Text",
+                                "log_group": "/aws/lambda/test-writer",
+                                "system_log_level": ""
+                            }
+                        ],
+                        "memory_size": 128,
+                        "package_type": "Zip",
+                        "publish": false,
+                        "publish_to": null,
+                        "qualified_arn": "arn:aws:lambda:us-east-1:992382747916:function:test-writer:$LATEST",
+                        "qualified_invoke_arn": "arn:aws:apigateway:us-east-1:lambda:path/2015-03-31/functions/arn:aws:lambda:us-east-1:992382747916:function:test-writer:$LATEST/invocations",
+                        "region": "us-east-1",
+                        "replace_security_groups_on_destroy": null,
+                        "replacement_security_group_ids": null,
+                        "reserved_concurrent_executions": -1,
+                        "response_streaming_invoke_arn": "arn:aws:apigateway:us-east-1:lambda:path/2021-11-15/functions/arn:aws:lambda:us-east-1:992382747916:function:test-writer/response-streaming-invocations",
+                        "role": "arn:aws:iam::992382747916:role/test-writer",
+                        "runtime": "python3.13",
+                        "s3_bucket": null,
+                        "s3_key": null,
+                        "s3_object_version": null,
+                        "signing_job_arn": "",
+                        "signing_profile_version_arn": "",
+                        "skip_destroy": false,
+                        "snap_start": [],
+                        "source_code_hash": "5K3Nf4dO5oHN5xW+AG/jnO7fvGmyFTG50dlm8L467tU=",
+                        "source_code_size": 231,
+                        "source_kms_key_arn": "",
+                        "tags": {},
+                        "tags_all": {},
+                        "tenancy_config": [],
+                        "timeout": 3,
+                        "timeouts": null,
+                        "tracing_config": [
+                            {
+                                "mode": "PassThrough"
+                            }
+                        ],
+                        "version": "$LATEST",
+                        "vpc_config": []
+                    },
+                    "after_unknown": {},
+                    "before_sensitive": {
+                        "architectures": [
+                            false
+                        ],
+                        "capacity_provider_config": [],
+                        "dead_letter_config": [],
+                        "durable_config": [],
+                        "environment": [],
+                        "ephemeral_storage": [
+                            {}
+                        ],
+                        "file_system_config": [],
+                        "image_config": [],
+                        "layers": [],
+                        "logging_config": [
+                            {}
+                        ],
+                        "snap_start": [],
+                        "tags": {},
+                        "tags_all": {},
+                        "tenancy_config": [],
+                        "tracing_config": [
+                            {}
+                        ],
+                        "vpc_config": []
+                    },
+                    "after_sensitive": {
+                        "architectures": [
+                            false
+                        ],
+                        "capacity_provider_config": [],
+                        "dead_letter_config": [],
+                        "durable_config": [],
+                        "environment": [],
+                        "ephemeral_storage": [
+                            {}
+                        ],
+                        "file_system_config": [],
+                        "image_config": [],
+                        "layers": [],
+                        "logging_config": [
+                            {}
+                        ],
+                        "snap_start": [],
+                        "tags": {},
+                        "tags_all": {},
+                        "tenancy_config": [],
+                        "tracing_config": [
+                            {}
+                        ],
+                        "vpc_config": []
+                    }
+                }
+            }
+        ],
+        "edges_new": []
+    },
+    "module.lambda-writer.local_file.archive_plan": {
+        "resources": [
+            {
+                "address": "module.lambda-writer.local_file.archive_plan[0]",
+                "module_address": "module.lambda-writer",
+                "mode": "managed",
+                "type": "local_file",
+                "name": "archive_plan",
+                "index": 0,
+                "provider_name": "registry.opentofu.org/hashicorp/local",
+                "change": {
+                    "actions": [
+                        "no-op"
+                    ],
+                    "before": {
+                        "content": "{\"filename\": \"builds/9c36e723854b07d30831934c1e09ec90731e68f335c47261ea580080b50210e8.zip\", \"runtime\": \"python3.13\", \"artifacts_dir\": \"builds\", \"build_plan\": [[[\"zip\", \"lambda_function.py\", null]]], \"quiet\": \"true\"}",
+                        "content_base64": null,
+                        "content_base64sha256": "HEz4YjBEt2fnjbeDrK0KXczTCjTz4qLvZoJ5FvEsY/I=",
+                        "content_base64sha512": "BmJ2HEVzT7WZk/OsyMUdcXYYpzb9R+KgpuMHT866iVCslTuD5V1hHT6N2KVWgtWQrvZvfCO//adtfCixfoGPKw==",
+                        "content_md5": "4e1e126ba134308495c5d18d0197734a",
+                        "content_sha1": "0d1bd632aab0c5d858a347659f72f776e8b94125",
+                        "content_sha256": "1c4cf8623044b767e78db783acad0a5dccd30a34f3e2a2ef66827916f12c63f2",
+                        "content_sha512": "0662761c45734fb59993f3acc8c51d717618a736fd47e2a0a6e3074fceba8950ac953b83e55d611d3e8dd8a55682d590aef66f7c23bffda76d7c28b17e818f2b",
+                        "directory_permission": "0755",
+                        "file_permission": "0644",
+                        "filename": "builds/9c36e723854b07d30831934c1e09ec90731e68f335c47261ea580080b50210e8.plan.json",
+                        "id": "0d1bd632aab0c5d858a347659f72f776e8b94125",
+                        "sensitive_content": null,
+                        "source": null
+                    },
+                    "after": {
+                        "content": "{\"filename\": \"builds/9c36e723854b07d30831934c1e09ec90731e68f335c47261ea580080b50210e8.zip\", \"runtime\": \"python3.13\", \"artifacts_dir\": \"builds\", \"build_plan\": [[[\"zip\", \"lambda_function.py\", null]]], \"quiet\": \"true\"}",
+                        "content_base64": null,
+                        "content_base64sha256": "HEz4YjBEt2fnjbeDrK0KXczTCjTz4qLvZoJ5FvEsY/I=",
+                        "content_base64sha512": "BmJ2HEVzT7WZk/OsyMUdcXYYpzb9R+KgpuMHT866iVCslTuD5V1hHT6N2KVWgtWQrvZvfCO//adtfCixfoGPKw==",
+                        "content_md5": "4e1e126ba134308495c5d18d0197734a",
+                        "content_sha1": "0d1bd632aab0c5d858a347659f72f776e8b94125",
+                        "content_sha256": "1c4cf8623044b767e78db783acad0a5dccd30a34f3e2a2ef66827916f12c63f2",
+                        "content_sha512": "0662761c45734fb59993f3acc8c51d717618a736fd47e2a0a6e3074fceba8950ac953b83e55d611d3e8dd8a55682d590aef66f7c23bffda76d7c28b17e818f2b",
+                        "directory_permission": "0755",
+                        "file_permission": "0644",
+                        "filename": "builds/9c36e723854b07d30831934c1e09ec90731e68f335c47261ea580080b50210e8.plan.json",
+                        "id": "0d1bd632aab0c5d858a347659f72f776e8b94125",
+                        "sensitive_content": null,
+                        "source": null
+                    },
+                    "after_unknown": {},
+                    "before_sensitive": {
+                        "content": true,
+                        "sensitive_content": true
+                    },
+                    "after_sensitive": {
+                        "content": true,
+                        "sensitive_content": true
+                    }
+                }
+            }
+        ],
+        "edges_new": []
+    },
+    "module.lambda-writer.null_resource.archive": {
+        "resources": [
+            {
+                "address": "module.lambda-writer.null_resource.archive[0]",
+                "module_address": "module.lambda-writer",
+                "mode": "managed",
+                "type": "null_resource",
+                "name": "archive",
+                "index": 0,
+                "provider_name": "registry.opentofu.org/hashicorp/null",
+                "change": {
+                    "actions": [
+                        "no-op"
+                    ],
+                    "before": {
+                        "id": "5160054721792605470",
+                        "triggers": {
+                            "filename": "builds/9c36e723854b07d30831934c1e09ec90731e68f335c47261ea580080b50210e8.zip",
+                            "timestamp": "1770212317846617000"
+                        }
+                    },
+                    "after": {
+                        "id": "5160054721792605470",
+                        "triggers": {
+                            "filename": "builds/9c36e723854b07d30831934c1e09ec90731e68f335c47261ea580080b50210e8.zip",
+                            "timestamp": "1770212317846617000"
+                        }
+                    },
+                    "after_unknown": {},
+                    "before_sensitive": {
+                        "triggers": {}
+                    },
+                    "after_sensitive": {
+                        "triggers": {}
+                    }
+                }
+            }
+        ],
+        "edges_new": []
+    }
+}
