@@ -4,6 +4,8 @@ import SQSIcon from './assets/svg/App-Integration/Simple-Queue-Service.svg';
 import S3Icon from './assets/svg/Storage/Simple-Storage-Service.svg';
 import IAMIcon from './assets/more-icons/Resource-Icons_07312025/Res_Security-Identity-Compliance/Res_AWS-Identity-Access-Management_Role_48.svg';
 import AWSIcon from './assets/more-icons/Architecture-Group-Icons_07312025/AWS-Cloud_32.svg';
+import CloudwatchIcon from './assets/svg/Management-Governance/CloudWatch.svg'
+import IamPolicy from './assets/policy-svgrepo-com.svg'
 import RoughLine from './RoughLine';
 
 import GraphNode from './GraphNode';
@@ -19,7 +21,10 @@ const iconMap = {
     "aws_s3_bucket": S3Icon,
     "aws_lambda_function": LambdaIcon,
     "aws_iam_role": IAMIcon,
-    "aws_cloud": AWSIcon
+    "aws_cloud": AWSIcon,
+    "aws_cloudwatch_log_group": CloudwatchIcon,
+    "aws_iam_policy_document": IamPolicy,
+    "aws_iam_role_policy": IamPolicy,
 };
 
 function SvgPage() {
