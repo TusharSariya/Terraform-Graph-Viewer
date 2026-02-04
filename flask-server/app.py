@@ -146,6 +146,9 @@ def get_adjacency_list_from_dot(file_path):
 
 
 def load_plan_and_nodes(file_path):
+    current_dir = os.path.dirname(os.path.abspath(__file__))
+    file_path = os.path.join(current_dir, 'planexisting-larger.json')
+    
     with open(file_path) as json_data:
         plan = json.load(json_data)
 
@@ -156,7 +159,7 @@ def load_plan_and_nodes(file_path):
     for resource_change in resource_changes:
         address = resource_change['address']
         nodes[address] = resource_change
-    return plan, nodes
+    return nodes
 
 
 def build_new_edges(nodes, newedges):
@@ -232,7 +235,13 @@ def compute_resource_diffs(nodes):
                         'before': node['change']['before'][key]
                     }
 
-def build_existing_edges(plan, nodes):
+def build_existing_edges(nodes):
+    current_dir = os.path.dirname(os.path.abspath(__file__))
+    file_path = os.path.join(current_dir, 'planexisting-larger.json')
+    
+    with open(file_path) as json_data:
+        plan = json.load(json_data)
+
     existingedges = defaultdict(set)
 
     def existingeRecursion(module):
@@ -286,12 +295,12 @@ def get_graph2():
     file_path = os.path.join(current_dir, 'planexisting-larger.json')
 
     try:
-        plan, nodes = load_plan_and_nodes(file_path)
+        nodes = load_plan_and_nodes(file_path)
 
 
         build_new_edges(nodes, newedges)
         compute_resource_diffs(nodes)
-        build_existing_edges(plan, nodes)
+        build_existing_edges(nodes)
         ensure_edge_lists(nodes)
     
         return jsonify(nodes)
