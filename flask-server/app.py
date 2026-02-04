@@ -7,6 +7,7 @@ import os
 from collections import defaultdict
 import traceback
 from deepdiff import DeepDiff
+import re
 
 
 app = Flask(__name__)
@@ -161,18 +162,22 @@ def load_plan_and_nodes():
     nodes = defaultdict(dict)
 
     for resource_change in resource_changes:
-        address = resource_change['address']
-        nodes[address] = resource_change
+        address = resource_change['address'] # may end with [*]
+        path = re.sub(r'\[\d+\]', '', address) # remove [*]
+        if "resources" not in nodes[path]:
+            nodes[path]["resources"] = []
+        nodes[path]["resources"].append(resource_change)
     return nodes
 
 
 def build_new_edges(nodes, newedges):
-    def traverse_new(headnode,address,visited):
-        if address in visited:
+
+    def traverse_new(headnode,path,visited):
+        if path in visited:
             return
-        visited.add(address)
-        if address in newedges:
-            for edge in newedges[address]:
+        visited.add(path)
+        if path in newedges:
+            for edge in newedges[path]:
                 if edge in nodes:
                     headnode['edges_new'].append(edge)
                 elif edge.startswith("provider"): #this technically skips potential connections
@@ -181,11 +186,10 @@ def build_new_edges(nodes, newedges):
                     traverse_new(headnode,edge,visited)                
 
     #from a node, traverse the adj list, untill dead end or you hit another resource
-    for address,node in nodes.items():
-        headnode = node
+    for path,node in nodes.items(): # key and map containing list of resources
         node['edges_new'] = []
         visited = set([])
-        traverse_new(headnode,address,visited)
+        traverse_new(node,path,visited)
 
     # Post-processing: Remove self-references and duplicates
     for address, node in nodes.items():
@@ -202,42 +206,45 @@ def build_new_edges(nodes, newedges):
                 target_edges = nodes[target]['edges_new']
                 if source not in target_edges:
                     target_edges.append(source)
+    return nodes
 
 def compute_resource_diffs(nodes):
     #create a diff of changes to resources
-    for address,node in nodes.items():
-        node['change']['diff'] = {}
+    for path,mymap in nodes.items(): #key and map containing list of resources and new_edges
+        for node in mymap["resources"]:
+            node['change']['diff'] = {}
 
-        if node['change']['before'] is None:
-            node['change']['before'] = {}
-        if node['change']['after'] is None:
-            node['change']['after'] = {}
+            if node['change']['before'] is None:
+                node['change']['before'] = {}
+            if node['change']['after'] is None:
+                node['change']['after'] = {}
 
-        for key,value in node['change']['before'].items():
-            if key not in node['change']['after']:
-                node['change']['diff'][key] = {
-                    'before': value,
-                    'after': None
-                }
-            else:
-                if value != node['change']['after'][key]:
+            for key,value in node['change']['before'].items():
+                if key not in node['change']['after']:
                     node['change']['diff'][key] = {
                         'before': value,
-                        'after': node['change']['after'][key]
+                        'after': None
                     }
+                else:
+                    if value != node['change']['after'][key]:
+                        node['change']['diff'][key] = {
+                            'before': value,
+                            'after': node['change']['after'][key]
+                        }
 
-        for key,value in node['change']['after'].items():
-            if key not in node['change']['before']:
-                node['change']['diff'][key] = {
-                    'before': None,
-                    'after': value
-                }
-            else:
-                if value != node['change']['before'][key]:
+            for key,value in node['change']['after'].items():
+                if key not in node['change']['before']:
                     node['change']['diff'][key] = {
-                        'after': value,
-                        'before': node['change']['before'][key]
+                        'before': None,
+                        'after': value
                     }
+                else:
+                    if value != node['change']['before'][key]:
+                        node['change']['diff'][key] = {
+                            'after': value,
+                            'before': node['change']['before'][key]
+                        }
+    return nodes
 
 def build_existing_edges(nodes):
     current_dir = os.path.dirname(os.path.abspath(__file__))
@@ -263,15 +270,21 @@ def build_existing_edges(nodes):
     if "prior_state" in plan and "values" in plan["prior_state"] and "root_module" in plan["prior_state"]["values"]:
         existingeRecursion(plan["prior_state"]["values"]["root_module"])
 
+    print(existingedges)
+    print("computed existing edges")
+    print("\n\n\n\n")
 
     for key, value in existingedges.items():
+        key = re.sub(r'\[\d+\]', '', key)
         if key in nodes:
             nodes[key]['edges_existing'] = list(value)
         for val in value:
+            val = re.sub(r'\[\d+\]', '', val)
             if val in nodes:
                 if 'edges_existing' not in nodes[val]:
                     nodes[val]['edges_existing'] = []
                 nodes[val]['edges_existing'].append(key)
+    return nodes
 
 def ensure_edge_lists(nodes):
     for node in nodes.values():
@@ -287,13 +300,28 @@ def ensure_edge_lists(nodes):
 def get_graph2():
     # this uses dot to dict script
     try:
-        newedges = get_adjacency_list_from_dot()
-        nodes = load_plan_and_nodes()
+        #get edges from dot file
+        newedges = get_adjacency_list_from_dot() # edges, no index
+        #get nodes from plan with resource changes
+        nodes = load_plan_and_nodes() #resource changes nodes, use index, need to remove it
+
+        print(newedges)
+        print("\n\n\n\n\n")
+        print(nodes)
+        print("\n\n\n\n\n")
 
 
-        build_new_edges(nodes, newedges)
-        compute_resource_diffs(nodes)
+        nodes = build_new_edges(nodes, newedges)
+        print(nodes)
+        print("\n\n\n\n\n")
+        nodes =compute_resource_diffs(nodes)
+        print(nodes)
+        print("computed diffs")
+        print("\n\n\n\n\n")
         build_existing_edges(nodes)
+        print(nodes)
+        print("computed existing edges")
+        print("\n\n\n\n\n")
         ensure_edge_lists(nodes)
     
         return jsonify(nodes)
