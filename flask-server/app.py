@@ -96,11 +96,11 @@ def get_graph():
     resource_changes = plan['resource_changes'] # all nodes
 
     for resource_change in resource_changes:
-        address = resource_change['address'].replace('[0]', '')
+        #address = resource_change['address'].replace('[0]', '')
         nodes[address] = resource_change
 
     for key,value in edges.items():
-        key = key.replace('[0]', '')
+        #key = key.replace('[0]', '')
         if key in nodes:
             if 'edges' not in nodes[key]:
                 nodes[key]['edges'] = set([])
@@ -108,7 +108,7 @@ def get_graph():
             # print(value)
             nodes[key]['edges'].update(value)
         for val in value:
-            val = val.replace('[0]', '')
+            #val = val.replace('[0]', '')
             if val in nodes:
                 if 'edges' not in nodes[val]:
                     nodes[val]['edges'] = set([])
@@ -127,7 +127,7 @@ def get_graph():
 @app.route('/api/graph2')
 def get_graph2():
     # this uses dot to dict script
-    adjacency_list = defaultdict(set) #all edges
+    adjacency_list = defaultdict(set) #all new edges
     
     current_dir = os.path.dirname(os.path.abspath(__file__))
     file_path = os.path.join(current_dir, 'graphexisting.dot')
@@ -164,46 +164,47 @@ def get_graph2():
         nodes = defaultdict(dict)
 
         for resource_change in resource_changes:
-            address = resource_change['address'].replace('[0]', '')
+            address = resource_change['address']
             nodes[address] = resource_change
 
 
-        def traverse(headnode,address,visited):
+        def traverse_new(headnode,address,visited):
             if address in visited:
                 return
             visited.add(address)
             if address in adjacency_list:
                 for edge in adjacency_list[address]:
                     if edge in nodes:
-                        headnode['edges'].append(edge)
+                        headnode['edges_new'].append(edge)
                     elif edge.startswith("provider"): #this technically skips potential connections
                         continue
                     else:
-                        traverse(headnode,edge,visited)                
+                        traverse_new(headnode,edge,visited)                
 
         #from a node, traverse the adj list, untill dead end or you hit another resource
         for address,node in nodes.items():
             headnode = node
-            node['edges'] = []
+            node['edges_new'] = []
             visited = set([])
-            traverse(headnode,address,visited)
+            traverse_new(headnode,address,visited)
 
         # Post-processing: Remove self-references and duplicates
         for address, node in nodes.items():
-            unique_edges = set(node['edges'])
+            unique_edges = set(node['edges_new'])
             if address in unique_edges:
                 unique_edges.remove(address)
-            node['edges'] = list(unique_edges)
+            node['edges_new'] = list(unique_edges)
 
         # Post-processing: Enforce bidirectionality
         # If A -> B, ensure B -> A
         for source, node in nodes.items():
-            for target in node['edges']:
+            for target in node['edges_new']:
                 if target in nodes:
-                    target_edges = nodes[target]['edges']
+                    target_edges = nodes[target]['edges_new']
                     if source not in target_edges:
                         target_edges.append(source)
 
+        #create a diff of changes to resources
         for address,node in nodes.items():
             node['change']['diff'] = {}
 
@@ -237,6 +238,38 @@ def get_graph2():
                             'after': value,
                             'before': node['change']['before'][key]
                         }
+
+        existingedges = defaultdict(set)
+
+        def existingeRecursion(module):
+            if "resources" in module:
+                for resource in module["resources"]:
+                    address = resource['address']
+                    if "depends_on" in resource:
+                        existingedges[address].update(resource["depends_on"])
+                        for edge in resource["depends_on"]:
+                            existingedges[edge].add(address)
+            if "child_modules" in module:
+                for module in module["child_modules"]:
+                    existingeRecursion(module)
+
+        existingeRecursion(plan["prior_state"]["values"]["root_module"])
+
+
+        for key, value in existingedges.items():
+            if key in nodes:
+                nodes[key]['edges_existing'] = list(value)
+            for val in value:
+                if val in nodes:
+                    if 'edges_existing' not in nodes[val]:
+                        nodes[val]['edges_existing'] = []
+                    nodes[val]['edges_existing'].append(key)
+        
+        for node in nodes.values():
+            if 'edges_new' not in node:
+                node['edges_new'] = []
+            if 'edges_existing' not in node:
+                node['edges_existing'] = []
     
         return jsonify(nodes)
 
