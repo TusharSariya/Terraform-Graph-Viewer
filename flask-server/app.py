@@ -264,6 +264,8 @@ def build_existing_edges(nodes):
                     nodes[path] = {}
                     nodes[path]["resources"] = []
                 if path in nodes and resource not in nodes[path]["resources"]:
+                    resource['change'] = {}
+                    resource['change']['actions'] = ['existing']
                     nodes[path]["resources"].append(resource)
                 address = resource['address']
                 if "depends_on" in resource:
