@@ -8,13 +8,13 @@
 }*/
 
 resource "aws_s3_bucket" "test" {
-  bucket = "test"
+  bucket_prefix = "test-"
 }
 
 resource "aws_s3_bucket_object" "test" {
   bucket = aws_s3_bucket.test.id
   key    = "test"
-  source = "test.txt"
+  source = "./test.txt"
 }
 
 # SQS Queue

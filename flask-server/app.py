@@ -6,6 +6,8 @@ from pprint import pprint
 import os
 from collections import defaultdict
 import traceback
+from deepdiff import DeepDiff
+
 
 app = Flask(__name__)
 CORS(app)  # Enable CORS for all routes
@@ -128,7 +130,7 @@ def get_graph2():
     adjacency_list = defaultdict(set) #all edges
     
     current_dir = os.path.dirname(os.path.abspath(__file__))
-    file_path = os.path.join(current_dir, 'graph.dot')
+    file_path = os.path.join(current_dir, 'graphexisting.dot')
     try:
         with open(file_path, 'r') as f:
             lines = f.readlines()
@@ -151,7 +153,7 @@ def get_graph2():
         return {"error": str(e), "trace": traceback.format_exc()}
                 
     current_dir = os.path.dirname(os.path.abspath(__file__))
-    file_path = os.path.join(current_dir, 'plan-larger.json')
+    file_path = os.path.join(current_dir, 'planexisting-larger.json')
 
     try:
         with open(file_path) as json_data:
@@ -202,6 +204,39 @@ def get_graph2():
                     if source not in target_edges:
                         target_edges.append(source)
 
+        for address,node in nodes.items():
+            node['change']['diff'] = {}
+
+            if node['change']['before'] is None:
+                node['change']['before'] = {}
+            if node['change']['after'] is None:
+                node['change']['after'] = {}
+
+            for key,value in node['change']['before'].items():
+                if key not in node['change']['after']:
+                    node['change']['diff'][key] = {
+                        'before': value,
+                        'after': None
+                    }
+                else:
+                    if value != node['change']['after'][key]:
+                        node['change']['diff'][key] = {
+                            'before': value,
+                            'after': node['change']['after'][key]
+                        }
+
+            for key,value in node['change']['after'].items():
+                if key not in node['change']['before']:
+                    node['change']['diff'][key] = {
+                        'before': None,
+                        'after': value
+                    }
+                else:
+                    if value != node['change']['before'][key]:
+                        node['change']['diff'][key] = {
+                            'after': value,
+                            'before': node['change']['before'][key]
+                        }
     
         return jsonify(nodes)
 
