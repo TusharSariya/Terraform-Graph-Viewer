@@ -4,6 +4,8 @@ function terraformShapes(data) {
     const shapes = {};
 
     for (const [key, value] of Object.entries(data)) {
+        console.log("Key: ", key);
+        console.log("Value: ", value);
         shapes[key] = ({
             id: key,
             x: Math.random() * 100,
@@ -11,7 +13,8 @@ function terraformShapes(data) {
             size: 40,
             color: 'red',
             name: key,
-            edges: value.edges,
+            edges_new: value.edges_new,
+            edges_existing: value.edges_existing,
             type: value.type,
             showLabel: false // Default to hidden, consistent with original logic
         })

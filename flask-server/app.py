@@ -327,6 +327,62 @@ def ensure_edge_lists(nodes):
             node['edges_new'] = []
         if 'edges_existing' not in node:
             node['edges_existing'] = []
+    return nodes
+
+
+def external_resources(nodes):
+
+    newnodes = {}
+    for path,node in nodes.items():
+        edges_existing  = node["edges_existing"]
+        edges_new = node["edges_new"]
+        for edge in edges_existing:
+            if edge not in nodes:
+                newnodes[edge] = {}
+                newnodes[edge]["resources"] = []
+                external_resource = {
+                    "address": edge,
+                    "type": edge.split(".")[-2],
+                    "change": {
+                        "actions": ["external"]
+                    }
+                }
+                newnodes[edge]["resources"].append(external_resource)
+                newnodes[edge]["edges_existing"] = []
+                newnodes[edge]["edges_new"] = []
+                newnodes[edge]["edges_existing"].append(path)
+                newnodes[edge]["edges_new"].append(path)
+        
+        for edge in edges_new:
+            if edge not in nodes:
+                newnodes[edge] = {}
+                newnodes[edge]["resources"] = []
+                external_resource = {
+                    "address": edge,
+                    "type": edge.split(".")[-2],
+                    "change": {
+                        "actions": ["external"]
+                    }
+                }
+                newnodes[edge]["resources"].append(external_resource)
+                newnodes[edge]["edges_existing"] = []
+                newnodes[edge]["edges_new"] = []
+                newnodes[edge]["edges_existing"].append(path)
+                newnodes[edge]["edges_new"].append(path)
+    for key,value in newnodes.items():
+        if key not in nodes:
+            nodes[key] = value
+        else:
+            print("key already exists")
+            print(key)
+            print("\n\n\n\n\n")
+
+    return nodes
+
+                
+
+            
+        
 
 
 
@@ -354,11 +410,20 @@ def get_graph2():
         print(nodes)
         print("computed diffs")
         print("\n\n\n\n\n")
-        build_existing_edges(nodes)
+        nodes = build_existing_edges(nodes)
         print(nodes)
         print("computed existing edges")
         print("\n\n\n\n\n")
-        ensure_edge_lists(nodes)
+
+        nodes = ensure_edge_lists(nodes)
+        print(nodes)
+        print("ensured edge lists")
+        print("\n\n\n\n\n")
+
+        nodes = external_resources(nodes)
+        print(nodes)
+        print("computed external resources")
+        print("\n\n\n\n\n")
     
         return jsonify(nodes)
 

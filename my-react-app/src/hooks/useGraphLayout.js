@@ -15,8 +15,9 @@ const useGraphLayout = (shapes, setShapes, dimensions) => {
         // Extract links from the 'edges' property of each shape
         const links = [];
         nodes.forEach(sourceNode => {
-            if (sourceNode.edges) {
-                sourceNode.edges.forEach(targetId => {
+            const edges = sourceNode.edges_new.concat(sourceNode.edges_existing);
+            if (edges) {
+                edges.forEach(targetId => {
                     // D3 links need references to the node objects (or ids if using id accessor)
                     links.push({ source: sourceNode.id, target: targetId });
                 });
