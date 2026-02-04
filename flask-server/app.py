@@ -255,9 +255,16 @@ def build_existing_edges(nodes):
 
     existingedges = defaultdict(set)
 
+    #gets all existing edges via depends_on and adds missing nodes
     def existingeRecursion(module):
         if "resources" in module:
             for resource in module["resources"]:
+                path = re.sub(r'\[\d+\]', '', resource['address'])
+                if path not in nodes:
+                    nodes[path] = {}
+                    nodes[path]["resources"] = []
+                if path in nodes and resource not in nodes[path]["resources"]:
+                    nodes[path]["resources"].append(resource)
                 address = resource['address']
                 if "depends_on" in resource:
                     existingedges[address].update(resource["depends_on"])
