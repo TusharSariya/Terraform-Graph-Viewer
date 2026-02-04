@@ -123,7 +123,10 @@ def get_graph():
             nodes[key]['edges'] = []
     return jsonify(nodes)
 
-def get_adjacency_list_from_dot(file_path):
+def get_adjacency_list_from_dot():
+
+    current_dir = os.path.dirname(os.path.abspath(__file__))
+    file_path = os.path.join(current_dir, 'graphexisting.dot')
     adjacency_list = defaultdict(set)
     with open(file_path, 'r') as f:
         lines = f.readlines()
@@ -145,7 +148,8 @@ def get_adjacency_list_from_dot(file_path):
     return adjacency_list
 
 
-def load_plan_and_nodes(file_path):
+
+def load_plan_and_nodes():
     current_dir = os.path.dirname(os.path.abspath(__file__))
     file_path = os.path.join(current_dir, 'planexisting-larger.json')
     
@@ -282,20 +286,9 @@ def ensure_edge_lists(nodes):
 @app.route('/api/graph2')
 def get_graph2():
     # this uses dot to dict script
-    current_dir = os.path.dirname(os.path.abspath(__file__))
-    file_path = os.path.join(current_dir, 'graphexisting.dot')
-    
     try:
-        newedges = get_adjacency_list_from_dot(file_path)
-    except Exception as e:
-        traceback.print_exc()
-        return {"error": str(e), "trace": traceback.format_exc()}
-                
-    current_dir = os.path.dirname(os.path.abspath(__file__))
-    file_path = os.path.join(current_dir, 'planexisting-larger.json')
-
-    try:
-        nodes = load_plan_and_nodes(file_path)
+        newedges = get_adjacency_list_from_dot()
+        nodes = load_plan_and_nodes()
 
 
         build_new_edges(nodes, newedges)
