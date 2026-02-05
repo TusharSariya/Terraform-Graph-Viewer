@@ -147,6 +147,7 @@ const useGraphInteraction = (svgRef, shapes, setShapes) => {
     };
 
     const handleContextMenu = (e, shape) => {
+        console.log("handleContextMenu", e, shape);
         e.preventDefault();
         e.stopPropagation();
 
@@ -170,7 +171,10 @@ const useGraphInteraction = (svgRef, shapes, setShapes) => {
                     visible: true,
                     x: pt.x,
                     y: pt.y,
-                    shapeId: shape.id
+                    shapeId: shape.id,
+                    before_state: shape.before_state,
+                    after_state: shape.after_state,
+                    diff: shape.diff
                 }
             };
         });

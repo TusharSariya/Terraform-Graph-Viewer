@@ -219,6 +219,14 @@ function SvgPage() {
                                         {
                                             label: "Properties (Placeholder)",
                                             onClick: () => console.log("Properties clicked for", contextMenu.shapeId)
+                                        },
+                                        {
+                                            label: "Before State",
+                                            onClick: () => console.log("Before State:", contextMenu.before_state)
+                                        },
+                                        {
+                                            label: "After State",
+                                            onClick: () => console.log("After State:", contextMenu.after_state)
                                         }
                                     ]}
                                 />
