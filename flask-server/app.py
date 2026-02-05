@@ -172,8 +172,8 @@ def load_plan_and_nodes():
         address = resource_change['address'] # may end with [*]
         path = re.sub(r'\[\d+\]', '', address) # remove [*]
         if "resources" not in nodes[path]:
-            nodes[path]["resources"] = []
-        nodes[path]["resources"].append(resource_change)
+            nodes[path]["resources"] = {}
+        nodes[path]["resources"][resource_change['address']]=resource_change
 
     output_path = os.path.join(current_dir, 'nodes.json')
     with open(output_path, 'w') as f:
@@ -238,7 +238,7 @@ def build_new_edges(nodes, newedges):
 def compute_resource_diffs(nodes):
     #create a diff of changes to resources
     for path,mymap in nodes.items(): #key and map containing list of resources and new_edges
-        for node in mymap["resources"]:
+        for address,node in mymap["resources"].items():
             node['change']['diff'] = {}
 
             if node['change']['before'] is None:
@@ -289,11 +289,11 @@ def build_existing_edges(nodes):
                 path = re.sub(r'\[\d+\]', '', resource['address'])
                 if path not in nodes:
                     nodes[path] = {}
-                    nodes[path]["resources"] = []
-                if path in nodes and resource not in nodes[path]["resources"]:
+                    nodes[path]["resources"] = {}
+                if path in nodes and resource['address'] not in nodes[path]["resources"]:
                     resource['change'] = {}
                     resource['change']['actions'] = ['existing']
-                    nodes[path]["resources"].append(resource)
+                    nodes[path]["resources"][resource['address']]=resource
                 if "depends_on" in resource:
                     existingedges[path].update(resource["depends_on"])
                     for edge in resource["depends_on"]:
@@ -339,7 +339,7 @@ def external_resources(nodes):
         for edge in edges_existing:
             if edge not in nodes:
                 newnodes[edge] = {}
-                newnodes[edge]["resources"] = []
+                newnodes[edge]["resources"] = {}
                 external_resource = {
                     "address": edge,
                     "type": edge,
@@ -347,7 +347,7 @@ def external_resources(nodes):
                         "actions": ["external"]
                     }
                 }
-                newnodes[edge]["resources"].append(external_resource)
+                newnodes[edge]["resources"][edge]=external_resource
                 newnodes[edge]["edges_existing"] = []
                 newnodes[edge]["edges_new"] = []
                 newnodes[edge]["edges_existing"].append(path)
@@ -356,7 +356,7 @@ def external_resources(nodes):
         for edge in edges_new:
             if edge not in nodes:
                 newnodes[edge] = {}
-                newnodes[edge]["resources"] = []
+                newnodes[edge]["resources"] = {}
                 external_resource = {
                     "address": edge,
                     "type": edge,
@@ -364,7 +364,7 @@ def external_resources(nodes):
                         "actions": ["external"]
                     }
                 }
-                newnodes[edge]["resources"].append(external_resource)
+                newnodes[edge]["resources"][edge]=external_resource
                 newnodes[edge]["edges_existing"] = []
                 newnodes[edge]["edges_new"] = []
                 newnodes[edge]["edges_existing"].append(path)

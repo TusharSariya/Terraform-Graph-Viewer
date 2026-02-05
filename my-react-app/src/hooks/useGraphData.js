@@ -4,7 +4,8 @@ function terraformShapes(data) {
     const shapes = {};
 
     for (const [path, nodes] of Object.entries(data)) {
-        for (const resource of nodes["resources"]) {
+        const resources = nodes["resources"];
+        for (const [address, resource] of Object.entries(resources)) {
             shapes[resource.address] = ({
                 id: resource.address,
                 path: path,
@@ -28,7 +29,8 @@ function terraformShapes(data) {
 function terraformPaths(data) {
     const paths = {};
     for (const [path, nodes] of Object.entries(data)) {
-        for (const resource of nodes["resources"]) {
+        const resources = nodes["resources"];
+        for (const [address, resource] of Object.entries(resources)) {
             if (!paths[path]) paths[path] = [];
             paths[path].push(resource.address);
         }

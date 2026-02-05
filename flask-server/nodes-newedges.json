@@ -1,7 +1,7 @@
 {
     "aws_s3_bucket.test": {
-        "resources": [
-            {
+        "resources": {
+            "aws_s3_bucket.test": {
                 "address": "aws_s3_bucket.test",
                 "mode": "managed",
                 "type": "aws_s3_bucket",
@@ -194,12 +194,12 @@
                     }
                 }
             }
-        ],
+        },
         "edges_new": []
     },
     "aws_s3_bucket_object.test": {
-        "resources": [
-            {
+        "resources": {
+            "aws_s3_bucket_object.test": {
                 "address": "aws_s3_bucket_object.test",
                 "mode": "managed",
                 "type": "aws_s3_bucket_object",
@@ -284,12 +284,12 @@
                     }
                 }
             }
-        ],
+        },
         "edges_new": []
     },
     "aws_sqs_queue.test_queue": {
-        "resources": [
-            {
+        "resources": {
+            "aws_sqs_queue.test_queue": {
                 "address": "aws_sqs_queue.test_queue",
                 "mode": "managed",
                 "type": "aws_sqs_queue",
@@ -362,12 +362,12 @@
                     }
                 }
             }
-        ],
+        },
         "edges_new": []
     },
     "module.lambda-reader.data.aws_iam_policy_document.logs": {
-        "resources": [
-            {
+        "resources": {
+            "module.lambda-reader.data.aws_iam_policy_document.logs[0]": {
                 "address": "module.lambda-reader.data.aws_iam_policy_document.logs[0]",
                 "module_address": "module.lambda-reader",
                 "mode": "data",
@@ -451,15 +451,15 @@
                 },
                 "action_reason": "read_because_config_unknown"
             }
-        ],
+        },
         "edges_new": [
             "module.lambda-reader.aws_lambda_function.this",
             "module.lambda-reader.aws_cloudwatch_log_group.lambda"
         ]
     },
     "module.lambda-reader.aws_cloudwatch_log_group.lambda": {
-        "resources": [
-            {
+        "resources": {
+            "module.lambda-reader.aws_cloudwatch_log_group.lambda[0]": {
                 "address": "module.lambda-reader.aws_cloudwatch_log_group.lambda[0]",
                 "module_address": "module.lambda-reader",
                 "mode": "managed",
@@ -494,14 +494,14 @@
                     }
                 }
             }
-        ],
+        },
         "edges_new": [
             "module.lambda-reader.aws_lambda_function.this"
         ]
     },
     "module.lambda-reader.aws_iam_role.lambda": {
-        "resources": [
-            {
+        "resources": {
+            "module.lambda-reader.aws_iam_role.lambda[0]": {
                 "address": "module.lambda-reader.aws_iam_role.lambda[0]",
                 "module_address": "module.lambda-reader",
                 "mode": "managed",
@@ -542,14 +542,14 @@
                     }
                 }
             }
-        ],
+        },
         "edges_new": [
             "module.lambda-reader.aws_lambda_function.this"
         ]
     },
     "module.lambda-reader.aws_iam_role_policy.additional_inline": {
-        "resources": [
-            {
+        "resources": {
+            "module.lambda-reader.aws_iam_role_policy.additional_inline[0]": {
                 "address": "module.lambda-reader.aws_iam_role_policy.additional_inline[0]",
                 "module_address": "module.lambda-reader",
                 "mode": "managed",
@@ -575,17 +575,17 @@
                     "after_sensitive": {}
                 }
             }
-        ],
+        },
         "edges_new": [
-            "module.lambda-reader.aws_iam_role.lambda",
             "module.lambda-reader.aws_lambda_function.this",
+            "aws_s3_bucket.test",
             "aws_sqs_queue.test_queue",
-            "aws_s3_bucket.test"
+            "module.lambda-reader.aws_iam_role.lambda"
         ]
     },
     "module.lambda-reader.aws_iam_role_policy.logs": {
-        "resources": [
-            {
+        "resources": {
+            "module.lambda-reader.aws_iam_role_policy.logs[0]": {
                 "address": "module.lambda-reader.aws_iam_role_policy.logs[0]",
                 "module_address": "module.lambda-reader",
                 "mode": "managed",
@@ -611,16 +611,16 @@
                     "after_sensitive": {}
                 }
             }
-        ],
+        },
         "edges_new": [
-            "module.lambda-reader.aws_iam_role.lambda",
             "module.lambda-reader.data.aws_iam_policy_document.logs",
+            "module.lambda-reader.aws_iam_role.lambda",
             "module.lambda-reader.aws_lambda_function.this"
         ]
     },
     "module.lambda-reader.aws_lambda_function.this": {
-        "resources": [
-            {
+        "resources": {
+            "module.lambda-reader.aws_lambda_function.this[0]": {
                 "address": "module.lambda-reader.aws_lambda_function.this[0]",
                 "module_address": "module.lambda-reader",
                 "mode": "managed",
@@ -740,18 +740,18 @@
                     }
                 }
             }
-        ],
+        },
         "edges_new": [
             "module.lambda-reader.aws_lambda_function.this",
             "module.lambda-reader.aws_iam_role_policy.logs",
-            "module.lambda-reader.null_resource.archive",
             "module.lambda-reader.aws_iam_role.lambda",
+            "module.lambda-reader.null_resource.archive",
             "module.lambda-reader.aws_iam_role_policy.additional_inline"
         ]
     },
     "module.lambda-reader.local_file.archive_plan": {
-        "resources": [
-            {
+        "resources": {
+            "module.lambda-reader.local_file.archive_plan[0]": {
                 "address": "module.lambda-reader.local_file.archive_plan[0]",
                 "module_address": "module.lambda-reader",
                 "mode": "managed",
@@ -789,14 +789,14 @@
                     }
                 }
             }
-        ],
+        },
         "edges_new": [
             "module.lambda-reader.aws_lambda_function.this"
         ]
     },
     "module.lambda-reader.null_resource.archive": {
-        "resources": [
-            {
+        "resources": {
+            "module.lambda-reader.null_resource.archive[0]": {
                 "address": "module.lambda-reader.null_resource.archive[0]",
                 "module_address": "module.lambda-reader",
                 "mode": "managed",
@@ -825,15 +825,15 @@
                     }
                 }
             }
-        ],
+        },
         "edges_new": [
             "module.lambda-reader.aws_lambda_function.this",
             "module.lambda-reader.local_file.archive_plan"
         ]
     },
     "module.lambda-writer.aws_cloudwatch_log_group.lambda": {
-        "resources": [
-            {
+        "resources": {
+            "module.lambda-writer.aws_cloudwatch_log_group.lambda[0]": {
                 "address": "module.lambda-writer.aws_cloudwatch_log_group.lambda[0]",
                 "module_address": "module.lambda-writer",
                 "mode": "managed",
@@ -884,12 +884,12 @@
                     }
                 }
             }
-        ],
+        },
         "edges_new": []
     },
     "module.lambda-writer.aws_iam_role.lambda": {
-        "resources": [
-            {
+        "resources": {
+            "module.lambda-writer.aws_iam_role.lambda[0]": {
                 "address": "module.lambda-writer.aws_iam_role.lambda[0]",
                 "module_address": "module.lambda-writer",
                 "mode": "managed",
@@ -976,14 +976,14 @@
                     }
                 }
             }
-        ],
+        },
         "edges_new": [
             "module.lambda-writer.aws_iam_role_policy.additional_inline"
         ]
     },
     "module.lambda-writer.aws_iam_role_policy.additional_inline": {
-        "resources": [
-            {
+        "resources": {
+            "module.lambda-writer.aws_iam_role_policy.additional_inline[0]": {
                 "address": "module.lambda-writer.aws_iam_role_policy.additional_inline[0]",
                 "module_address": "module.lambda-writer",
                 "mode": "managed",
@@ -1014,17 +1014,17 @@
                     "after_sensitive": {}
                 }
             }
-        ],
+        },
         "edges_new": [
-            "module.lambda-writer.aws_iam_role.lambda",
             "module.lambda-writer.aws_iam_role_policy.additional_inline",
-            "aws_sqs_queue.test_queue",
-            "aws_s3_bucket.test"
+            "module.lambda-writer.aws_iam_role.lambda",
+            "aws_s3_bucket.test",
+            "aws_sqs_queue.test_queue"
         ]
     },
     "module.lambda-writer.aws_iam_role_policy.logs": {
-        "resources": [
-            {
+        "resources": {
+            "module.lambda-writer.aws_iam_role_policy.logs[0]": {
                 "address": "module.lambda-writer.aws_iam_role_policy.logs[0]",
                 "module_address": "module.lambda-writer",
                 "mode": "managed",
@@ -1055,12 +1055,12 @@
                     "after_sensitive": {}
                 }
             }
-        ],
+        },
         "edges_new": []
     },
     "module.lambda-writer.aws_lambda_function.this": {
-        "resources": [
-            {
+        "resources": {
+            "module.lambda-writer.aws_lambda_function.this[0]": {
                 "address": "module.lambda-writer.aws_lambda_function.this[0]",
                 "module_address": "module.lambda-writer",
                 "mode": "managed",
@@ -1271,12 +1271,12 @@
                     }
                 }
             }
-        ],
+        },
         "edges_new": []
     },
     "module.lambda-writer.local_file.archive_plan": {
-        "resources": [
-            {
+        "resources": {
+            "module.lambda-writer.local_file.archive_plan[0]": {
                 "address": "module.lambda-writer.local_file.archive_plan[0]",
                 "module_address": "module.lambda-writer",
                 "mode": "managed",
@@ -1331,12 +1331,12 @@
                     }
                 }
             }
-        ],
+        },
         "edges_new": []
     },
     "module.lambda-writer.null_resource.archive": {
-        "resources": [
-            {
+        "resources": {
+            "module.lambda-writer.null_resource.archive[0]": {
                 "address": "module.lambda-writer.null_resource.archive[0]",
                 "module_address": "module.lambda-writer",
                 "mode": "managed",
@@ -1371,7 +1371,7 @@
                     }
                 }
             }
-        ],
+        },
         "edges_new": []
     }
 }
