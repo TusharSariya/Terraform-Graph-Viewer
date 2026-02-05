@@ -7,6 +7,7 @@ const useGraphInteraction = (svgRef, shapes, setShapes) => {
     const [mode, setMode] = useState('pan'); // 'pan' | 'draw' | 'eraser'
     const [drawnLines, setDrawnLines] = useState([]);
     const [currentLine, setCurrentLine] = useState(null);
+    const [contextMenu, setContextMenu] = useState({ visible: false, x: 0, y: 0, shapeId: null });
 
     const dragStartRef = useRef({ x: 0, y: 0 });
     const initialTransformRef = useRef({ x: 0, y: 0 });
@@ -119,13 +120,30 @@ const useGraphInteraction = (svgRef, shapes, setShapes) => {
         e.preventDefault();
         e.stopPropagation();
 
-        setShapes(prevShapes => ({
-            ...prevShapes,
-            [shapeId]: {
-                ...prevShapes[shapeId],
-                showLabel: !prevShapes[shapeId].showLabel
-            }
-        }));
+        const pt = getSVGPoint(e.clientX, e.clientY);
+
+        setShapes((prevShapes) => {
+            const targetShape = prevShapes[shapeId]; //get shape that we clicked on
+            const updatedShape = {
+                ...targetShape,
+                showLabel: !targetShape.showLabel
+            }; //invert the lable property
+            const newShapesCollection = { ...prevShapes }; //make a new shapes collection
+            newShapesCollection[shapeId] = updatedShape; //add my new shape to it
+            return newShapesCollection; //set new shapes collection
+        });
+
+
+        setContextMenu({
+            visible: true,
+            x: pt.x,
+            y: pt.y,
+            shapeId: shapeId
+        });
+    };
+
+    const handleCloseContextMenu = () => {
+        setContextMenu(prev => ({ ...prev, visible: false }));
     };
 
     return {
@@ -142,7 +160,11 @@ const useGraphInteraction = (svgRef, shapes, setShapes) => {
         handleMouseDown,
         handleMouseMove,
         handleMouseUp,
-        handleContextMenu
+        handleMouseMove,
+        handleMouseUp,
+        handleContextMenu,
+        contextMenu,
+        handleCloseContextMenu
     };
 };
 

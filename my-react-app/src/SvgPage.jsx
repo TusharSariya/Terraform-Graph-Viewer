@@ -11,6 +11,7 @@ import RoughLine from './RoughLine';
 import GraphNode from './GraphNode';
 import GraphEdge from './GraphEdge';
 import GraphControls from './GraphControls';
+import ContextMenu from './ContextMenu';
 
 import useGraphData from './hooks/useGraphData';
 import useGraphInteraction from './hooks/useGraphInteraction';
@@ -47,7 +48,9 @@ function SvgPage() {
         handleMouseDown,
         handleMouseMove,
         handleMouseUp,
-        handleContextMenu
+        handleContextMenu,
+        contextMenu,
+        handleCloseContextMenu
     } = useGraphInteraction(svgRef, shapes, setShapes);
 
     useEffect(() => {
@@ -190,8 +193,39 @@ function SvgPage() {
                             onContextMenu={handleContextMenu}
                         />
                     ))}
+
+                    {contextMenu.visible && (
+                        <foreignObject x={contextMenu.x} y={contextMenu.y} width="200" height="300" style={{ overflow: 'visible' }}>
+                            <ContextMenu
+                                embedded={true}
+                                onClose={handleCloseContextMenu}
+                                items={[
+                                    {
+                                        label: "Toggle Label",
+                                        onClick: () => {
+                                            setShapes(prevShapes => ({
+                                                ...prevShapes,
+                                                [contextMenu.shapeId]: {
+                                                    ...prevShapes[contextMenu.shapeId],
+                                                    showLabel: !prevShapes[contextMenu.shapeId].showLabel
+                                                }
+                                            }));
+                                        }
+                                    },
+                                    {
+                                        label: "Properties (Placeholder)",
+                                        onClick: () => console.log("Properties clicked for", contextMenu.shapeId)
+                                    }
+                                ]}
+                            />
+                        </foreignObject>
+                    )}
                 </g>
+
+
             </svg>
+
+
         </div>
     );
 }
