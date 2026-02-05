@@ -9,249 +9,249 @@
         "module.lambda-reader.aws_lambda_function.this[0]"
     ],
     "module.lambda-reader.aws_cloudwatch_log_group.lambda": [
-        "module.lambda-reader.var.create_function",
-        "module.lambda-reader.var.cloudwatch_logs_retention_in_days",
-        "module.lambda-reader.var.tags",
-        "module.lambda-reader.var.use_existing_cloudwatch_log_group",
-        "module.lambda-reader.var.cloudwatch_logs_kms_key_id",
-        "module.lambda-reader.local.create",
-        "module.lambda-reader.var.function_name",
-        "module.lambda-reader.var.cloudwatch_logs_log_group_class",
-        "module.lambda-reader.var.cloudwatch_logs_skip_destroy",
-        "module.lambda-reader.var.create_layer",
         "module.lambda-reader.var.region",
-        "module.lambda-reader.var.logging_log_group",
-        "provider[registry.opentofu.org/hashicorp/aws]",
+        "module.lambda-reader.var.cloudwatch_logs_tags",
         "module.lambda-reader.var.lambda_at_edge",
-        "module.lambda-reader.var.cloudwatch_logs_tags"
+        "module.lambda-reader.var.cloudwatch_logs_log_group_class",
+        "module.lambda-reader.local.create",
+        "module.lambda-reader.var.cloudwatch_logs_skip_destroy",
+        "module.lambda-reader.var.create_function",
+        "module.lambda-reader.var.logging_log_group",
+        "module.lambda-reader.var.tags",
+        "provider[registry.opentofu.org/hashicorp/aws]",
+        "module.lambda-reader.var.create_layer",
+        "module.lambda-reader.var.function_name",
+        "module.lambda-reader.var.use_existing_cloudwatch_log_group",
+        "module.lambda-reader.var.cloudwatch_logs_retention_in_days",
+        "module.lambda-reader.var.cloudwatch_logs_kms_key_id"
     ],
     "module.lambda-reader.aws_cloudwatch_log_group.lambda[0]": [
         "module.lambda-reader.aws_cloudwatch_log_group.lambda"
     ],
     "module.lambda-reader.aws_iam_role.lambda": [
-        "module.lambda-reader.var.role_maximum_session_duration",
-        "module.lambda-reader.var.role_tags",
-        "module.lambda-reader.var.tags",
-        "module.lambda-reader.var.role_permissions_boundary",
         "module.lambda-reader.var.role_description",
         "module.lambda-reader.data.aws_iam_policy_document.assume_role",
-        "module.lambda-reader.var.role_force_detach_policies",
         "module.lambda-reader.var.role_path",
-        "module.lambda-reader.local.role_name"
+        "module.lambda-reader.var.role_permissions_boundary",
+        "module.lambda-reader.local.role_name",
+        "module.lambda-reader.var.role_maximum_session_duration",
+        "module.lambda-reader.var.role_force_detach_policies",
+        "module.lambda-reader.var.role_tags",
+        "module.lambda-reader.var.tags"
     ],
     "module.lambda-reader.aws_iam_role.lambda[0]": [
         "module.lambda-reader.aws_iam_role.lambda"
     ],
     "module.lambda-reader.aws_iam_role_policy.additional_inline": [
+        "module.lambda-reader.local.policy_name",
         "module.lambda-reader.data.aws_iam_policy_document.additional_inline",
-        "module.lambda-reader.aws_iam_role.lambda[0]",
-        "module.lambda-reader.local.policy_name"
+        "module.lambda-reader.aws_iam_role.lambda[0]"
     ],
     "module.lambda-reader.aws_iam_role_policy.additional_inline[0]": [
         "module.lambda-reader.aws_iam_role_policy.additional_inline"
     ],
     "module.lambda-reader.aws_iam_role_policy.additional_json": [
         "module.lambda-reader.var.attach_policy_json",
+        "module.lambda-reader.local.policy_name",
         "module.lambda-reader.var.policy_json",
-        "module.lambda-reader.aws_iam_role.lambda[0]",
-        "module.lambda-reader.local.policy_name"
+        "module.lambda-reader.aws_iam_role.lambda[0]"
     ],
     "module.lambda-reader.aws_iam_role_policy.additional_jsons": [
         "module.lambda-reader.var.number_of_policy_jsons",
-        "module.lambda-reader.var.attach_policy_jsons",
-        "module.lambda-reader.aws_iam_role.lambda[0]",
         "module.lambda-reader.var.policy_jsons",
-        "module.lambda-reader.local.policy_name"
+        "module.lambda-reader.var.attach_policy_jsons",
+        "module.lambda-reader.local.policy_name",
+        "module.lambda-reader.aws_iam_role.lambda[0]"
     ],
     "module.lambda-reader.aws_iam_role_policy.async": [
+        "module.lambda-reader.data.aws_iam_policy_document.async",
         "module.lambda-reader.local.policy_name",
-        "module.lambda-reader.aws_iam_role.lambda[0]",
-        "module.lambda-reader.data.aws_iam_policy_document.async"
+        "module.lambda-reader.aws_iam_role.lambda[0]"
     ],
     "module.lambda-reader.aws_iam_role_policy.dead_letter": [
+        "module.lambda-reader.local.policy_name",
         "module.lambda-reader.data.aws_iam_policy_document.dead_letter",
-        "module.lambda-reader.aws_iam_role.lambda[0]",
-        "module.lambda-reader.local.policy_name"
+        "module.lambda-reader.aws_iam_role.lambda[0]"
     ],
     "module.lambda-reader.aws_iam_role_policy.logs": [
         "module.lambda-reader.data.aws_iam_policy_document.logs[0]",
-        "module.lambda-reader.aws_iam_role.lambda[0]",
-        "module.lambda-reader.local.policy_name"
+        "module.lambda-reader.local.policy_name",
+        "module.lambda-reader.aws_iam_role.lambda[0]"
     ],
     "module.lambda-reader.aws_iam_role_policy.logs[0]": [
         "module.lambda-reader.aws_iam_role_policy.logs"
     ],
     "module.lambda-reader.aws_iam_role_policy.tracing": [
         "module.lambda-reader.data.aws_iam_policy.tracing",
-        "module.lambda-reader.aws_iam_role.lambda[0]",
-        "module.lambda-reader.local.policy_name"
+        "module.lambda-reader.local.policy_name",
+        "module.lambda-reader.aws_iam_role.lambda[0]"
     ],
     "module.lambda-reader.aws_iam_role_policy.vpc": [
+        "module.lambda-reader.local.policy_name",
         "module.lambda-reader.data.aws_iam_policy.vpc",
-        "module.lambda-reader.aws_iam_role.lambda[0]",
-        "module.lambda-reader.local.policy_name"
+        "module.lambda-reader.aws_iam_role.lambda[0]"
     ],
     "module.lambda-reader.aws_iam_role_policy_attachment.additional_many": [
-        "module.lambda-reader.var.number_of_policies",
-        "module.lambda-reader.var.attach_policies",
         "module.lambda-reader.var.policies",
+        "module.lambda-reader.var.attach_policies",
+        "module.lambda-reader.var.number_of_policies",
         "module.lambda-reader.aws_iam_role.lambda[0]"
     ],
     "module.lambda-reader.aws_iam_role_policy_attachment.additional_one": [
-        "module.lambda-reader.var.attach_policy",
         "module.lambda-reader.var.policy",
+        "module.lambda-reader.var.attach_policy",
         "module.lambda-reader.aws_iam_role.lambda[0]"
     ],
     "module.lambda-reader.aws_lambda_function.this": [
-        "module.lambda-reader.var.memory_size",
-        "module.lambda-reader.var.tenant_isolation_mode",
-        "module.lambda-reader.var.vpc_security_group_ids",
-        "module.lambda-reader.aws_iam_role_policy.logs[0]",
-        "module.lambda-reader.var.timeout",
-        "module.lambda-reader.var.file_system_arn",
-        "module.lambda-reader.var.ephemeral_storage_size",
-        "module.lambda-reader.var.file_system_local_mount_path",
-        "module.lambda-reader.var.description",
-        "module.lambda-reader.aws_iam_role_policy.vpc",
-        "module.lambda-reader.var.architectures",
-        "module.lambda-reader.aws_iam_role_policy.dead_letter",
-        "module.lambda-reader.local.s3_object_version",
-        "module.lambda-reader.var.layers",
-        "module.lambda-reader.var.logging_log_format",
-        "module.lambda-reader.var.package_type",
-        "module.lambda-reader.var.replacement_security_group_ids",
-        "module.lambda-reader.var.lambda_role",
-        "module.lambda-reader.var.snap_start",
-        "module.lambda-reader.var.reserved_concurrent_executions",
-        "module.lambda-reader.var.image_config_command",
-        "module.lambda-reader.var.environment_variables",
-        "module.lambda-reader.aws_iam_role_policy.async",
-        "module.lambda-reader.local.filename",
-        "module.lambda-reader.aws_iam_role_policy.additional_json",
-        "module.lambda-reader.var.image_uri",
-        "module.lambda-reader.aws_iam_role_policy_attachment.additional_one",
-        "module.lambda-reader.var.publish",
-        "module.lambda-reader.aws_iam_role_policy.additional_inline[0]",
-        "module.lambda-reader.aws_iam_role_policy_attachment.additional_many",
-        "module.lambda-reader.aws_iam_role_policy.tracing",
         "module.lambda-reader.var.replace_security_groups_on_destroy",
-        "module.lambda-reader.var.ignore_source_code_hash",
-        "module.lambda-reader.var.handler",
-        "module.lambda-reader.var.image_config_working_directory",
-        "module.lambda-reader.local.s3_bucket",
-        "module.lambda-reader.var.skip_destroy",
-        "module.lambda-reader.var.timeouts",
-        "module.lambda-reader.var.vpc_subnet_ids",
-        "module.lambda-reader.var.function_tags",
-        "module.lambda-reader.var.ipv6_allowed_for_dual_stack",
         "module.lambda-reader.var.kms_key_arn",
-        "module.lambda-reader.var.code_signing_config_arn",
-        "module.lambda-reader.var.tracing_mode",
+        "module.lambda-reader.var.image_config_entry_point",
+        "module.lambda-reader.var.layers",
+        "module.lambda-reader.var.timeout",
+        "module.lambda-reader.aws_iam_role_policy.async",
+        "module.lambda-reader.var.tenant_isolation_mode",
+        "module.lambda-reader.var.description",
+        "module.lambda-reader.aws_iam_role_policy.tracing",
         "module.lambda-reader.aws_iam_role_policy.additional_jsons",
-        "module.lambda-reader.var.logging_application_log_level",
+        "module.lambda-reader.var.tracing_mode",
+        "module.lambda-reader.aws_iam_role_policy_attachment.additional_many",
+        "module.lambda-reader.var.image_config_working_directory",
+        "module.lambda-reader.var.package_type",
+        "module.lambda-reader.var.vpc_security_group_ids",
+        "module.lambda-reader.aws_iam_role_policy.vpc",
+        "module.lambda-reader.var.code_signing_config_arn",
+        "module.lambda-reader.var.vpc_subnet_ids",
+        "module.lambda-reader.local.s3_bucket",
+        "module.lambda-reader.var.image_uri",
+        "module.lambda-reader.var.reserved_concurrent_executions",
+        "module.lambda-reader.aws_iam_role_policy_attachment.additional_one",
+        "module.lambda-reader.aws_iam_role_policy.dead_letter",
+        "module.lambda-reader.var.memory_size",
+        "module.lambda-reader.var.skip_destroy",
+        "module.lambda-reader.var.architectures",
+        "module.lambda-reader.var.function_tags",
+        "module.lambda-reader.var.file_system_arn",
+        "module.lambda-reader.var.file_system_local_mount_path",
+        "module.lambda-reader.var.ignore_source_code_hash",
+        "module.lambda-reader.var.lambda_role",
+        "module.lambda-reader.aws_iam_role_policy.additional_inline[0]",
+        "module.lambda-reader.aws_iam_role_policy.logs[0]",
         "module.lambda-reader.var.logging_system_log_level",
-        "module.lambda-reader.var.image_config_entry_point"
+        "module.lambda-reader.var.ipv6_allowed_for_dual_stack",
+        "module.lambda-reader.aws_iam_role_policy.additional_json",
+        "module.lambda-reader.var.replacement_security_group_ids",
+        "module.lambda-reader.var.ephemeral_storage_size",
+        "module.lambda-reader.local.s3_object_version",
+        "module.lambda-reader.var.publish",
+        "module.lambda-reader.var.image_config_command",
+        "module.lambda-reader.local.filename",
+        "module.lambda-reader.var.logging_log_format",
+        "module.lambda-reader.var.timeouts",
+        "module.lambda-reader.var.snap_start",
+        "module.lambda-reader.var.environment_variables",
+        "module.lambda-reader.var.handler",
+        "module.lambda-reader.var.logging_application_log_level"
     ],
     "module.lambda-reader.aws_lambda_function.this[0]": [
         "module.lambda-reader.aws_lambda_function.this"
     ],
     "module.lambda-reader.aws_s3_object.lambda_package": [
-        "module.lambda-reader.var.s3_object_tags_only",
-        "module.lambda-reader.var.tags",
-        "module.lambda-reader.local.create",
-        "module.lambda-reader.var.s3_server_side_encryption",
-        "module.lambda-reader.var.s3_object_tags",
-        "module.lambda-reader.var.s3_acl",
-        "module.lambda-reader.var.s3_kms_key_id",
-        "module.lambda-reader.var.region",
-        "module.lambda-reader.var.s3_bucket",
-        "provider[registry.opentofu.org/hashicorp/aws]",
         "module.lambda-reader.local.s3_key",
         "module.lambda-reader.var.s3_object_storage_class",
+        "module.lambda-reader.var.s3_acl",
+        "module.lambda-reader.var.s3_bucket",
+        "module.lambda-reader.var.s3_object_tags",
+        "module.lambda-reader.null_resource.archive[0]",
+        "module.lambda-reader.local.create",
         "module.lambda-reader.var.s3_object_override_default_tags",
-        "module.lambda-reader.null_resource.archive[0]"
+        "module.lambda-reader.var.s3_object_tags_only",
+        "module.lambda-reader.var.tags",
+        "provider[registry.opentofu.org/hashicorp/aws]",
+        "module.lambda-reader.var.s3_server_side_encryption",
+        "module.lambda-reader.var.s3_kms_key_id",
+        "module.lambda-reader.var.region"
     ],
     "module.lambda-reader.data.aws_arn.log_group_arn": [
-        "module.lambda-reader.local.create_role",
-        "module.lambda-reader.local.log_group_arn_regional"
+        "module.lambda-reader.local.log_group_arn_regional",
+        "module.lambda-reader.local.create_role"
     ],
     "module.lambda-reader.data.aws_cloudwatch_log_group.lambda": [
+        "module.lambda-reader.var.lambda_at_edge",
         "module.lambda-reader.var.create_function",
-        "module.lambda-reader.var.use_existing_cloudwatch_log_group",
         "module.lambda-reader.local.create",
-        "module.lambda-reader.var.function_name",
-        "module.lambda-reader.var.create_layer",
-        "module.lambda-reader.var.region",
         "module.lambda-reader.var.logging_log_group",
         "provider[registry.opentofu.org/hashicorp/aws]",
-        "module.lambda-reader.var.lambda_at_edge"
+        "module.lambda-reader.var.create_layer",
+        "module.lambda-reader.var.function_name",
+        "module.lambda-reader.var.region",
+        "module.lambda-reader.var.use_existing_cloudwatch_log_group"
     ],
     "module.lambda-reader.data.aws_iam_policy.tracing": [
-        "module.lambda-reader.local.create_role",
+        "module.lambda-reader.data.aws_partition.current",
         "module.lambda-reader.var.attach_tracing_policy",
-        "module.lambda-reader.data.aws_partition.current"
+        "module.lambda-reader.local.create_role"
     ],
     "module.lambda-reader.data.aws_iam_policy.vpc": [
-        "module.lambda-reader.local.create_role",
         "module.lambda-reader.var.attach_network_policy",
-        "module.lambda-reader.data.aws_partition.current"
+        "module.lambda-reader.data.aws_partition.current",
+        "module.lambda-reader.local.create_role"
     ],
     "module.lambda-reader.data.aws_iam_policy_document.additional_inline": [
-        "module.lambda-reader.local.create_role",
         "module.lambda-reader.var.attach_policy_statements",
-        "module.lambda-reader.var.policy_statements"
+        "module.lambda-reader.var.policy_statements",
+        "module.lambda-reader.local.create_role"
     ],
     "module.lambda-reader.data.aws_iam_policy_document.assume_role": [
-        "module.lambda-reader.local.trusted_entities_services",
         "module.lambda-reader.local.trusted_entities_principals",
-        "module.lambda-reader.local.create_role",
+        "module.lambda-reader.local.trusted_entities_services",
         "module.lambda-reader.var.assume_role_policy_statements",
-        "provider[registry.opentofu.org/hashicorp/aws]"
+        "provider[registry.opentofu.org/hashicorp/aws]",
+        "module.lambda-reader.local.create_role"
     ],
     "module.lambda-reader.data.aws_iam_policy_document.async": [
-        "module.lambda-reader.var.destination_on_success",
-        "module.lambda-reader.local.create_role",
         "module.lambda-reader.var.attach_async_event_policy",
-        "module.lambda-reader.var.destination_on_failure",
-        "provider[registry.opentofu.org/hashicorp/aws]"
+        "module.lambda-reader.var.destination_on_success",
+        "provider[registry.opentofu.org/hashicorp/aws]",
+        "module.lambda-reader.local.create_role",
+        "module.lambda-reader.var.destination_on_failure"
     ],
     "module.lambda-reader.data.aws_iam_policy_document.dead_letter": [
-        "module.lambda-reader.local.create_role",
-        "provider[registry.opentofu.org/hashicorp/aws]",
         "module.lambda-reader.var.attach_dead_letter_policy",
+        "provider[registry.opentofu.org/hashicorp/aws]",
+        "module.lambda-reader.local.create_role",
         "module.lambda-reader.var.dead_letter_target_arn"
     ],
     "module.lambda-reader.data.aws_iam_policy_document.logs": [
         "module.lambda-reader.var.attach_cloudwatch_logs_policy",
-        "module.lambda-reader.var.attach_create_log_group_permission",
-        "module.lambda-reader.local.log_group_arn"
+        "module.lambda-reader.local.log_group_arn",
+        "module.lambda-reader.var.attach_create_log_group_permission"
     ],
     "module.lambda-reader.data.aws_iam_policy_document.logs[0]": [
         "module.lambda-reader.data.aws_iam_policy_document.logs"
     ],
     "module.lambda-reader.data.aws_partition.current": [
-        "module.lambda-reader",
-        "provider[registry.opentofu.org/hashicorp/aws]"
+        "provider[registry.opentofu.org/hashicorp/aws]",
+        "module.lambda-reader"
     ],
     "module.lambda-reader.data.external.archive_prepare": [
-        "module.lambda-reader.var.docker_build_root",
-        "module.lambda-reader.var.docker_with_ssh_agent",
         "module.lambda-reader.var.docker_entrypoint",
         "module.lambda-reader.var.recreate_missing_package",
-        "module.lambda-reader.var.docker_additional_options",
-        "module.lambda-reader.var.create_package",
         "module.lambda-reader.var.docker_pip_cache",
         "provider[registry.opentofu.org/hashicorp/external]",
-        "module.lambda-reader.var.artifacts_dir",
-        "module.lambda-reader.var.docker_image",
-        "module.lambda-reader.var.runtime",
-        "module.lambda-reader.var.source_path",
-        "module.lambda-reader.var.quiet_archive_local_exec",
-        "module.lambda-reader.local.python",
+        "module.lambda-reader.var.create_package",
         "module.lambda-reader.var.create",
-        "module.lambda-reader.var.docker_file",
         "module.lambda-reader.var.build_in_docker",
-        "module.lambda-reader.var.hash_extra"
+        "module.lambda-reader.var.docker_file",
+        "module.lambda-reader.var.hash_extra",
+        "module.lambda-reader.var.source_path",
+        "module.lambda-reader.var.artifacts_dir",
+        "module.lambda-reader.var.runtime",
+        "module.lambda-reader.var.docker_with_ssh_agent",
+        "module.lambda-reader.var.docker_build_root",
+        "module.lambda-reader.var.quiet_archive_local_exec",
+        "module.lambda-reader.var.docker_image",
+        "module.lambda-reader.local.python",
+        "module.lambda-reader.var.docker_additional_options"
     ],
     "module.lambda-reader.local.archive_filename": [
         "module.lambda-reader.data.external.archive_prepare"
@@ -260,19 +260,19 @@
         "module.lambda-reader.local.archive_filename"
     ],
     "module.lambda-reader.local.create": [
-        "module.lambda-reader.var.putin_khuylo",
-        "module.lambda-reader.var.create"
+        "module.lambda-reader.var.create",
+        "module.lambda-reader.var.putin_khuylo"
     ],
     "module.lambda-reader.local.create_role": [
+        "module.lambda-reader.var.create_role",
         "module.lambda-reader.var.create_function",
         "module.lambda-reader.local.create",
-        "module.lambda-reader.var.create_role",
         "module.lambda-reader.var.create_layer"
     ],
     "module.lambda-reader.local.filename": [
         "module.lambda-reader.local.archive_filename",
-        "module.lambda-reader.var.store_on_s3",
-        "module.lambda-reader.var.local_existing_package"
+        "module.lambda-reader.var.local_existing_package",
+        "module.lambda-reader.var.store_on_s3"
     ],
     "module.lambda-reader.local.log_group_arn": [
         "module.lambda-reader.data.aws_arn.log_group_arn",
@@ -290,20 +290,20 @@
         "module.lambda-reader"
     ],
     "module.lambda-reader.local.role_name": [
-        "module.lambda-reader.local.create_role",
+        "module.lambda-reader.var.role_name",
         "module.lambda-reader.var.function_name",
-        "module.lambda-reader.var.role_name"
+        "module.lambda-reader.local.create_role"
     ],
     "module.lambda-reader.local.s3_bucket": [
-        "module.lambda-reader.var.store_on_s3",
+        "module.lambda-reader.var.s3_existing_package",
         "module.lambda-reader.var.s3_bucket",
-        "module.lambda-reader.var.s3_existing_package"
+        "module.lambda-reader.var.store_on_s3"
     ],
     "module.lambda-reader.local.s3_key": [
-        "module.lambda-reader.local.archive_filename_string",
-        "module.lambda-reader.var.store_on_s3",
         "module.lambda-reader.var.s3_existing_package",
-        "module.lambda-reader.var.s3_prefix"
+        "module.lambda-reader.var.s3_prefix",
+        "module.lambda-reader.var.store_on_s3",
+        "module.lambda-reader.local.archive_filename_string"
     ],
     "module.lambda-reader.local.s3_object_version": [
         "module.lambda-reader.aws_s3_object.lambda_package"
@@ -312,8 +312,8 @@
         "module.lambda-reader.var.trusted_entities"
     ],
     "module.lambda-reader.local.trusted_entities_services": [
-        "module.lambda-reader.var.trusted_entities",
-        "module.lambda-reader.var.lambda_at_edge"
+        "module.lambda-reader.var.lambda_at_edge",
+        "module.lambda-reader.var.trusted_entities"
     ],
     "module.lambda-reader.local_file.archive_plan": [
         "module.lambda-reader.data.external.archive_prepare",
@@ -323,16 +323,16 @@
         "module.lambda-reader.local_file.archive_plan"
     ],
     "module.lambda-reader.null_resource.archive": [
-        "module.lambda-reader.var.trigger_on_package_timestamp",
         "module.lambda-reader.local_file.archive_plan[0]",
-        "provider[registry.opentofu.org/hashicorp/null]"
+        "provider[registry.opentofu.org/hashicorp/null]",
+        "module.lambda-reader.var.trigger_on_package_timestamp"
     ],
     "module.lambda-reader.null_resource.archive[0]": [
         "module.lambda-reader.null_resource.archive"
     ],
     "module.lambda-reader.var.architectures": [
-        "module.lambda-reader",
-        "module.lambda-reader.var.architectures"
+        "module.lambda-reader.var.architectures",
+        "module.lambda-reader"
     ],
     "module.lambda-reader.var.artifacts_dir": [
         "module.lambda-reader.var.artifacts_dir",
@@ -355,8 +355,8 @@
         "module.lambda-reader"
     ],
     "module.lambda-reader.var.attach_dead_letter_policy": [
-        "module.lambda-reader",
-        "module.lambda-reader.var.attach_dead_letter_policy"
+        "module.lambda-reader.var.attach_dead_letter_policy",
+        "module.lambda-reader"
     ],
     "module.lambda-reader.var.attach_network_policy": [
         "module.lambda-reader.var.attach_network_policy",
@@ -391,8 +391,8 @@
         "module.lambda-reader"
     ],
     "module.lambda-reader.var.cloudwatch_logs_kms_key_id": [
-        "module.lambda-reader",
-        "module.lambda-reader.var.cloudwatch_logs_kms_key_id"
+        "module.lambda-reader.var.cloudwatch_logs_kms_key_id",
+        "module.lambda-reader"
     ],
     "module.lambda-reader.var.cloudwatch_logs_log_group_class": [
         "module.lambda-reader.var.cloudwatch_logs_log_group_class",
@@ -407,16 +407,16 @@
         "module.lambda-reader"
     ],
     "module.lambda-reader.var.cloudwatch_logs_tags": [
-        "module.lambda-reader",
-        "module.lambda-reader.var.cloudwatch_logs_tags"
+        "module.lambda-reader.var.cloudwatch_logs_tags",
+        "module.lambda-reader"
     ],
     "module.lambda-reader.var.code_signing_config_arn": [
         "module.lambda-reader.var.code_signing_config_arn",
         "module.lambda-reader"
     ],
     "module.lambda-reader.var.create": [
-        "module.lambda-reader",
-        "module.lambda-reader.var.create"
+        "module.lambda-reader.var.create",
+        "module.lambda-reader"
     ],
     "module.lambda-reader.var.create_function": [
         "module.lambda-reader.var.create_function",
@@ -427,32 +427,32 @@
         "module.lambda-reader"
     ],
     "module.lambda-reader.var.create_package": [
-        "module.lambda-reader",
-        "module.lambda-reader.var.create_package"
+        "module.lambda-reader.var.create_package",
+        "module.lambda-reader"
     ],
     "module.lambda-reader.var.create_role": [
-        "module.lambda-reader",
-        "module.lambda-reader.var.create_role"
+        "module.lambda-reader.var.create_role",
+        "module.lambda-reader"
     ],
     "module.lambda-reader.var.dead_letter_target_arn": [
         "module.lambda-reader.var.dead_letter_target_arn",
         "module.lambda-reader"
     ],
     "module.lambda-reader.var.description": [
-        "module.lambda-reader",
-        "module.lambda-reader.var.description"
+        "module.lambda-reader.var.description",
+        "module.lambda-reader"
     ],
     "module.lambda-reader.var.destination_on_failure": [
         "module.lambda-reader.var.destination_on_failure",
         "module.lambda-reader"
     ],
     "module.lambda-reader.var.destination_on_success": [
-        "module.lambda-reader",
-        "module.lambda-reader.var.destination_on_success"
+        "module.lambda-reader.var.destination_on_success",
+        "module.lambda-reader"
     ],
     "module.lambda-reader.var.docker_additional_options": [
-        "module.lambda-reader",
-        "module.lambda-reader.var.docker_additional_options"
+        "module.lambda-reader.var.docker_additional_options",
+        "module.lambda-reader"
     ],
     "module.lambda-reader.var.docker_build_root": [
         "module.lambda-reader.var.docker_build_root",
@@ -463,16 +463,16 @@
         "module.lambda-reader"
     ],
     "module.lambda-reader.var.docker_file": [
-        "module.lambda-reader",
-        "module.lambda-reader.var.docker_file"
+        "module.lambda-reader.var.docker_file",
+        "module.lambda-reader"
     ],
     "module.lambda-reader.var.docker_image": [
         "module.lambda-reader.var.docker_image",
         "module.lambda-reader"
     ],
     "module.lambda-reader.var.docker_pip_cache": [
-        "module.lambda-reader",
-        "module.lambda-reader.var.docker_pip_cache"
+        "module.lambda-reader.var.docker_pip_cache",
+        "module.lambda-reader"
     ],
     "module.lambda-reader.var.docker_with_ssh_agent": [
         "module.lambda-reader.var.docker_with_ssh_agent",
@@ -483,16 +483,16 @@
         "module.lambda-reader"
     ],
     "module.lambda-reader.var.ephemeral_storage_size": [
-        "module.lambda-reader",
-        "module.lambda-reader.var.ephemeral_storage_size"
+        "module.lambda-reader.var.ephemeral_storage_size",
+        "module.lambda-reader"
     ],
     "module.lambda-reader.var.file_system_arn": [
         "module.lambda-reader.var.file_system_arn",
         "module.lambda-reader"
     ],
     "module.lambda-reader.var.file_system_local_mount_path": [
-        "module.lambda-reader",
-        "module.lambda-reader.var.file_system_local_mount_path"
+        "module.lambda-reader.var.file_system_local_mount_path",
+        "module.lambda-reader"
     ],
     "module.lambda-reader.var.function_name": [
         "module.lambda-reader.var.function_name",
@@ -507,12 +507,12 @@
         "module.lambda-reader"
     ],
     "module.lambda-reader.var.hash_extra": [
-        "module.lambda-reader",
-        "module.lambda-reader.var.hash_extra"
+        "module.lambda-reader.var.hash_extra",
+        "module.lambda-reader"
     ],
     "module.lambda-reader.var.ignore_source_code_hash": [
-        "module.lambda-reader",
-        "module.lambda-reader.var.ignore_source_code_hash"
+        "module.lambda-reader.var.ignore_source_code_hash",
+        "module.lambda-reader"
     ],
     "module.lambda-reader.var.image_config_command": [
         "module.lambda-reader.var.image_config_command",
@@ -535,28 +535,28 @@
         "module.lambda-reader"
     ],
     "module.lambda-reader.var.kms_key_arn": [
-        "module.lambda-reader",
-        "module.lambda-reader.var.kms_key_arn"
+        "module.lambda-reader.var.kms_key_arn",
+        "module.lambda-reader"
     ],
     "module.lambda-reader.var.lambda_at_edge": [
-        "module.lambda-reader",
-        "module.lambda-reader.var.lambda_at_edge"
+        "module.lambda-reader.var.lambda_at_edge",
+        "module.lambda-reader"
     ],
     "module.lambda-reader.var.lambda_at_edge_logs_all_regions": [
-        "module.lambda-reader",
-        "module.lambda-reader.var.lambda_at_edge_logs_all_regions"
+        "module.lambda-reader.var.lambda_at_edge_logs_all_regions",
+        "module.lambda-reader"
     ],
     "module.lambda-reader.var.lambda_role": [
-        "module.lambda-reader",
-        "module.lambda-reader.var.lambda_role"
+        "module.lambda-reader.var.lambda_role",
+        "module.lambda-reader"
     ],
     "module.lambda-reader.var.layers": [
-        "module.lambda-reader",
-        "module.lambda-reader.var.layers"
+        "module.lambda-reader.var.layers",
+        "module.lambda-reader"
     ],
     "module.lambda-reader.var.local_existing_package": [
-        "module.lambda-reader",
-        "module.lambda-reader.var.local_existing_package"
+        "module.lambda-reader.var.local_existing_package",
+        "module.lambda-reader"
     ],
     "module.lambda-reader.var.logging_application_log_level": [
         "module.lambda-reader.var.logging_application_log_level",
@@ -583,16 +583,16 @@
         "module.lambda-reader"
     ],
     "module.lambda-reader.var.number_of_policy_jsons": [
-        "module.lambda-reader",
-        "module.lambda-reader.var.number_of_policy_jsons"
+        "module.lambda-reader.var.number_of_policy_jsons",
+        "module.lambda-reader"
     ],
     "module.lambda-reader.var.package_type": [
         "module.lambda-reader.var.package_type",
         "module.lambda-reader"
     ],
     "module.lambda-reader.var.policies": [
-        "module.lambda-reader",
-        "module.lambda-reader.var.policies"
+        "module.lambda-reader.var.policies",
+        "module.lambda-reader"
     ],
     "module.lambda-reader.var.policy": [
         "module.lambda-reader.var.policy",
@@ -603,16 +603,16 @@
         "module.lambda-reader"
     ],
     "module.lambda-reader.var.policy_jsons": [
-        "module.lambda-reader",
-        "module.lambda-reader.var.policy_jsons"
+        "module.lambda-reader.var.policy_jsons",
+        "module.lambda-reader"
     ],
     "module.lambda-reader.var.policy_name": [
-        "module.lambda-reader",
-        "module.lambda-reader.var.policy_name"
+        "module.lambda-reader.var.policy_name",
+        "module.lambda-reader"
     ],
     "module.lambda-reader.var.policy_statements": [
-        "aws_s3_bucket.test",
         "module.lambda-reader.var.policy_statements",
+        "aws_s3_bucket.test",
         "aws_sqs_queue.test_queue",
         "module.lambda-reader"
     ],
@@ -661,8 +661,8 @@
         "module.lambda-reader"
     ],
     "module.lambda-reader.var.role_name": [
-        "module.lambda-reader",
-        "module.lambda-reader.var.role_name"
+        "module.lambda-reader.var.role_name",
+        "module.lambda-reader"
     ],
     "module.lambda-reader.var.role_path": [
         "module.lambda-reader.var.role_path",
@@ -677,8 +677,8 @@
         "module.lambda-reader"
     ],
     "module.lambda-reader.var.runtime": [
-        "module.lambda-reader",
-        "module.lambda-reader.var.runtime"
+        "module.lambda-reader.var.runtime",
+        "module.lambda-reader"
     ],
     "module.lambda-reader.var.s3_acl": [
         "module.lambda-reader.var.s3_acl",
@@ -689,16 +689,16 @@
         "module.lambda-reader"
     ],
     "module.lambda-reader.var.s3_existing_package": [
-        "module.lambda-reader",
-        "module.lambda-reader.var.s3_existing_package"
+        "module.lambda-reader.var.s3_existing_package",
+        "module.lambda-reader"
     ],
     "module.lambda-reader.var.s3_kms_key_id": [
         "module.lambda-reader.var.s3_kms_key_id",
         "module.lambda-reader"
     ],
     "module.lambda-reader.var.s3_object_override_default_tags": [
-        "module.lambda-reader",
-        "module.lambda-reader.var.s3_object_override_default_tags"
+        "module.lambda-reader.var.s3_object_override_default_tags",
+        "module.lambda-reader"
     ],
     "module.lambda-reader.var.s3_object_storage_class": [
         "module.lambda-reader.var.s3_object_storage_class",
@@ -709,16 +709,16 @@
         "module.lambda-reader"
     ],
     "module.lambda-reader.var.s3_object_tags_only": [
-        "module.lambda-reader",
-        "module.lambda-reader.var.s3_object_tags_only"
+        "module.lambda-reader.var.s3_object_tags_only",
+        "module.lambda-reader"
     ],
     "module.lambda-reader.var.s3_prefix": [
         "module.lambda-reader.var.s3_prefix",
         "module.lambda-reader"
     ],
     "module.lambda-reader.var.s3_server_side_encryption": [
-        "module.lambda-reader",
-        "module.lambda-reader.var.s3_server_side_encryption"
+        "module.lambda-reader.var.s3_server_side_encryption",
+        "module.lambda-reader"
     ],
     "module.lambda-reader.var.skip_destroy": [
         "module.lambda-reader.var.skip_destroy",
@@ -749,8 +749,8 @@
         "module.lambda-reader"
     ],
     "module.lambda-reader.var.timeouts": [
-        "module.lambda-reader",
-        "module.lambda-reader.var.timeouts"
+        "module.lambda-reader.var.timeouts",
+        "module.lambda-reader"
     ],
     "module.lambda-reader.var.tracing_mode": [
         "module.lambda-reader.var.tracing_mode",
@@ -769,8 +769,8 @@
         "module.lambda-reader"
     ],
     "module.lambda-reader.var.vpc_security_group_ids": [
-        "module.lambda-reader",
-        "module.lambda-reader.var.vpc_security_group_ids"
+        "module.lambda-reader.var.vpc_security_group_ids",
+        "module.lambda-reader"
     ],
     "module.lambda-reader.var.vpc_subnet_ids": [
         "module.lambda-reader.var.vpc_subnet_ids",
@@ -780,15 +780,15 @@
         "module.lambda-writer.aws_iam_role_policy.additional_inline[0]"
     ],
     "module.lambda-writer.aws_iam_role.lambda": [
-        "module.lambda-writer.data.aws_iam_policy_document.assume_role",
+        "module.lambda-writer.var.role_maximum_session_duration",
         "module.lambda-writer.var.role_force_detach_policies",
+        "module.lambda-writer.data.aws_iam_policy_document.assume_role",
+        "module.lambda-writer.local.role_name",
         "module.lambda-writer.var.tags",
         "module.lambda-writer.var.role_description",
         "module.lambda-writer.var.role_tags",
-        "module.lambda-writer.var.role_maximum_session_duration",
         "module.lambda-writer.var.role_path",
-        "module.lambda-writer.var.role_permissions_boundary",
-        "module.lambda-writer.local.role_name"
+        "module.lambda-writer.var.role_permissions_boundary"
     ],
     "module.lambda-writer.aws_iam_role_policy.additional_inline": [
         "module.lambda-writer.local.policy_name",
@@ -799,34 +799,34 @@
         "module.lambda-writer.aws_iam_role_policy.additional_inline"
     ],
     "module.lambda-writer.data.aws_iam_policy_document.additional_inline": [
-        "module.lambda-writer.var.policy_statements",
         "module.lambda-writer.local.create_role",
+        "module.lambda-writer.var.policy_statements",
         "module.lambda-writer.var.attach_policy_statements"
     ],
     "module.lambda-writer.data.aws_iam_policy_document.assume_role": [
-        "module.lambda-writer.local.trusted_entities_principals",
+        "module.lambda-writer.local.create_role",
         "module.lambda-writer.var.assume_role_policy_statements",
-        "provider[registry.opentofu.org/hashicorp/aws]",
         "module.lambda-writer.local.trusted_entities_services",
-        "module.lambda-writer.local.create_role"
+        "provider[registry.opentofu.org/hashicorp/aws]",
+        "module.lambda-writer.local.trusted_entities_principals"
     ],
     "module.lambda-writer.local.create": [
-        "module.lambda-writer.var.create",
-        "module.lambda-writer.var.putin_khuylo"
+        "module.lambda-writer.var.putin_khuylo",
+        "module.lambda-writer.var.create"
     ],
     "module.lambda-writer.local.create_role": [
         "module.lambda-writer.var.create_role",
+        "module.lambda-writer.var.create_function",
         "module.lambda-writer.var.create_layer",
-        "module.lambda-writer.local.create",
-        "module.lambda-writer.var.create_function"
+        "module.lambda-writer.local.create"
     ],
     "module.lambda-writer.local.policy_name": [
         "module.lambda-writer.local.role_name",
         "module.lambda-writer.var.policy_name"
     ],
     "module.lambda-writer.local.role_name": [
-        "module.lambda-writer.var.function_name",
         "module.lambda-writer.local.create_role",
+        "module.lambda-writer.var.function_name",
         "module.lambda-writer.var.role_name"
     ],
     "module.lambda-writer.local.trusted_entities_principals": [
@@ -837,50 +837,50 @@
         "module.lambda-writer.var.trusted_entities"
     ],
     "module.lambda-writer.var.assume_role_policy_statements": [
-        "module.lambda-writer",
-        "module.lambda-writer.var.assume_role_policy_statements"
+        "module.lambda-writer.var.assume_role_policy_statements",
+        "module.lambda-writer"
     ],
     "module.lambda-writer.var.attach_policy_statements": [
-        "module.lambda-writer",
-        "module.lambda-writer.var.attach_policy_statements"
+        "module.lambda-writer.var.attach_policy_statements",
+        "module.lambda-writer"
     ],
     "module.lambda-writer.var.create": [
-        "module.lambda-writer",
-        "module.lambda-writer.var.create"
+        "module.lambda-writer.var.create",
+        "module.lambda-writer"
     ],
     "module.lambda-writer.var.create_function": [
-        "module.lambda-writer",
-        "module.lambda-writer.var.create_function"
+        "module.lambda-writer.var.create_function",
+        "module.lambda-writer"
     ],
     "module.lambda-writer.var.create_layer": [
         "module.lambda-writer",
         "module.lambda-writer.var.create_layer"
     ],
     "module.lambda-writer.var.create_role": [
-        "module.lambda-writer",
-        "module.lambda-writer.var.create_role"
+        "module.lambda-writer.var.create_role",
+        "module.lambda-writer"
     ],
     "module.lambda-writer.var.function_name": [
-        "module.lambda-writer",
-        "module.lambda-writer.var.function_name"
+        "module.lambda-writer.var.function_name",
+        "module.lambda-writer"
     ],
     "module.lambda-writer.var.lambda_at_edge": [
-        "module.lambda-writer",
-        "module.lambda-writer.var.lambda_at_edge"
+        "module.lambda-writer.var.lambda_at_edge",
+        "module.lambda-writer"
     ],
     "module.lambda-writer.var.policy_name": [
         "module.lambda-writer",
         "module.lambda-writer.var.policy_name"
     ],
     "module.lambda-writer.var.policy_statements": [
-        "module.lambda-writer",
+        "module.lambda-writer.var.policy_statements",
         "aws_s3_bucket.test",
-        "aws_sqs_queue.test_queue",
-        "module.lambda-writer.var.policy_statements"
+        "module.lambda-writer",
+        "aws_sqs_queue.test_queue"
     ],
     "module.lambda-writer.var.putin_khuylo": [
-        "module.lambda-writer",
-        "module.lambda-writer.var.putin_khuylo"
+        "module.lambda-writer.var.putin_khuylo",
+        "module.lambda-writer"
     ],
     "module.lambda-writer.var.role_description": [
         "module.lambda-writer",
@@ -891,36 +891,36 @@
         "module.lambda-writer.var.role_force_detach_policies"
     ],
     "module.lambda-writer.var.role_maximum_session_duration": [
-        "module.lambda-writer",
-        "module.lambda-writer.var.role_maximum_session_duration"
+        "module.lambda-writer.var.role_maximum_session_duration",
+        "module.lambda-writer"
     ],
     "module.lambda-writer.var.role_name": [
         "module.lambda-writer",
         "module.lambda-writer.var.role_name"
     ],
     "module.lambda-writer.var.role_path": [
-        "module.lambda-writer",
-        "module.lambda-writer.var.role_path"
+        "module.lambda-writer.var.role_path",
+        "module.lambda-writer"
     ],
     "module.lambda-writer.var.role_permissions_boundary": [
         "module.lambda-writer",
         "module.lambda-writer.var.role_permissions_boundary"
     ],
     "module.lambda-writer.var.role_tags": [
-        "module.lambda-writer",
-        "module.lambda-writer.var.role_tags"
+        "module.lambda-writer.var.role_tags",
+        "module.lambda-writer"
     ],
     "module.lambda-writer.var.tags": [
-        "module.lambda-writer",
-        "module.lambda-writer.var.tags"
+        "module.lambda-writer.var.tags",
+        "module.lambda-writer"
     ],
     "module.lambda-writer.var.trusted_entities": [
-        "module.lambda-writer",
-        "module.lambda-writer.var.trusted_entities"
+        "module.lambda-writer.var.trusted_entities",
+        "module.lambda-writer"
     ],
     "provider[registry.opentofu.org/hashicorp/aws]": [
-        "module.lambda-reader.aws_lambda_function.this[0]",
-        "module.lambda-writer.aws_iam_role_policy.additional_inline[0]"
+        "module.lambda-writer.aws_iam_role_policy.additional_inline[0]",
+        "module.lambda-reader.aws_lambda_function.this[0]"
     ],
     "provider[registry.opentofu.org/hashicorp/external]": [
         "module.lambda-reader.data.external.archive_prepare"
@@ -932,11 +932,11 @@
         "module.lambda-reader.null_resource.archive[0]"
     ],
     "root": [
-        "module.lambda-writer",
-        "provider[registry.opentofu.org/hashicorp/external]",
         "module.lambda-reader",
         "provider[registry.opentofu.org/hashicorp/local]",
         "provider[registry.opentofu.org/hashicorp/null]",
-        "provider[registry.opentofu.org/hashicorp/aws]"
+        "provider[registry.opentofu.org/hashicorp/aws]",
+        "module.lambda-writer",
+        "provider[registry.opentofu.org/hashicorp/external]"
     ]
 }

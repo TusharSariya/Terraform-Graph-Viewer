@@ -15,7 +15,10 @@ const ContextMenu = ({ x, y, onClose, items, children, embedded }) => {
                 borderRadius: '4px',
                 minWidth: '150px'
             }}
-            onMouseLeave={onClose}
+            onContextMenu={(e) => {
+                e.preventDefault();
+                onClose();
+            }}
         >
             {items ? items.map((item, index) => (
                 <div
@@ -29,10 +32,6 @@ const ContextMenu = ({ x, y, onClose, items, children, embedded }) => {
                     }}
                     onMouseEnter={(e) => e.target.style.backgroundColor = '#f5f5f5'}
                     onMouseLeave={(e) => e.target.style.backgroundColor = 'white'}
-                    onClick={() => {
-                        item.onClick();
-                        onClose();
-                    }}
                 >
                     {item.label}
                 </div>
