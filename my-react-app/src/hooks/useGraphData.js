@@ -3,22 +3,24 @@ import { useState, useEffect } from 'react';
 function terraformShapes(data) {
     const shapes = {};
 
-    for (const [key, value] of Object.entries(data)) {
-        console.log("Key: ", key);
-        console.log("Value: ", value);
-        shapes[key] = ({
-            id: key,
-            x: Math.random() * 100,
-            y: Math.random() * 100,
-            size: 40,
-            color: 'red',
-            name: key,
-            edges_new: value.edges_new,
-            edges_existing: value.edges_existing,
-            type: value.type,
-            showLabel: false // Default to hidden, consistent with original logic
-        })
+    for (const [path, nodes] of Object.entries(data)) {
+        for (const resource of nodes["resources"]) {
+            shapes[resource.address] = ({
+                path: path,
+                address: resource.address,
+                x: Math.random() * 100,
+                y: Math.random() * 100,
+                size: 40,
+                color: 'red',
+                name: resource.name,
+                edges_new: nodes.edges_new,
+                edges_existing: nodes.edges_existing,
+                type: resource.type,
+                showLabel: false // Default to hidden, consistent with original logic
+            })
+        }
     }
+    console.log("Shapes: ", shapes);
 
     return shapes;
 }

@@ -424,6 +424,11 @@ def get_graph2():
         print(nodes)
         print("computed external resources")
         print("\n\n\n\n\n")
+
+        nodes = ensure_edge_lists(nodes)
+        print(nodes)
+        print("ensured edge lists")
+        print("\n\n\n\n\n")
     
         return jsonify(nodes)
 
