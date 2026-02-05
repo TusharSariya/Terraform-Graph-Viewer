@@ -146,31 +146,31 @@ const useGraphInteraction = (svgRef, shapes, setShapes) => {
         }
     };
 
-    const handleContextMenu = (e, shapeId) => {
+    const handleContextMenu = (e, shape) => {
         e.preventDefault();
         e.stopPropagation();
 
         const pt = getSVGPoint(e.clientX, e.clientY);
 
         setShapes((prevShapes) => {
-            const targetShape = prevShapes[shapeId]; //get shape that we clicked on
+            const targetShape = prevShapes[shape.id]; //get shape that we clicked on
             const updatedShape = {
                 ...targetShape,
                 showLabel: !targetShape.showLabel
             }; //invert the lable property
             const newShapesCollection = { ...prevShapes }; //make a new shapes collection
-            newShapesCollection[shapeId] = updatedShape; //add my new shape to it
+            newShapesCollection[shape.id] = updatedShape; //add my new shape to it
             return newShapesCollection; //set new shapes collection
         });
 
         setContextMenus((prevMenus) => {
             return {
                 ...prevMenus,
-                [shapeId]: {
+                [shape.id]: {
                     visible: true,
                     x: pt.x,
                     y: pt.y,
-                    shapeId: shapeId
+                    shapeId: shape.id
                 }
             };
         });

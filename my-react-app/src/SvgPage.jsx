@@ -138,7 +138,7 @@ function SvgPage() {
                     )}
 
                     {/* Layer 1: Edges (Background) */}
-                    {/* TODO: a shape does not have edges, it has new and existing */}
+                    {/* draw edges_new */}
                     {Object.values(shapes).map((shape) => (
                         shape.showLabel && shape.edges_new && shape.edges_new.map(edgePath => {
                             const targetAddresses = paths[edgePath];
@@ -161,6 +161,7 @@ function SvgPage() {
                         })
                     ))}
 
+                    {/* draw edges_existing */}
                     {Object.values(shapes).map((shape) => (
                         shape.showLabel && shape.edges_existing && shape.edges_existing.map(edgePath => {
                             const targetAddresses = paths[edgePath];
@@ -203,7 +204,7 @@ function SvgPage() {
                                     onClose={() => handleCloseContextMenu(contextMenu.shapeId)}
                                     items={[
                                         {
-                                            label: "Toggle Label",
+                                            label: "Hide",
                                             onClick: () => {
                                                 setShapes(prevShapes => ({
                                                     ...prevShapes,
@@ -212,6 +213,7 @@ function SvgPage() {
                                                         showLabel: !prevShapes[contextMenu.shapeId].showLabel
                                                     }
                                                 }));
+                                                handleCloseContextMenu(contextMenu.shapeId)
                                             }
                                         },
                                         {

@@ -10,7 +10,7 @@ const GraphNode = ({ shape, icon, isDragging, onMouseDown, onContextMenu }) => {
                 width={shape.size}
                 height={shape.size}
                 onMouseDown={(e) => onMouseDown(e, shape.id)}
-                onContextMenu={(e) => onContextMenu(e, shape.id)}
+                onContextMenu={(e) => onContextMenu(e, shape)}
                 style={{
                     cursor: 'move',
                     filter: isDragging ? 'drop-shadow(0 0 5px white)' : 'none'
