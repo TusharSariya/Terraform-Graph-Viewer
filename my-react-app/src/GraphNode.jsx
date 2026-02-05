@@ -30,7 +30,7 @@ const GraphNode = ({ shape, icon, isDragging, onMouseDown, onContextMenu }) => {
                         textShadow: '0px 0px 2px white'
                     }}
                 >
-                    {shape.name}
+                    {shape.id}
                 </text>
             )}
         </g>

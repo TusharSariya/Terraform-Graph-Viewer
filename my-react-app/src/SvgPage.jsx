@@ -31,10 +31,10 @@ function SvgPage() {
     const svgRef = useRef(null);
     const [dimensions, setDimensions] = useState({ width: window.innerWidth, height: window.innerHeight });
 
-    const { shapes, setShapes } = useGraphData();
+    const { shapes, setShapes, paths, setPaths } = useGraphData();
 
     // Auto-layout the graph
-    useGraphLayout(shapes, setShapes, dimensions);
+    useGraphLayout(shapes, setShapes, paths, setPaths, dimensions);
 
     const {
         viewTransform,
@@ -134,19 +134,25 @@ function SvgPage() {
                     )}
 
                     {/* Layer 1: Edges (Background) */}
+                    {/* TODO: a shape does not have edges, it has new and existing */}
                     {Object.values(shapes).map((shape) => (
-                        shape.showLabel && shape.edges && shape.edges.map(edge => {
-                            const depShape = shapes[edge];
-                            if (!depShape) return null;
-                            return (
-                                <GraphEdge
-                                    key={`conn-${shape.id}-${depShape.id}`}
-                                    startX={shape.x + shape.size / 2}
-                                    startY={shape.y + shape.size / 2}
-                                    endX={depShape.x + depShape.size / 2}
-                                    endY={depShape.y + depShape.size / 2}
-                                />
-                            );
+                        shape.showLabel && shape.edges_new && shape.edges_new.map(edgePath => {
+                            const targetAddresses = paths[edgePath];
+                            if (!targetAddresses) return null;
+
+                            return targetAddresses.map(targetAddress => {
+                                const depShape = shapes[targetAddress];
+                                if (!depShape) return null;
+                                return (
+                                    <GraphEdge
+                                        key={`conn-${shape.id}-${depShape.id}`}
+                                        startX={shape.x + shape.size / 2}
+                                        startY={shape.y + shape.size / 2}
+                                        endX={depShape.x + depShape.size / 2}
+                                        endY={depShape.y + depShape.size / 2}
+                                    />
+                                );
+                            });
                         })
                     ))}
 

@@ -6,6 +6,7 @@ function terraformShapes(data) {
     for (const [path, nodes] of Object.entries(data)) {
         for (const resource of nodes["resources"]) {
             shapes[resource.address] = ({
+                id: resource.address,
                 path: path,
                 address: resource.address,
                 x: Math.random() * 100,
@@ -20,29 +21,36 @@ function terraformShapes(data) {
             })
         }
     }
-    console.log("Shapes: ", shapes);
 
     return shapes;
 }
 
+function terraformPaths(data) {
+    const paths = {};
+    for (const [path, nodes] of Object.entries(data)) {
+        for (const resource of nodes["resources"]) {
+            if (!paths[path]) paths[path] = [];
+            paths[path].push(resource.address);
+        }
+    }
+    return paths;
+}
+
 const useGraphData = () => {
     const [shapes, setShapes] = useState({});
+    const [paths, setPaths] = useState({});
 
     useEffect(() => {
         fetch('http://localhost:8000/api/graph2')
             .then(res => res.json())
             .then(jsonData => {
-                console.log("Fetched Data:", jsonData);
-                return terraformShapes(jsonData);
-            })
-            .then(newShapes => {
-                setShapes(newShapes);
-                console.log("Shapes: ", newShapes);
+                setShapes(terraformShapes(jsonData));
+                setPaths(terraformPaths(jsonData));
             })
             .catch(err => console.error("Error fetching data:", err));
     }, []);
 
-    return { shapes, setShapes };
+    return { shapes, setShapes, paths, setPaths };
 };
 
 export default useGraphData;

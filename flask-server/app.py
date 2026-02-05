@@ -342,7 +342,7 @@ def external_resources(nodes):
                 newnodes[edge]["resources"] = []
                 external_resource = {
                     "address": edge,
-                    "type": edge.split(".")[-2],
+                    "type": edge,
                     "change": {
                         "actions": ["external"]
                     }
@@ -359,7 +359,7 @@ def external_resources(nodes):
                 newnodes[edge]["resources"] = []
                 external_resource = {
                     "address": edge,
-                    "type": edge.split(".")[-2],
+                    "type": edge,
                     "change": {
                         "actions": ["external"]
                     }
