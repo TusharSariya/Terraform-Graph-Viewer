@@ -1,8 +1,16 @@
-import React from 'react';
+import React, { useRef } from 'react';
 
-const ContextMenu = ({ x, y, onClose, items, children, embedded }) => {
+const ContextMenu = ({ x, y, onClose, items, children, embedded, onMouseDown }) => {
+    const mouseDownPos = useRef({ x: 0, y: 0 });
+
+    const handleMouseDownWrapper = (e) => {
+        mouseDownPos.current = { x: e.clientX, y: e.clientY };
+        if (onMouseDown) onMouseDown(e);
+    };
+
     return (
         <div
+            onMouseDown={handleMouseDownWrapper}
             style={{
                 position: embedded ? 'static' : 'fixed',
                 top: embedded ? undefined : y,
@@ -32,6 +40,16 @@ const ContextMenu = ({ x, y, onClose, items, children, embedded }) => {
                     }}
                     onMouseEnter={(e) => e.target.style.backgroundColor = '#f5f5f5'}
                     onMouseLeave={(e) => e.target.style.backgroundColor = 'white'}
+                    onClick={(e) => {
+                        e.stopPropagation();
+                        // Check for drag
+                        const dx = Math.abs(e.clientX - mouseDownPos.current.x);
+                        const dy = Math.abs(e.clientY - mouseDownPos.current.y);
+                        if (dx > 5 || dy > 5) return; // It was a drag, not a click
+
+                        if (item.onClick) item.onClick();
+                        if (onClose) onClose();
+                    }}
                 >
                     {item.label}
                 </div>

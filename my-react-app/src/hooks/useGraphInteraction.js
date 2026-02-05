@@ -4,6 +4,7 @@ const useGraphInteraction = (svgRef, shapes, setShapes) => {
     const [viewTransform, setViewTransform] = useState({ x: 0, y: 0, scale: 1 });
     const [draggingShapeId, setDraggingShapeId] = useState(null);
     const [isPanning, setIsPanning] = useState(false);
+    const [draggingContextMenuId, setDraggingContextMenuId] = useState(null);
     const [mode, setMode] = useState('pan'); // 'pan' | 'draw' | 'eraser'
     const [drawnLines, setDrawnLines] = useState([]);
     const [currentLine, setCurrentLine] = useState(null);
@@ -103,6 +104,20 @@ const useGraphInteraction = (svgRef, shapes, setShapes) => {
                 x: initialTransformRef.current.x + dx,
                 y: initialTransformRef.current.y + dy
             });
+        } else if (draggingContextMenuId !== null) {
+            // Drag Context Menu
+            const pt = getSVGPoint(e.clientX, e.clientY);
+            const dx = pt.x - dragStartRef.current.x;
+            const dy = pt.y - dragStartRef.current.y;
+
+            setContextMenus(prev => ({
+                ...prev,
+                [draggingContextMenuId]: {
+                    ...prev[draggingContextMenuId],
+                    x: initialShapePosRef.current.x + dx,
+                    y: initialShapePosRef.current.y + dy
+                }
+            }));
         }
     };
 
@@ -113,7 +128,22 @@ const useGraphInteraction = (svgRef, shapes, setShapes) => {
             setCurrentLine(null);
         }
         setDraggingShapeId(null);
+        setDraggingContextMenuId(null);
         setIsPanning(false);
+    };
+
+    const handleContextMenuMouseDown = (e, contextMenuId) => {
+        e.stopPropagation();
+        e.preventDefault();
+        const pt = getSVGPoint(e.clientX, e.clientY);
+        setDraggingContextMenuId(contextMenuId);
+        dragStartRef.current = { x: pt.x, y: pt.y };
+
+        // Use existing ref or create new one? safe to reuse if exclusive
+        const menu = contextMenus[contextMenuId];
+        if (menu) {
+            initialShapePosRef.current = { x: menu.x, y: menu.y };
+        }
     };
 
     const handleContextMenu = (e, shapeId) => {
@@ -166,7 +196,8 @@ const useGraphInteraction = (svgRef, shapes, setShapes) => {
         handleMouseUp,
         handleContextMenu,
         contextMenus,
-        handleCloseContextMenu
+        handleCloseContextMenu,
+        handleContextMenuMouseDown
     };
 };
 

@@ -50,7 +50,8 @@ function SvgPage() {
         handleMouseUp,
         handleContextMenu,
         contextMenus,
-        handleCloseContextMenu
+        handleCloseContextMenu,
+        handleContextMenuMouseDown
     } = useGraphInteraction(svgRef, shapes, setShapes);
 
     useEffect(() => {
@@ -198,6 +199,7 @@ function SvgPage() {
                             <foreignObject x={contextMenu.x} y={contextMenu.y} width="200" height="300" style={{ overflow: 'visible' }}>
                                 <ContextMenu
                                     embedded={true}
+                                    onMouseDown={(e) => handleContextMenuMouseDown(e, contextMenu.shapeId)}
                                     onClose={handleCloseContextMenu}
                                     items={[
                                         {
