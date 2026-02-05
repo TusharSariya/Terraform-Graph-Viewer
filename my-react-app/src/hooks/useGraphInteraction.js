@@ -7,8 +7,8 @@ const useGraphInteraction = (svgRef, shapes, setShapes) => {
     const [mode, setMode] = useState('pan'); // 'pan' | 'draw' | 'eraser'
     const [drawnLines, setDrawnLines] = useState([]);
     const [currentLine, setCurrentLine] = useState(null);
-    const [contextMenu, setContextMenu] = useState({ visible: false, x: 0, y: 0, shapeId: null });
-
+    //const [contextMenu, setContextMenu] = useState({ visible: false, x: 0, y: 0, shapeId: null });
+    const [contextMenus, setContextMenus] = useState({});
     const dragStartRef = useRef({ x: 0, y: 0 });
     const initialTransformRef = useRef({ x: 0, y: 0 });
     const initialShapePosRef = useRef({ x: 0, y: 0 });
@@ -133,17 +133,21 @@ const useGraphInteraction = (svgRef, shapes, setShapes) => {
             return newShapesCollection; //set new shapes collection
         });
 
-
-        setContextMenu({
-            visible: true,
-            x: pt.x,
-            y: pt.y,
-            shapeId: shapeId
+        setContextMenus((prevMenus) => {
+            return {
+                ...prevMenus,
+                [shapeId]: {
+                    visible: true,
+                    x: pt.x,
+                    y: pt.y,
+                    shapeId: shapeId
+                }
+            };
         });
     };
 
     const handleCloseContextMenu = () => {
-        setContextMenu(prev => ({ ...prev, visible: false }));
+        setContextMenus({});
     };
 
     return {
@@ -160,10 +164,8 @@ const useGraphInteraction = (svgRef, shapes, setShapes) => {
         handleMouseDown,
         handleMouseMove,
         handleMouseUp,
-        handleMouseMove,
-        handleMouseUp,
         handleContextMenu,
-        contextMenu,
+        contextMenus,
         handleCloseContextMenu
     };
 };
