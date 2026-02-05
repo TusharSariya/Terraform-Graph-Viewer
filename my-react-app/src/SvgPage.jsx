@@ -16,6 +16,7 @@ import ContextMenu from './ContextMenu';
 import useGraphData from './hooks/useGraphData';
 import useGraphInteraction from './hooks/useGraphInteraction';
 import useGraphLayout from './hooks/useGraphLayout';
+import { generateMenuItems } from './utils/contextMenuUtils';
 
 const iconMap = {
     "aws_sqs_queue": SQSIcon,
@@ -222,11 +223,11 @@ function SvgPage() {
                                         },
                                         {
                                             label: "Before State",
-                                            onClick: () => console.log("Before State:", contextMenu.before_state)
+                                            subItems: generateMenuItems(contextMenu.before_state, "Before")
                                         },
                                         {
                                             label: "After State",
-                                            onClick: () => console.log("After State:", contextMenu.after_state)
+                                            subItems: generateMenuItems(contextMenu.after_state, "After")
                                         }
                                     ]}
                                 />

@@ -3,6 +3,8 @@ import { useState, useEffect } from 'react';
 function terraformShapes(data) {
     const shapes = {};
 
+    console.log("data", data);
+
     for (const [path, nodes] of Object.entries(data)) {
         const resources = nodes["resources"];
         for (const [address, resource] of Object.entries(resources)) {
@@ -25,6 +27,8 @@ function terraformShapes(data) {
             })
         }
     }
+
+    console.log("shapes2", shapes);
 
     return shapes;
 }
