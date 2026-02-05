@@ -40,16 +40,6 @@ const ContextMenu = ({ x, y, onClose, items, children, embedded, onMouseDown }) 
                     }}
                     onMouseEnter={(e) => e.target.style.backgroundColor = '#f5f5f5'}
                     onMouseLeave={(e) => e.target.style.backgroundColor = 'white'}
-                    onClick={(e) => {
-                        e.stopPropagation();
-                        // Check for drag
-                        const dx = Math.abs(e.clientX - mouseDownPos.current.x);
-                        const dy = Math.abs(e.clientY - mouseDownPos.current.y);
-                        if (dx > 5 || dy > 5) return; // It was a drag, not a click
-
-                        if (item.onClick) item.onClick();
-                        if (onClose) onClose();
-                    }}
                 >
                     {item.label}
                 </div>

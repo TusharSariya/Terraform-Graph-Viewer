@@ -200,7 +200,7 @@ function SvgPage() {
                                 <ContextMenu
                                     embedded={true}
                                     onMouseDown={(e) => handleContextMenuMouseDown(e, contextMenu.shapeId)}
-                                    onClose={handleCloseContextMenu}
+                                    onClose={() => handleCloseContextMenu(contextMenu.shapeId)}
                                     items={[
                                         {
                                             label: "Toggle Label",

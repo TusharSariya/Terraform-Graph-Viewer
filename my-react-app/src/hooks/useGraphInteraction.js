@@ -174,10 +174,16 @@ const useGraphInteraction = (svgRef, shapes, setShapes) => {
                 }
             };
         });
+
+
     };
 
-    const handleCloseContextMenu = () => {
-        setContextMenus({});
+    const handleCloseContextMenu = (shapeId) => {
+        setContextMenus((prevMenus) => {
+            const newMenus = { ...prevMenus };
+            delete newMenus[shapeId];
+            return newMenus;
+        });
     };
 
     return {
