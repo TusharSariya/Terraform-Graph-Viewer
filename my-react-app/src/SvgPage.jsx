@@ -150,6 +150,29 @@ function SvgPage() {
                                         startY={shape.y + shape.size / 2}
                                         endX={depShape.x + depShape.size / 2}
                                         endY={depShape.y + depShape.size / 2}
+                                        color="#008f15ff"
+                                    />
+                                );
+                            });
+                        })
+                    ))}
+
+                    {Object.values(shapes).map((shape) => (
+                        shape.showLabel && shape.edges_existing && shape.edges_existing.map(edgePath => {
+                            const targetAddresses = paths[edgePath];
+                            if (!targetAddresses) return null;
+
+                            return targetAddresses.map(targetAddress => {
+                                const depShape = shapes[targetAddress];
+                                if (!depShape) return null;
+                                return (
+                                    <GraphEdge
+                                        key={`conn-${shape.id}-${depShape.id}`}
+                                        startX={shape.x + shape.size / 2}
+                                        startY={shape.y + shape.size / 2}
+                                        endX={depShape.x + depShape.size / 2}
+                                        endY={depShape.y + depShape.size / 2}
+                                        color="#333"
                                     />
                                 );
                             });

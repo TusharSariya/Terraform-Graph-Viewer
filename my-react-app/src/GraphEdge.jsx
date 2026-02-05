@@ -1,13 +1,13 @@
 import React from 'react';
 
-const GraphEdge = ({ startX, startY, endX, endY }) => {
+const GraphEdge = ({ startX, startY, endX, endY, color = "#333" }) => {
     return (
         <line
             x1={startX}
             y1={startY}
             x2={endX}
             y2={endY}
-            stroke="#333"
+            stroke={color}
             strokeWidth={1}
         />
     );
