@@ -196,6 +196,26 @@ function SvgPage() {
                             onContextMenu={handleContextMenu}
                         />
                     ))}
+                    {/* Lines from shapes to their context menus */}
+                    {Object.values(contextMenus).map((contextMenu) => {
+                        if (!contextMenu.visible) return null;
+                        const shape = shapes[contextMenu.shapeId];
+                        if (!shape) return null;
+                        return (
+                            <line
+                                key={`ctx-line-${contextMenu.shapeId}`}
+                                x1={shape.x + shape.size / 2}
+                                y1={shape.y + shape.size / 2}
+                                x2={contextMenu.x}
+                                y2={contextMenu.y}
+                                stroke="#999"
+                                strokeWidth={1}
+                                strokeDasharray="4 3"
+                                pointerEvents="none"
+                            />
+                        );
+                    })}
+
                     {Object.values(contextMenus).map((contextMenu) => (
                         contextMenu.visible && (
                             <foreignObject x={contextMenu.x} y={contextMenu.y} width="200" height="300" style={{ overflow: 'visible' }}>
