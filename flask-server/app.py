@@ -98,7 +98,7 @@ def get_graph():
 
     for resource_change in resource_changes:
         #address = resource_change['address'].replace('[0]', '')
-        nodes[address] = resource_change
+        nodes['address'] = resource_change
 
     for key,value in edges.items():
         #key = key.replace('[0]', '')
@@ -333,6 +333,15 @@ def ensure_edge_lists(nodes):
             node['edges_existing'] = []
     return nodes
 
+def delete_orphaned_nodes(nodes):
+    duplicate = {}
+    for path,resources in nodes.items():
+        if resources["edges_existing"] != [] or resources["edges_new"] != []:
+            duplicate[path]=resources
+    return duplicate
+
+
+
 
 def external_resources(nodes):
 
@@ -434,6 +443,7 @@ def get_graph2():
         #print(nodes)
         print("ensured edge lists")
         print("\n\n\n\n\n")
+        nodes = delete_orphaned_nodes(nodes)
     
         return jsonify(nodes)
 
