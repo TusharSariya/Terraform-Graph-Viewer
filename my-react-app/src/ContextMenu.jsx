@@ -1,6 +1,6 @@
 import React, { useRef, useState } from 'react';
 
-const ContextMenu = ({ x, y, onClose, items, children, embedded, onMouseDown }) => {
+const ContextMenu = ({ x, y, onClose, items, children, embedded, submenu, onMouseDown }) => {
     const mouseDownPos = useRef({ x: 0, y: 0 });
     const [activeSubMenuIndex, setActiveSubMenuIndex] = useState(null);
 
@@ -13,9 +13,9 @@ const ContextMenu = ({ x, y, onClose, items, children, embedded, onMouseDown }) 
         <div
             onMouseDown={handleMouseDownWrapper}
             style={{
-                position: embedded ? 'static' : 'fixed',
-                top: embedded ? undefined : y,
-                left: embedded ? undefined : x,
+                position: submenu ? 'absolute' : (embedded ? 'static' : 'fixed'),
+                top: submenu ? 0 : (embedded ? undefined : y),
+                left: submenu ? 'calc(100% + 2px)' : (embedded ? undefined : x),
                 backgroundColor: 'white',
                 border: '1px solid #ccc',
                 boxShadow: '2px 2px 5px rgba(0,0,0,0.2)',
@@ -28,7 +28,7 @@ const ContextMenu = ({ x, y, onClose, items, children, embedded, onMouseDown }) 
             }}
             onContextMenu={(e) => {
                 e.preventDefault();
-                // Do not close on right click inside, just prevent default
+                onClose()
             }}
             onMouseLeave={() => setActiveSubMenuIndex(null)}
         >
@@ -70,37 +70,18 @@ const ContextMenu = ({ x, y, onClose, items, children, embedded, onMouseDown }) 
                         if (item.onClick) {
                             item.onClick();
                         }
-                        // If it has subItems, click might toggle it or do nothing (hover handles it)
-                        // Standard behavior: leaf nodes trigger action and close menu.
-                        // Branch nodes (submenus) just show menu.
-                        if (!item.subItems && !item.disabled) {
-                            // Only close if it's a leaf node action? 
-                            // Usually yes, but if we want to keep it open we can.
-                            // For now, let's assume if there's an onClick, we might want to close?
-                            // But the parent handles close. The onClick should probably call onClose provided by parent if desired.
-                            // Actually, the original implementation didn't strictly enforce close on click inside component,
-                            // but the usage in SvgPage did: `() => { ...; handleCloseContextMenu() }`.
-                            // So we rely on the item.onClick to close if it wants to.
-                        }
                     }}
                 >
                     <span>{item.label}</span>
                     {item.subItems && <span>&#9656;</span>}
 
-                    {/* Render SubMenu */}
+                    {/* Render SubMenu - positioned to the right of parent item */}
                     {item.subItems && activeSubMenuIndex === index && (
                         <ContextMenu
-                            embedded={false} // Force fixed position relative to screen or calculate absolute?
-                            // Actually, since we are inside a relative parent, absolute positioning works nice.
-                            // But wait, the top-level ContextMenu in SvgPage is inside a foreignObject.
-                            // Basic absolute positioning `left: 100%` might work if overflow is visible.
-                            x={'100%'}
-                            y={0}
+                            submenu={true}
                             items={item.subItems}
                             onClose={onClose}
-                        // Propagate common props?
-                        // For recursive menus, they are just visual extensions.
-                        // We construct them to look like they are popping out.
+                            onMouseDown={onMouseDown}
                         />
                     )}
                 </div>
