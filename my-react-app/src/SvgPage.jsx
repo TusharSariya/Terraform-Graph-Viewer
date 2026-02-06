@@ -205,21 +205,8 @@ function SvgPage() {
                                     onClose={() => handleCloseContextMenu(contextMenu.shapeId)}
                                     items={[
                                         {
-                                            label: "Hide",
-                                            onClick: () => {
-                                                setShapes(prevShapes => ({
-                                                    ...prevShapes,
-                                                    [contextMenu.shapeId]: {
-                                                        ...prevShapes[contextMenu.shapeId],
-                                                        showLabel: !prevShapes[contextMenu.shapeId].showLabel
-                                                    }
-                                                }));
-                                                handleCloseContextMenu(contextMenu.shapeId)
-                                            }
-                                        },
-                                        {
-                                            label: "Properties (Placeholder)",
-                                            onClick: () => console.log("Properties clicked for", contextMenu.shapeId)
+                                            label: "Diff",
+                                            subItems: generateMenuItems(contextMenu.diff, "diffs")
                                         },
                                         {
                                             label: "Before State",

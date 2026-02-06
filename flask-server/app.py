@@ -248,12 +248,12 @@ def compute_resource_diffs(nodes):
 
             for key,value in node['change']['before'].items():
                 if key not in node['change']['after']:
-                    node['change']['diff'][key] = {
-                        'before': value,
-                        'after': None
-                    }
-                else:
-                    if value != node['change']['after'][key]:
+                    if value is not None:
+                        node['change']['diff'][key] = {
+                            'before': value,
+                            'after': None
+                        }
+                elif value != node['change']['after'][key]:
                         node['change']['diff'][key] = {
                             'before': value,
                             'after': node['change']['after'][key]
@@ -261,16 +261,16 @@ def compute_resource_diffs(nodes):
 
             for key,value in node['change']['after'].items():
                 if key not in node['change']['before']:
-                    node['change']['diff'][key] = {
-                        'before': None,
-                        'after': value
-                    }
-                else:
-                    if value != node['change']['before'][key]:
+                    if value is not None and value != '' and value != [] and value != {}:
                         node['change']['diff'][key] = {
-                            'after': value,
-                            'before': node['change']['before'][key]
+                            'before': None,
+                            'after': value
                         }
+                elif value != node['change']['before'][key]:
+                    node['change']['diff'][key] = {
+                        'after': value,
+                        'before': node['change']['before'][key]
+                    }
     return nodes
 
 def build_existing_edges(nodes):
