@@ -6,7 +6,6 @@ from pprint import pprint
 import os
 from collections import defaultdict
 import traceback
-from deepdiff import DeepDiff
 import re
 import tempfile
 
@@ -305,20 +304,25 @@ def build_existing_edges(nodes):
     if "prior_state" in plan and "values" in plan["prior_state"] and "root_module" in plan["prior_state"]["values"]:
         existingeRecursion(plan["prior_state"]["values"]["root_module"])
 
-    print(existingedges)
+    #print(existingedges)
     print("computed existing edges")
     print("\n\n\n\n")
 
     for key, value in existingedges.items():
         key = re.sub(r'\[\d+\]', '', key)
         if key in nodes:
-            nodes[key]['edges_existing'] = list(value)
+            #print(value)
+            nodes[key]['edges_existing'] = []
+            for val in value:
+                if val in nodes:
+                    nodes[key]['edges_existing'].append(val)
         for val in value:
             val = re.sub(r'\[\d+\]', '', val)
             if val in nodes:
                 if 'edges_existing' not in nodes[val]:
                     nodes[val]['edges_existing'] = []
-                nodes[val]['edges_existing'].append(key)
+                if key in nodes:
+                    nodes[val]['edges_existing'].append(key)
     return nodes
 
 def ensure_edge_lists(nodes):
@@ -337,7 +341,8 @@ def external_resources(nodes):
         edges_existing  = node["edges_existing"]
         edges_new = node["edges_new"]
         for edge in edges_existing:
-            if edge not in nodes:
+            if edge not in nodes and ".data." not in edge and "aws_iam_role_policy" not in edge:
+                print(edge)
                 newnodes[edge] = {}
                 newnodes[edge]["resources"] = {}
                 external_resource = {
@@ -396,37 +401,37 @@ def get_graph2():
         #get nodes from plan with resource changes
         nodes = load_plan_and_nodes() #resource changes nodes, use index, need to remove it
 
-        print(newedges)
+        #print(newedges)
         print("\n\n\n\n\n")
-        print(nodes)
+        #print(nodes)
         print("\n\n\n\n\n")
 
 
         nodes = build_new_edges(nodes, newedges)
-        print(nodes)
+        #print(nodes)
         print("built new edges")
         print("\n\n\n\n\n")
         nodes = compute_resource_diffs(nodes)
-        print(nodes)
+        #print(nodes)
         print("computed diffs")
         print("\n\n\n\n\n")
         nodes = build_existing_edges(nodes)
-        print(nodes)
+        #print(nodes)
         print("computed existing edges")
         print("\n\n\n\n\n")
 
         nodes = ensure_edge_lists(nodes)
-        print(nodes)
+        #print(nodes)
         print("ensured edge lists")
         print("\n\n\n\n\n")
 
-        nodes = external_resources(nodes)
-        print(nodes)
+        nodes =external_resources(nodes)
+        #print(nodes)
         print("computed external resources")
         print("\n\n\n\n\n")
 
         nodes = ensure_edge_lists(nodes)
-        print(nodes)
+        #print(nodes)
         print("ensured edge lists")
         print("\n\n\n\n\n")
     

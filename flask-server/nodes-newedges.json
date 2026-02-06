@@ -578,9 +578,9 @@
         },
         "edges_new": [
             "module.lambda-reader.aws_lambda_function.this",
-            "module.lambda-reader.aws_iam_role.lambda",
             "aws_sqs_queue.test_queue",
-            "aws_s3_bucket.test"
+            "aws_s3_bucket.test",
+            "module.lambda-reader.aws_iam_role.lambda"
         ]
     },
     "module.lambda-reader.aws_iam_role_policy.logs": {
@@ -614,8 +614,8 @@
         },
         "edges_new": [
             "module.lambda-reader.aws_lambda_function.this",
-            "module.lambda-reader.aws_iam_role.lambda",
-            "module.lambda-reader.data.aws_iam_policy_document.logs"
+            "module.lambda-reader.data.aws_iam_policy_document.logs",
+            "module.lambda-reader.aws_iam_role.lambda"
         ]
     },
     "module.lambda-reader.aws_lambda_function.this": {
@@ -744,9 +744,9 @@
         "edges_new": [
             "module.lambda-reader.aws_lambda_function.this",
             "module.lambda-reader.aws_iam_role.lambda",
+            "module.lambda-reader.aws_iam_role_policy.logs",
             "module.lambda-reader.null_resource.archive",
-            "module.lambda-reader.aws_iam_role_policy.additional_inline",
-            "module.lambda-reader.aws_iam_role_policy.logs"
+            "module.lambda-reader.aws_iam_role_policy.additional_inline"
         ]
     },
     "module.lambda-reader.local_file.archive_plan": {
