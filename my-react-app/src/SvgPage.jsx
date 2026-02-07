@@ -6,6 +6,7 @@ import IAMIcon from './assets/more-icons/Resource-Icons_07312025/Res_Security-Id
 import AWSIcon from './assets/more-icons/Architecture-Group-Icons_07312025/AWS-Cloud_32.svg';
 import CloudwatchIcon from './assets/svg/Management-Governance/CloudWatch.svg'
 import IamPolicy from './assets/policy-svgrepo-com.svg'
+import ZipIcon from './assets/zip-file-svgrepo-com.svg'
 import RoughLine from './RoughLine';
 
 import GraphNode from './GraphNode';

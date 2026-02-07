@@ -393,7 +393,23 @@ def external_resources(nodes):
 
     return nodes
 
-                
+
+def clean_up_role_links(nodes):
+
+    for path, resources in nodes.items():
+        if "aws_iam_role_policy" in path or "aws_iam_policy_document" in path:
+            edges_existing = [x for x in resources["edges_existing"] if "aws_lambda_function" not in x]
+            edges_new = [x for x in resources["edges_new"] if "aws_lambda_function" not in x]
+            nodes[path]["edges_existing"] = edges_existing
+            nodes[path]["edges_new"] = edges_new
+        if "aws_lambda_function" in path:
+            edges_existing = [x for x in resources["edges_existing"] if "aws_iam_role_policy"  not in x and "aws_iam_policy_document" not in x ]
+            edges_new = [x for x in resources["edges_new"] if "aws_iam_role_policy" not in x and "aws_iam_policy_document" not in x]
+            nodes[path]["edges_existing"] = edges_existing
+            nodes[path]["edges_new"] = edges_new
+
+
+    return nodes
 
             
         
@@ -444,6 +460,7 @@ def get_graph2():
         print("ensured edge lists")
         print("\n\n\n\n\n")
         nodes = delete_orphaned_nodes(nodes)
+        nodes = clean_up_role_links(nodes)
     
         return jsonify(nodes)
 
