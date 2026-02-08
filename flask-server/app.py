@@ -1,4 +1,4 @@
-from flask import Flask, jsonify
+from flask import Flask, jsonify, request
 from flask_cors import CORS
 from terraformPlan import TerraformPlan
 import json
@@ -693,24 +693,50 @@ def clean_up_role_links_v2(nodes):
     return nodes
 
 
+def build_graph3_nodes():
+    """Build the full processed nodes dict (reusable outside the route)."""
+    newedges = get_adjacency_list_from_dot_pydot()
+    nodes = load_plan_and_nodes()
+    nodes = build_new_edges_nx(nodes, newedges)
+    nodes = compute_resource_diffs_v2(nodes)
+    nodes = build_existing_edges_v2(nodes)
+    nodes = ensure_edge_lists(nodes)
+    nodes = external_resources_v2(nodes)
+    nodes = ensure_edge_lists(nodes)
+    nodes = delete_orphaned_nodes_v2(nodes)
+    nodes = clean_up_role_links_v2(nodes)
+    return nodes
+
+
 @app.route('/api/graph3')
 def get_graph3():
     try:
-        newedges = get_adjacency_list_from_dot_pydot()
-        nodes = load_plan_and_nodes()
-        nodes = build_new_edges_nx(nodes, newedges)
-        nodes = compute_resource_diffs_v2(nodes)
-        nodes = build_existing_edges_v2(nodes)
-        nodes = ensure_edge_lists(nodes)
-        nodes = external_resources_v2(nodes)
-        nodes = ensure_edge_lists(nodes)
-        nodes = delete_orphaned_nodes_v2(nodes)
-        nodes = clean_up_role_links_v2(nodes)
+        nodes = build_graph3_nodes()
         return jsonify(nodes)
 
     except Exception as e:
         traceback.print_exc()
         return {"error": str(e), "trace": traceback.format_exc()}
+
+
+@app.route('/api/query', methods=['POST'])
+def query_rag():
+    """RAG endpoint — accepts {"question": "..."} and returns an LLM answer."""
+    from rag import get_query_engine
+
+    body = request.get_json(silent=True) or {}
+    question = body.get("question", "").strip()
+
+    if not question:
+        return jsonify({"error": "A 'question' field is required in the JSON body."}), 400
+
+    try:
+        engine = get_query_engine()
+        response = engine.query(question)
+        return jsonify({"question": question, "answer": str(response)})
+    except Exception as e:
+        traceback.print_exc()
+        return jsonify({"error": str(e), "trace": traceback.format_exc()}), 500
 
 
 if __name__ == '__main__':

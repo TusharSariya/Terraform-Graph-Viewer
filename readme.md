@@ -98,3 +98,10 @@ dot file
   ]
 
 
+curl -X POST http://localhost:8000/api/query \
+  -H "Content-Type: application/json" \
+  -d '{"question": "What resources depend on the security group?"}'
+
+watch -n 1 nvidia-smi
+
+htop

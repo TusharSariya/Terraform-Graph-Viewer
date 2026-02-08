@@ -50,7 +50,7 @@ const useGraphData = () => {
     const [paths, setPaths] = useState({});
 
     useEffect(() => {
-        fetch('http://localhost:8000/api/graph2')
+        fetch('http://localhost:8000/api/graph3')
             .then(res => res.json())
             .then(jsonData => {
                 setShapes(terraformShapes(jsonData));
