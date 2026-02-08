@@ -8,6 +8,8 @@ from collections import defaultdict
 import traceback
 import re
 import tempfile
+import pydot
+import networkx as nx
 
 
 app = Flask(__name__)
@@ -468,6 +470,248 @@ def get_graph2():
         traceback.print_exc()
         return {"error": str(e), "trace": traceback.format_exc()}
     
+
+def get_adjacency_list_from_dot_pydot():
+    current_dir = os.path.dirname(os.path.abspath(__file__))
+    file_path = os.path.join(current_dir, 'graphexisting.dot')
+
+    graphs = pydot.graph_from_dot_file(file_path)
+    graph = graphs[0]
+
+    def extract_resource_name(node_id):
+        # node_id is like '"[root] aws_s3_bucket.test (expand)"'
+        # Match the original parsing: split by space, take index 1, strip quotes/backslashes
+        name = node_id.strip()
+        parts = name.split(" ")
+        if len(parts) >= 2:
+            return parts[1].replace('"', '').replace('\\', '')
+        return name.replace('"', '').replace('\\', '')
+
+    adjacency_list = defaultdict(set)
+
+    # pydot handles subgraphs — collect edges from all subgraphs recursively
+    def collect_edges(g):
+        for edge in g.get_edges():
+            source = extract_resource_name(edge.get_source())
+            target = extract_resource_name(edge.get_destination())
+            adjacency_list[source].add(target)
+        for subgraph in g.get_subgraphs():
+            collect_edges(subgraph)
+
+    collect_edges(graph)
+
+    for key in adjacency_list:
+        adjacency_list[key] = list(adjacency_list[key])
+
+    return adjacency_list
+
+
+def build_new_edges_nx(nodes, newedges):
+    # Build a networkx DiGraph from the adjacency list
+    G = nx.DiGraph()
+    for source, targets in newedges.items():
+        for target in targets:
+            G.add_edge(source, target)
+
+    resource_nodes = set(nodes.keys())
+
+    # For each resource node, BFS through intermediate (non-resource, non-provider) nodes
+    # to find reachable resource nodes
+    for path, node in nodes.items():
+        node['edges_new'] = []
+        if path not in G:
+            continue
+        # BFS: expand only non-resource, non-provider nodes
+        visited = set()
+        visited.add(path)
+        queue = [path]
+        while queue:
+            current = queue.pop(0)
+            if current not in G:
+                continue
+            for neighbor in G.successors(current):
+                if neighbor in visited:
+                    continue
+                visited.add(neighbor)
+                if neighbor in resource_nodes:
+                    node['edges_new'].append(neighbor)
+                elif neighbor.startswith("provider"):
+                    continue
+                else:
+                    queue.append(neighbor)
+
+    # Post-processing: Remove self-references and duplicates
+    for address, node in nodes.items():
+        unique_edges = set(node['edges_new'])
+        unique_edges.discard(address)
+        node['edges_new'] = list(unique_edges)
+
+    # Post-processing: Enforce bidirectionality — if A -> B, ensure B -> A
+    for source, node in nodes.items():
+        for target in node['edges_new']:
+            if target in nodes:
+                target_edges = nodes[target]['edges_new']
+                if source not in target_edges:
+                    target_edges.append(source)
+
+    return nodes
+
+
+def build_existing_edges_v2(nodes):
+    current_dir = os.path.dirname(os.path.abspath(__file__))
+    file_path = os.path.join(current_dir, 'planexisting-larger.json')
+
+    with open(file_path) as json_data:
+        plan = json.load(json_data)
+
+    if "prior_state" not in plan or "values" not in plan["prior_state"] or "root_module" not in plan["prior_state"]["values"]:
+        return nodes
+
+    existingedges = defaultdict(set)
+
+    # Iterative traversal instead of recursive — no recursion limit risk
+    stack = [plan["prior_state"]["values"]["root_module"]]
+    while stack:
+        module = stack.pop()
+        if "resources" in module:
+            for resource in module["resources"]:
+                path = re.sub(r'\[\d+\]', '', resource['address'])
+                if path not in nodes:
+                    nodes[path] = {"resources": {}}
+                if resource['address'] not in nodes[path]["resources"]:
+                    resource['change'] = {'actions': ['existing']}
+                    nodes[path]["resources"][resource['address']] = resource
+                if "depends_on" in resource:
+                    existingedges[path].update(resource["depends_on"])
+                    for edge in resource["depends_on"]:
+                        existingedges[edge].add(path)
+        if "child_modules" in module:
+            stack.extend(module["child_modules"])
+
+    # Project onto nodes — same logic as original to preserve edge counts
+    for key, value in existingedges.items():
+        key = re.sub(r'\[\d+\]', '', key)
+        if key in nodes:
+            nodes[key]['edges_existing'] = []
+            for val in value:
+                if val in nodes:
+                    nodes[key]['edges_existing'].append(val)
+        for val in value:
+            val = re.sub(r'\[\d+\]', '', val)
+            if val in nodes:
+                if 'edges_existing' not in nodes[val]:
+                    nodes[val]['edges_existing'] = []
+                if key in nodes:
+                    nodes[val]['edges_existing'].append(key)
+
+    return nodes
+
+
+def compute_resource_diffs_v2(nodes):
+    for path, mymap in nodes.items():
+        for address, node in mymap["resources"].items():
+            before = node['change'].get('before') or {}
+            after = node['change'].get('after') or {}
+            # Mutate to match original behavior (original sets None to {})
+            node['change']['before'] = before
+            node['change']['after'] = after
+
+            diff = {}
+            all_keys = set(before.keys()) | set(after.keys())
+            for key in all_keys:
+                in_before = key in before
+                in_after = key in after
+                bval = before.get(key)
+                aval = after.get(key)
+
+                if in_before and not in_after:
+                    if bval is not None:
+                        diff[key] = {'before': bval, 'after': None}
+                elif not in_before and in_after:
+                    if aval is not None and aval != '' and aval != [] and aval != {}:
+                        diff[key] = {'before': None, 'after': aval}
+                elif bval != aval:
+                    diff[key] = {'before': bval, 'after': aval}
+
+            node['change']['diff'] = diff
+    return nodes
+
+
+def _make_external_node(edge, back_ref):
+    return {
+        "resources": {
+            edge: {
+                "address": edge,
+                "type": edge,
+                "change": {"actions": ["external"]}
+            }
+        },
+        "edges_existing": [back_ref],
+        "edges_new": [back_ref],
+    }
+
+
+def external_resources_v2(nodes):
+    newnodes = {}
+    for path, node in nodes.items():
+        for edge in node["edges_existing"]:
+            if edge not in nodes and ".data." not in edge and "aws_iam_role_policy" not in edge:
+                newnodes[edge] = _make_external_node(edge, path)
+        for edge in node["edges_new"]:
+            if edge not in nodes:
+                newnodes[edge] = _make_external_node(edge, path)
+
+    for key, value in newnodes.items():
+        if key not in nodes:
+            nodes[key] = value
+
+    return nodes
+
+
+def delete_orphaned_nodes_v2(nodes):
+    return {
+        path: node for path, node in nodes.items()
+        if node.get("edges_existing") or node.get("edges_new")
+    }
+
+
+EDGE_FILTER_RULES = [
+    # (path_contains, edge_must_not_contain)
+    ("aws_iam_role_policy", "aws_lambda_function"),
+    ("aws_iam_policy_document", "aws_lambda_function"),
+    ("aws_lambda_function", "aws_iam_role_policy"),
+    ("aws_lambda_function", "aws_iam_policy_document"),
+]
+
+
+def clean_up_role_links_v2(nodes):
+    for path, node in nodes.items():
+        for path_match, edge_exclude in EDGE_FILTER_RULES:
+            if path_match in path:
+                node["edges_existing"] = [e for e in node["edges_existing"] if edge_exclude not in e]
+                node["edges_new"] = [e for e in node["edges_new"] if edge_exclude not in e]
+    return nodes
+
+
+@app.route('/api/graph3')
+def get_graph3():
+    try:
+        newedges = get_adjacency_list_from_dot_pydot()
+        nodes = load_plan_and_nodes()
+        nodes = build_new_edges_nx(nodes, newedges)
+        nodes = compute_resource_diffs_v2(nodes)
+        nodes = build_existing_edges_v2(nodes)
+        nodes = ensure_edge_lists(nodes)
+        nodes = external_resources_v2(nodes)
+        nodes = ensure_edge_lists(nodes)
+        nodes = delete_orphaned_nodes_v2(nodes)
+        nodes = clean_up_role_links_v2(nodes)
+        return jsonify(nodes)
+
+    except Exception as e:
+        traceback.print_exc()
+        return {"error": str(e), "trace": traceback.format_exc()}
+
 
 if __name__ == '__main__':
     app.run(debug=True, port=8000)
