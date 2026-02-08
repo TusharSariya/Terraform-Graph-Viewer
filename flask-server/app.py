@@ -739,5 +739,99 @@ def query_rag():
         return jsonify({"error": str(e), "trace": traceback.format_exc()}), 500
 
 
+@app.route('/api/query/debug', methods=['POST'])
+def query_rag_debug():
+    """
+    RAG debug endpoint — same as /api/query but returns retrieval trace:
+    vector_paths, hop_additions, collected_paths, source_nodes with metadata.
+    """
+    from rag import get_query_engine, get_graph_retriever
+
+    body = request.get_json(silent=True) or {}
+    question = body.get("question", "").strip()
+
+    if not question:
+        return jsonify({"error": "A 'question' field is required in the JSON body."}), 400
+
+    try:
+        engine = get_query_engine()
+        response = engine.query(question)
+
+        graph_retriever = get_graph_retriever()
+        retrieval_trace = graph_retriever.last_trace if graph_retriever else None
+
+        source_nodes = []
+        if response.source_nodes:
+            for nws in response.source_nodes:
+                node = nws.node
+                source_nodes.append({
+                    "id": node.node_id,
+                    "score": nws.score,
+                    "retrieval_source": node.metadata.get("retrieval_source"),
+                    "graph_path": node.metadata.get("graph_path"),
+                    "text_preview": (node.text or "")[:200] + "..." if node.text and len(node.text) > 200 else node.text,
+                })
+
+        return jsonify({
+            "question": question,
+            "answer": str(response),
+            "retrieval_trace": retrieval_trace,
+            "source_nodes": source_nodes,
+        })
+    except Exception as e:
+        traceback.print_exc()
+        return jsonify({"error": str(e), "trace": traceback.format_exc()}), 500
+
+
+@app.route('/api/eval', methods=['POST'])
+def eval_rag():
+    """
+    RAG evaluation endpoint — runs Faithfulness and Relevancy evaluators.
+    Body: {"question": "..."} — runs query and evaluates the response.
+    """
+    from rag import get_query_engine, get_evaluators
+
+    body = request.get_json(silent=True) or {}
+    question = body.get("question", "").strip()
+
+    if not question:
+        return jsonify({"error": "A 'question' field is required in the JSON body."}), 400
+
+    try:
+        engine = get_query_engine()
+        response = engine.query(question)
+
+        faithfulness_eval, relevancy_eval = get_evaluators()
+
+        faithfulness_result = faithfulness_eval.evaluate_response(
+            query=question,
+            response=response,
+        )
+        relevancy_result = relevancy_eval.evaluate_response(
+            query=question,
+            response=response,
+        )
+
+        return jsonify({
+            "question": question,
+            "answer": str(response),
+            "evaluation": {
+                "faithfulness": {
+                    "passing": faithfulness_result.passing,
+                    "feedback": faithfulness_result.feedback,
+                    "score": faithfulness_result.score,
+                },
+                "relevancy": {
+                    "passing": relevancy_result.passing,
+                    "feedback": relevancy_result.feedback,
+                    "score": relevancy_result.score,
+                },
+            },
+        })
+    except Exception as e:
+        traceback.print_exc()
+        return jsonify({"error": str(e), "trace": traceback.format_exc()}), 500
+
+
 if __name__ == '__main__':
     app.run(debug=True, port=8000)
