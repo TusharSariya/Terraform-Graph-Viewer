@@ -632,6 +632,78 @@ def query_with_langgraph(question: str) -> dict:
     }
 
 
+def parse_analysis_to_resources(
+    analysis_text: str,
+    sub_answers: list[dict[str, str]] | None,
+    resource_paths: list[str],
+) -> dict[str, dict[str, Any]]:
+    """
+    Parse LangGraph analysis into per-resource enrichment.
+    Returns dict: path -> { summary, issues, recommendations }
+    """
+    if not resource_paths:
+        return {}
+
+    # Build context from sub_answers if available
+    sub_context = ""
+    if sub_answers:
+        chunks = [f"Q: {a.get('question', '')}\nA: {a.get('answer', '')}" for a in sub_answers]
+        sub_context = "\n\n".join(chunks)
+
+    paths_json = json.dumps(resource_paths)
+    prompt = f"""Given this Terraform infrastructure analysis:
+
+=== SYNTHESIZED ANALYSIS ===
+{analysis_text}
+=== END ===
+
+{f'''
+=== SUB-QUESTION ANSWERS (additional context) ===
+{sub_context}
+=== END ===
+''' if sub_context else ''}
+
+And these resource paths from the Terraform plan:
+{paths_json}
+
+For each resource path that the analysis discusses, extract what it says. Return a JSON object where each key is a resource path (exact string from the list) and each value is:
+{{ "summary": "brief 1-2 sentence summary for this resource", "issues": ["issue1", "issue2"], "recommendations": ["rec1", "rec2"] }}
+
+Rules:
+- Only include paths that appear in the list and that the analysis discusses
+- If the analysis doesn't mention a resource, omit it (don't include empty entries)
+- Use empty arrays for issues/recommendations if none
+- Return valid JSON only, no markdown or extra text"""
+
+    response = llm.invoke([HumanMessage(content=prompt)])
+    text = response.content if hasattr(response, "content") else str(response)
+    text = text.strip()
+
+    # Extract JSON (handle markdown code blocks)
+    match = re.search(r"\{[\s\S]*\}", text)
+    if match:
+        text = match.group(0)
+
+    try:
+        parsed = json.loads(text)
+        if isinstance(parsed, dict):
+            # Validate structure and ensure paths exist
+            result: dict[str, dict[str, Any]] = {}
+            paths_set = set(resource_paths)
+            for path, val in parsed.items():
+                if path in paths_set and isinstance(val, dict):
+                    result[path] = {
+                        "summary": val.get("summary", ""),
+                        "issues": val.get("issues", []) if isinstance(val.get("issues"), list) else [],
+                        "recommendations": val.get("recommendations", []) if isinstance(val.get("recommendations"), list) else [],
+                    }
+            return result
+    except json.JSONDecodeError:
+        logger.warning("[LangGraph] Failed to parse analysis JSON: %s", text[:200])
+
+    return {}
+
+
 if __name__ == "__main__":
     logging.basicConfig(level=logging.INFO)
     print("LangGraph Terraform RAG Demo\n" + "=" * 50)

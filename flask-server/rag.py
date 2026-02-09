@@ -30,7 +30,7 @@ embed_model = HuggingFaceEmbedding(model_name="BAAI/bge-large-en-v1.5")
 
 # Initialize LLM
 # llm = Ollama(model="mistral", request_timeout=120.0)
-llm = Anthropic(model="claude-opus-4-6", api_key=os.environ["ANTHROPIC_API_KEY"])
+llm = Anthropic(model="claude-sonnet-4-20250514", api_key=os.environ["ANTHROPIC_API_KEY"])
 
 SYSTEM_PROMPT = (
     "You are a Terraform infrastructure expert. "

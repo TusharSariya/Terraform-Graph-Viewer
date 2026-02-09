@@ -1,60 +1,68 @@
 # Terraform Plan Analysis: Issues and Recommendations
 
-Based on the analysis of your Terraform plan, there are **no critical bugs**, but several important issues need attention:
+## \ud83d\udd34 Critical Issues
 
-## \u2705 **What's Working Well**
-- No syntax errors or validation issues
-- Proper resource dependencies and references
-- Appropriate IAM permissions for basic Lambda-to-S3 and Lambda-to-SQS operations
-- Clean plan showing intentional addition of `lambda-reader` module without resource drift
+### 1. Missing SQS Event Source Mapping
+There is no `aws_lambda_event_source_mapping` resource connecting the SQS queue to either Lambda function. The `lambda-reader` has the correct IAM permissions to consume from SQS (`sqs:ReceiveMessage`, `sqs:DeleteMessage`, `sqs:GetQueueAttributes`), but without an event source mapping, **the Lambda will never be triggered by SQS messages**. This is a fundamental wiring gap that renders the reader non-functional as an event-driven consumer.
 
-## \u26a0\ufe0f **Key Issues to Address**
+### 2. Missing Environment Variables on Both Lambdas
+Both `lambda-reader` and `lambda-writer` have `\"environment\": []` \u2014 no environment variables whatsoever. Neither function has a way to discover at runtime:
+- The **S3 bucket name** (`test-20260204134234564900000001`)
+- The **SQS queue URL**
 
-### **Missing Configuration**
-1. **No Environment Variables**: Both Lambda functions lack environment variables for:
-   - S3 bucket name (`test-20260204134234564900000001`)
-   - SQS queue URL (`https://sqs.us-east-1.amazonaws.com/992382747916/test-queue`)
-   
-   Your Lambda code will need to hardcode these values or discover them at runtime.
+The IAM policies correctly reference these resources, but the functions themselves have no runtime configuration to locate them. Unless the resource identifiers are hardcoded in the application code (which is poor practice), **both functions will fail at runtime**.
 
-2. **Missing SQS Event Source Mapping**: The `lambda-reader` has SQS permissions but no `aws_lambda_event_source_mapping` to automatically trigger from the SQS queue.
+---
 
-### **Security Concerns**
-3. **Overly Broad CloudWatch Permissions**: Lambda roles have `logs:CreateLogGroup` permission despite log groups being explicitly created via Terraform.
+## \ud83d\udfe1 IAM Permission Gaps
 
-4. **Missing IAM Permissions**: 
-   - `lambda-reader` lacks `s3:ListBucket` (may be needed depending on use case)
-   - No Lambda has `s3:DeleteObject` permissions
+### 3. Missing `s3:ListBucket` for lambda-reader
+The reader has `s3:GetObject` but no `s3:ListBucket`. If the function needs to enumerate objects before reading them, it will receive a **403 Forbidden** on any ListObjects call. This is a common oversight.
 
-5. **No Encryption**: CloudWatch Log Groups and Lambda functions use default encryption instead of customer-managed KMS keys.
+### 4. Missing `s3:DeleteObject` for lambda-writer
+The writer has `s3:PutObject` but not `s3:DeleteObject`. If the writer ever needs to overwrite or clean up objects, this permission is absent. Whether this is an issue depends on application logic, but it's worth verifying.
 
-6. **Indefinite Log Retention**: `lambda-reader` log group has `retention_in_days: 0`, leading to indefinite retention and potential cost issues.
+### 5. Unnecessary Bucket-Level ARN in Object Policies
+Both inline policies grant permissions on both the bucket ARN and the `/*` (objects) ARN. For `s3:GetObject` and `s3:PutObject`, only the object-level ARN (`/*`) is needed. The bucket-level ARN is superfluous for these actions and should be removed for least-privilege adherence.
 
-### **Potential Design Issues**
-7. **Identical Code Artifacts**: Both Lambda functions use the same deployment package and source code hash. Verify this is intentional for reader vs. writer functions.
+---
 
-## \ud83d\udccb **Recommendations**
+## \ud83d\udfe1 Configuration Concerns
 
-1. **Add environment variables** to Lambda functions:
-   ```hcl
-   environment {
-     variables = {
-       S3_BUCKET_NAME = aws_s3_bucket.test.id
-       SQS_QUEUE_URL  = aws_sqs_queue.test_queue.url
-     }
-   }
-   ```
+### 6. Shared Deployment Artifact
+Both `lambda-reader` and `lambda-writer` reference the **same zip file** and **same source code hash** (`builds/9c36e723854b07d30831934c1e09ec90731e68f335c47261ea580080b50210e8.zip`). If these functions are intended to have different logic (reader vs. writer), this is a misconfiguration. If intentional (e.g., a single binary with role-based behavior), it should be documented and the function would need an environment variable to distinguish its role \u2014 which is currently missing.
 
-2. **Add SQS event source mapping** for the reader Lambda:
-   ```hcl
-   resource \"aws_lambda_event_source_mapping\" \"sqs_trigger\" {
-     event_source_arn = aws_sqs_queue.test_queue.arn
-     function_name    = module.lambda-reader.lambda_function_name
-   }
-   ```
+### 7. CloudWatch Log Retention Set to Infinite
+`module.lambda-reader.aws_cloudwatch_log_group.lambda` has `retention_in_days: 0`, meaning logs are retained **forever**. This leads to unbounded storage costs. Set an explicit retention period (e.g., 30, 90, or 365 days).
 
-3. **Set appropriate log retention** (e.g., 30 days) and consider KMS encryption for compliance.
+### 8. Hardcoded Values That Should Be Dynamic
+- **AWS Account ID** (`992382747916`) is hardcoded in the SQS queue ARN within IAM policies \u2014 should use `data.aws_caller_identity.current.account_id`.
+- **Region** (`us-east-1`) appears hardcoded \u2014 should reference `data.aws_region.current.name` or a variable.
+- **S3 bucket name** with a timestamp-based suffix is hardcoded in policies rather than interpolated from the bucket resource.
 
-4. **Review IAM policies** to remove unnecessary `logs:CreateLogGroup` permissions and add `s3:ListBucket` if needed.
+---
 
-The infrastructure will deploy successfully as-is, but these changes will improve security, functionality, and maintainability.
+## \u2705 What's Working Correctly
+
+| Area | Status |
+|------|--------|
+| Terraform syntax and resource references | No errors detected |
+| IAM trust policies (`sts:AssumeRole` for `lambda.amazonaws.com`) | Correct |
+| Read/write IAM separation (reader gets `GetObject`, writer gets `PutObject`) | Clean |
+| SQS IAM separation (reader gets consume permissions, writer gets `SendMessage`) | Correct |
+| Networking | Valid \u2014 both Lambdas run outside VPC, accessing S3/SQS via public endpoints |
+| CloudWatch logging policies | Present for both functions |
+
+---
+
+## Summary of Required Fixes
+
+| Priority | Issue | Fix |
+|----------|-------|-----|
+| \ud83d\udd34 Critical | No SQS \u2192 Lambda event source mapping | Add `aws_lambda_event_source_mapping` for `lambda-reader` |
+| \ud83d\udd34 Critical | No environment variables on either Lambda | Pass S3 bucket name and SQS queue URL as env vars |
+| \ud83d\udfe1 Medium | Missing `s3:ListBucket` on reader | Add to IAM policy if needed by application |
+| \ud83d\udfe1 Medium | Infinite log retention | Set `retention_in_days` to a finite value |
+| \ud83d\udfe1 Medium | Hardcoded account ID and region in policies | Use dynamic references |
+| \ud83d\udfe1 Low | Same code artifact for both functions | Verify this is intentional; add distinguishing env var if so |",
+    "question": "Are there any bugs or issues in this Terraform plan? Analyze each resource. Check for missing event source mappings, IAM gaps, networking issues, and configuration problems.

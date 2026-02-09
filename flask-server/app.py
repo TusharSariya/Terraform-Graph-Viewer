@@ -32,6 +32,17 @@ def get_data():
         ]
     })
 
+
+@app.route('/api/mock')
+def get_mock():
+    """Read and return mock.json."""
+    current_dir = os.path.dirname(os.path.abspath(__file__))
+    file_path = os.path.join(current_dir, 'mock.json')
+    with open(file_path) as f:
+        data = json.load(f)
+    return jsonify(data)
+
+
 @app.route('/api/plan')
 def get_plan():
     # Load the plan using the object model
@@ -719,6 +730,80 @@ def get_graph3():
         return {"error": str(e), "trace": traceback.format_exc()}
 
 
+@app.route('/api/graph4')
+def get_graph4():
+    """
+    Same as graph3 but enriched with LangGraph analysis per resource.
+    Each resource gets an 'enrichment' field: { summary, issues, recommendations }
+    plus top-level 'langgraph' with the raw LangGraph output and parsed per-resource JSON.
+    """
+    try:
+        nodes = build_graph3_nodes()
+        resource_paths = list(nodes.keys())
+
+        # Run LangGraph with analysis question
+        from LangGraph import query_with_langgraph, parse_analysis_to_resources
+
+        langgraph_result = query_with_langgraph(
+            "Are there any bugs or issues in this Terraform plan? "
+            "Analyze each resource. Check for missing event source mappings, IAM gaps, "
+            "networking issues, and configuration problems."
+        )
+
+        analysis_text = (
+            langgraph_result.get("synthesized_answer")
+            or langgraph_result.get("final_answer")
+            or langgraph_result.get("rag_answer")
+            or ""
+        )
+        sub_answers = langgraph_result.get("sub_answers") or []
+
+        # Parse analysis into per-resource enrichment (JSON)
+        enrichment_by_path = parse_analysis_to_resources(
+            analysis_text=analysis_text,
+            sub_answers=sub_answers,
+            resource_paths=resource_paths,
+        )
+
+        # Enrich each node with llm_analysis
+        for path, node_data in nodes.items():
+            enrichment = enrichment_by_path.get(path, {})
+            node_data["enrichment"] = {
+                "summary": enrichment.get("summary", ""),
+                "issues": enrichment.get("issues", []),
+                "recommendations": enrichment.get("recommendations", []),
+            }
+
+        for path,group in nodes.items():
+            enrichment = enrichment_by_path.get(path, {})
+            nodes[path]["AI"] = {}
+            nodes[path]["AI"]["Issues"] = enrichment.get("issues", [])
+            nodes[path]["AI"]["Sumary"] = enrichment.get("summary", "")
+            nodes[path]["AI"]["Recomendations"] = enrichment.get("recommendations", [])
+
+        return jsonify(nodes)
+
+        """
+        return jsonify({
+            "nodes": nodes
+            "langgraph": {
+                "question": langgraph_result.get("question"),
+                "route": langgraph_result.get("route"),
+                "final_answer": langgraph_result.get("final_answer"),
+                "synthesized_answer": langgraph_result.get("synthesized_answer"),
+                "sub_questions": langgraph_result.get("sub_questions"),
+                "sub_answers": langgraph_result.get("sub_answers"),
+                "trace": langgraph_result.get("trace"),
+                "enrichment_by_path": enrichment_by_path,
+            },
+        })
+        """
+    except Exception as e:
+        traceback.print_exc()
+        return jsonify({"error": str(e), "trace": traceback.format_exc()}), 500
+
+
+
 @app.route('/api/query', methods=['POST'])
 def query_rag():
     """RAG endpoint — accepts {"question": "..."} and returns an LLM answer."""
@@ -854,6 +939,15 @@ def query_langgraph():
     except Exception as e:
         traceback.print_exc()
         return jsonify({"error": str(e), "trace": traceback.format_exc()}), 500
+
+@app.route('/api/mock')
+def get_mock_response():
+    """Read and return mock.json."""
+    current_dir = os.path.dirname(os.path.abspath(__file__))
+    file_path = os.path.join(current_dir, 'mock.json')
+    with open(file_path) as f:
+        data = json.load(f)
+    return jsonify(data)
 
 
 if __name__ == '__main__':
