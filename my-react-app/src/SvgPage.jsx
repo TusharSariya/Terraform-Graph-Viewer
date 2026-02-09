@@ -10,7 +10,7 @@ import ZipIcon from './assets/zip-file-svgrepo-com.svg'
 import RoughLine from './RoughLine';
 
 import GraphNode from './GraphNode';
-import GraphEdge from './GraphEdge';
+import RoughEdge from './RoughEdge';
 import GraphControls from './GraphControls';
 import ContextMenu from './ContextMenu';
 
@@ -18,6 +18,28 @@ import useGraphData from './hooks/useGraphData';
 import useGraphInteraction from './hooks/useGraphInteraction';
 import useGraphLayout from './hooks/useGraphLayout';
 import { generateMenuItems } from './utils/contextMenuUtils';
+
+/**
+ * Offset line endpoints from shape center to shape edge.
+ * Returns { startX, startY, endX, endY } so the line stops at the shape boundaries.
+ */
+function offsetEdgeToShapeEdge(startX, startY, endX, endY, startSize, endSize, margin = 0) {
+    const dx = endX - startX;
+    const dy = endY - startY;
+    const distance = Math.hypot(dx, dy) || 0.001;
+    const ux = dx / distance;
+    const uy = dy / distance;
+
+    const startRadius = startSize / 2 + margin;
+    const endRadius = endSize / 2 + margin;
+
+    return {
+        startX: startX + startRadius * ux,
+        startY: startY + startRadius * uy,
+        endX: endX - endRadius * ux,
+        endY: endY - endRadius * uy
+    };
+}
 
 const iconMap = {
     "aws_sqs_queue": SQSIcon,
@@ -149,13 +171,19 @@ function SvgPage() {
                             return targetAddresses.map(targetAddress => {
                                 const depShape = shapes[targetAddress];
                                 if (!depShape) return null;
+                                const pts = offsetEdgeToShapeEdge(
+                                    shape.x + shape.size / 2, shape.y + shape.size / 2,
+                                    depShape.x + depShape.size / 2, depShape.y + depShape.size / 2,
+                                    shape.size, depShape.size,
+                                    5
+                                );
                                 return (
-                                    <GraphEdge
-                                        key={`conn-${shape.id}-${depShape.id}`}
-                                        startX={shape.x + shape.size / 2}
-                                        startY={shape.y + shape.size / 2}
-                                        endX={depShape.x + depShape.size / 2}
-                                        endY={depShape.y + depShape.size / 2}
+                                    <RoughEdge
+                                        key={`conn-new-${shape.id}-${depShape.id}`}
+                                        startX={pts.startX}
+                                        startY={pts.startY}
+                                        endX={pts.endX}
+                                        endY={pts.endY}
                                         color="#008f15ff"
                                     />
                                 );
@@ -172,13 +200,19 @@ function SvgPage() {
                             return targetAddresses.map(targetAddress => {
                                 const depShape = shapes[targetAddress];
                                 if (!depShape) return null;
+                                const pts = offsetEdgeToShapeEdge(
+                                    shape.x + shape.size / 2, shape.y + shape.size / 2,
+                                    depShape.x + depShape.size / 2, depShape.y + depShape.size / 2,
+                                    shape.size, depShape.size,
+                                    5
+                                );
                                 return (
-                                    <GraphEdge
-                                        key={`conn-${shape.id}-${depShape.id}`}
-                                        startX={shape.x + shape.size / 2}
-                                        startY={shape.y + shape.size / 2}
-                                        endX={depShape.x + depShape.size / 2}
-                                        endY={depShape.y + depShape.size / 2}
+                                    <RoughEdge
+                                        key={`conn-existing-${shape.id}-${depShape.id}`}
+                                        startX={pts.startX}
+                                        startY={pts.startY}
+                                        endX={pts.endX}
+                                        endY={pts.endY}
                                         color="#333"
                                     />
                                 );

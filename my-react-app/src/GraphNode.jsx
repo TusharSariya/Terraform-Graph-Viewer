@@ -24,6 +24,7 @@ const GraphNode = ({ shape, icon, isDragging, onMouseDown, onContextMenu }) => {
                     dominantBaseline="middle"
                     fill="#333"
                     fontSize={14}
+                    fontFamily="'Cascadia Code', monospace"
                     style={{
                         pointerEvents: 'none',
                         userSelect: 'none',
