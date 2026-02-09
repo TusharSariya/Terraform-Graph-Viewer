@@ -833,5 +833,28 @@ def eval_rag():
         return jsonify({"error": str(e), "trace": traceback.format_exc()}), 500
 
 
+@app.route('/api/query/langgraph', methods=['POST'])
+def query_langgraph():
+    """
+    LangGraph-powered RAG endpoint — routing, agentic critique/refine loop, full trace.
+    Body: {"question": "..."}
+    Returns: final_answer, route, trace, rag_answer, refined_answer (if refined).
+    """
+    from LangGraph import query_with_langgraph
+
+    body = request.get_json(silent=True) or {}
+    question = body.get("question", "").strip()
+
+    if not question:
+        return jsonify({"error": "A 'question' field is required in the JSON body."}), 400
+
+    try:
+        result = query_with_langgraph(question)
+        return jsonify(result)
+    except Exception as e:
+        traceback.print_exc()
+        return jsonify({"error": str(e), "trace": traceback.format_exc()}), 500
+
+
 if __name__ == '__main__':
     app.run(debug=True, port=8000)

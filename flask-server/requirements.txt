@@ -39,6 +39,10 @@ joblib==1.5.3
 llama-index-core==0.14.13
 llama-index-embeddings-huggingface==0.6.1
 llama-index-llms-ollama==0.6.1
+langgraph>=0.2.0
+langchain>=0.3.0
+langchain-anthropic>=0.3.0
+langchain-core>=0.3.0
 llama-index-instrumentation==0.4.2
 llama-index-workflows==2.14.1
 MarkupSafe==3.0.3
