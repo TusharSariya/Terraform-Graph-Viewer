@@ -23,7 +23,8 @@ function terraformShapes(data) {
                 showLabel: false, // Default to hidden, consistent with original logic
                 before_state: resource.change.before,
                 after_state: resource.change.after,
-                diff: resource.change.diff
+                diff: resource.change.diff,
+                AI: nodes.AI
             })
         }
     }
@@ -50,7 +51,7 @@ const useGraphData = () => {
     const [paths, setPaths] = useState({});
 
     useEffect(() => {
-        fetch('http://localhost:8000/api/graph3')
+        fetch('http://localhost:8000/api/mock')
             .then(res => res.json())
             .then(jsonData => {
                 setShapes(terraformShapes(jsonData));

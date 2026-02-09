@@ -236,6 +236,10 @@ function SvgPage() {
                                         {
                                             label: "After State",
                                             subItems: generateMenuItems(contextMenu.after_state, "After")
+                                        },
+                                        {
+                                            label: "AI insights",
+                                            subItems: generateMenuItems(contextMenu.AI,"AI")
                                         }
                                     ]}
                                 />

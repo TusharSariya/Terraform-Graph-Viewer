@@ -174,7 +174,8 @@ const useGraphInteraction = (svgRef, shapes, setShapes) => {
                     shapeId: shape.id,
                     before_state: shape.before_state,
                     after_state: shape.after_state,
-                    diff: shape.diff
+                    diff: shape.diff,
+                    AI: shape.AI
                 }
             };
         });
