@@ -13,6 +13,8 @@ import networkx as nx
 
 
 app = Flask(__name__)
+app.json.sort_keys = False
+app.config["JSONIFY_PRETTYPRINT_REGULAR"] = True
 CORS(app)  # Enable CORS for all routes
 
 @app.route('/')
@@ -736,18 +738,28 @@ def get_graph4():
     Same as graph3 but enriched with LangGraph analysis per resource.
     Each resource gets an 'enrichment' field: { summary, issues, recommendations }
     plus top-level 'langgraph' with the raw LangGraph output and parsed per-resource JSON.
+    Pass ?mock=true to skip all LLM calls and return deterministic canned data.
     """
     try:
-        nodes = build_graph3_nodes()
+        mock = request.args.get("mock", "").lower() in ("true", "1")
+
+        from LangGraph import query_with_langgraph, parse_analysis_to_resources
+
+        if mock:
+            import copy
+            from LangGraph import MOCK_GRAPH_NODES
+            nodes = copy.deepcopy(MOCK_GRAPH_NODES)
+        else:
+            nodes = build_graph3_nodes()
+
         resource_paths = list(nodes.keys())
 
         # Run LangGraph with analysis question
-        from LangGraph import query_with_langgraph, parse_analysis_to_resources
-
         langgraph_result = query_with_langgraph(
             "Are there any bugs or issues in this Terraform plan? "
             "Analyze each resource. Check for missing event source mappings, IAM gaps, "
-            "networking issues, and configuration problems."
+            "networking issues, and configuration problems.",
+            mock=mock,
         )
 
         analysis_text = (
@@ -763,6 +775,7 @@ def get_graph4():
             analysis_text=analysis_text,
             sub_answers=sub_answers,
             resource_paths=resource_paths,
+            mock=mock,
         )
 
         # Enrich each node with llm_analysis
@@ -922,19 +935,21 @@ def eval_rag():
 def query_langgraph():
     """
     LangGraph-powered RAG endpoint — routing, agentic critique/refine loop, full trace.
-    Body: {"question": "..."}
+    Body: {"question": "...", "mock": true/false}
     Returns: final_answer, route, trace, rag_answer, refined_answer (if refined).
+    Pass mock=true to skip real LLM/RAG calls and return deterministic canned responses.
     """
     from LangGraph import query_with_langgraph
 
     body = request.get_json(silent=True) or {}
     question = body.get("question", "").strip()
+    mock = bool(body.get("mock", False))
 
     if not question:
         return jsonify({"error": "A 'question' field is required in the JSON body."}), 400
 
     try:
-        result = query_with_langgraph(question)
+        result = query_with_langgraph(question, mock=mock)
         return jsonify(result)
     except Exception as e:
         traceback.print_exc()

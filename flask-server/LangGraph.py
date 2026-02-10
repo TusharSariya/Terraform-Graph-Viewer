@@ -47,6 +47,9 @@ class TerraformRAGState(TypedDict):
     # User input
     question: str
 
+    # Mock mode: skip real LLM/RAG calls and return deterministic canned responses
+    mock: Optional[bool]
+
     # Routing
     route: Optional[str]  # "simple" | "complex" | "analysis"
 
@@ -69,6 +72,115 @@ class TerraformRAGState(TypedDict):
 
     # Trace / introspection (reducer: append new entries)
     trace: Annotated[list[str], add]
+
+
+# ---------------------------------------------------------------------------
+# Mock responses — deterministic canned data shared with Node.js backend
+# ---------------------------------------------------------------------------
+
+MOCK_RAG_ANSWER = (
+    "The Terraform plan contains an S3 bucket (aws_s3_bucket.test), "
+    "a Lambda function (aws_lambda_function.writer), and an SQS queue "
+    "(aws_sqs_queue.input). The Lambda is triggered by the SQS queue "
+    "via an event source mapping."
+)
+
+MOCK_SUB_QUESTIONS = [
+    "Are there Terraform deployment or plan issues?",
+    "Are there security or IAM issues?",
+    "Are there any missing resources or dependencies?",
+]
+
+MOCK_SUB_ANSWERS = [
+    {"question": "Are there Terraform deployment or plan issues?",
+     "answer": "No deployment issues found. All resources have valid configurations."},
+    {"question": "Are there security or IAM issues?",
+     "answer": "The Lambda function has an IAM role with appropriate SQS permissions."},
+    {"question": "Are there any missing resources or dependencies?",
+     "answer": "No missing dependencies detected. The event source mapping connects Lambda to SQS."},
+]
+
+MOCK_SYNTHESIZED_ANSWER = (
+    "The Terraform plan is well-configured. No deployment issues, security gaps, "
+    "or missing dependencies were found. The Lambda function is properly connected "
+    "to the SQS queue via an event source mapping with appropriate IAM permissions."
+)
+
+MOCK_CRITIQUE_RESPONSE = '{"complete": true, "reason": "The answer addresses the question with specific resource details."}'
+
+MOCK_REFINED_ANSWER = (
+    "After additional review: The Terraform plan includes properly configured "
+    "resources with no issues detected."
+)
+
+MOCK_GRAPH_NODES = {
+    "aws_s3_bucket.test": {
+        "resources": {
+            "aws_s3_bucket.test": {
+                "address": "aws_s3_bucket.test",
+                "type": "aws_s3_bucket",
+                "change": {
+                    "actions": ["no-op"],
+                    "before": {"bucket": "my-test-bucket"},
+                    "after": {"bucket": "my-test-bucket"},
+                    "diff": {},
+                },
+            }
+        },
+        "edges_new": ["aws_lambda_function.writer"],
+        "edges_existing": [],
+    },
+    "aws_lambda_function.writer": {
+        "resources": {
+            "aws_lambda_function.writer": {
+                "address": "aws_lambda_function.writer",
+                "type": "aws_lambda_function",
+                "change": {
+                    "actions": ["no-op"],
+                    "before": {"function_name": "writer"},
+                    "after": {"function_name": "writer"},
+                    "diff": {},
+                },
+            }
+        },
+        "edges_new": ["aws_sqs_queue.input"],
+        "edges_existing": ["aws_s3_bucket.test"],
+    },
+    "aws_sqs_queue.input": {
+        "resources": {
+            "aws_sqs_queue.input": {
+                "address": "aws_sqs_queue.input",
+                "type": "aws_sqs_queue",
+                "change": {
+                    "actions": ["no-op"],
+                    "before": {"name": "input-queue"},
+                    "after": {"name": "input-queue"},
+                    "diff": {},
+                },
+            }
+        },
+        "edges_new": [],
+        "edges_existing": ["aws_lambda_function.writer"],
+    },
+}
+
+MOCK_ENRICHMENT = {
+    "aws_s3_bucket.test": {
+        "summary": "S3 bucket used for data storage. No issues detected.",
+        "issues": [],
+        "recommendations": [],
+    },
+    "aws_lambda_function.writer": {
+        "summary": "Lambda function triggered by SQS queue via event source mapping.",
+        "issues": ["No dead letter queue configured for error handling"],
+        "recommendations": ["Add a dead letter queue for failed invocations"],
+    },
+    "aws_sqs_queue.input": {
+        "summary": "SQS queue that triggers the Lambda function.",
+        "issues": [],
+        "recommendations": ["Consider adding a message retention policy"],
+    },
+}
 
 
 # ---------------------------------------------------------------------------
@@ -145,7 +257,10 @@ def rag_retrieve(state: TerraformRAGState) -> TerraformRAGState:
     """Call the graph RAG to get an initial answer."""
     question = state["question"]
 
-    answer = terraform_rag_query.invoke({"question": question})
+    if state.get("mock"):
+        answer = MOCK_RAG_ANSWER
+    else:
+        answer = terraform_rag_query.invoke({"question": question})
 
     return {"rag_answer": answer, "trace": [f"[rag] Retrieved answer ({len(answer)} chars)"]}
 
@@ -326,6 +441,13 @@ Output only the JSON array, no other text."""
 
 def decompose(state: TerraformRAGState) -> TerraformRAGState:
     """Generate sub-questions from broad analysis question, plus connection-checklist questions."""
+    if state.get("mock"):
+        sub_questions = list(MOCK_SUB_QUESTIONS)
+        return {
+            "sub_questions": sub_questions,
+            "trace": [f"[decompose] Generated {len(sub_questions)} sub-questions"],
+        }
+
     question = state["question"]
     sub_questions = decompose_question(question)
 
@@ -357,6 +479,18 @@ def multi_rag_retrieve(state: TerraformRAGState) -> TerraformRAGState:
     """Run RAG for each sub-question in parallel, collect answers."""
     sub_questions = state.get("sub_questions", [])
 
+    if state.get("mock"):
+        # Build a lookup from mock sub-answers
+        mock_lookup = {a["question"]: a["answer"] for a in MOCK_SUB_ANSWERS}
+        sub_answers = [
+            {"question": sq, "answer": mock_lookup.get(sq, MOCK_RAG_ANSWER)}
+            for sq in sub_questions
+        ]
+        return {
+            "sub_answers": sub_answers,
+            "trace": [f"[multi_rag] Retrieved {len(sub_answers)} sub-answers in parallel"],
+        }
+
     def _rag_one(sq: str) -> dict[str, str]:
         ans = terraform_rag_query.invoke({"question": sq})
         return {"question": sq, "answer": ans}
@@ -379,6 +513,14 @@ def multi_rag_retrieve(state: TerraformRAGState) -> TerraformRAGState:
 
 def synthesize(state: TerraformRAGState) -> TerraformRAGState:
     """LLM synthesizes sub-answers into one coherent answer."""
+    if state.get("mock"):
+        synthesized = MOCK_SYNTHESIZED_ANSWER
+        sub_answers = state.get("sub_answers", [])
+        return {
+            "synthesized_answer": synthesized,
+            "trace": [f"[synthesize] Combined {len(sub_answers)} answers ({len(synthesized)} chars)"],
+        }
+
     question = state["question"]
     sub_answers = state.get("sub_answers", [])
 
@@ -411,6 +553,14 @@ def critique(state: TerraformRAGState) -> TerraformRAGState:
     LLM critiques the RAG answer: is it complete and faithful to the context?
     Returns needs_refinement=True if the answer seems incomplete or uncertain.
     """
+    if state.get("mock"):
+        critique_text = MOCK_CRITIQUE_RESPONSE
+        return {
+            "critique": critique_text,
+            "needs_refinement": False,
+            "trace": ["[critique] needs_refinement=False"],
+        }
+
     question = state["question"]
     answer = state.get("rag_answer", "")
 
@@ -445,6 +595,10 @@ def refine(state: TerraformRAGState) -> TerraformRAGState:
     If critique said the answer is incomplete, do a follow-up RAG with a refined question
     and synthesize a better answer.
     """
+    if state.get("mock"):
+        refined = MOCK_REFINED_ANSWER
+        return {"refined_answer": refined, "trace": [f"[refine] Synthesized {len(refined)} chars"]}
+
     question = state["question"]
     initial_answer = state.get("rag_answer", "")
     critique_text = state.get("critique", "")
@@ -595,14 +749,16 @@ def get_langgraph() -> StateGraph:
     return _graph
 
 
-def query_with_langgraph(question: str) -> dict:
+def query_with_langgraph(question: str, mock: bool = False) -> dict:
     """
     Run a question through the full LangGraph workflow.
     Returns dict with final_answer, trace, route, and metadata.
+    Pass mock=True to skip real LLM/RAG calls and use deterministic canned responses.
     """
     graph = get_langgraph()
     initial_state: TerraformRAGState = {
         "question": question,
+        "mock": mock,
         "route": None,
         "rag_answer": None,
         "critique": None,
@@ -636,13 +792,19 @@ def parse_analysis_to_resources(
     analysis_text: str,
     sub_answers: list[dict[str, str]] | None,
     resource_paths: list[str],
+    mock: bool = False,
 ) -> dict[str, dict[str, Any]]:
     """
     Parse LangGraph analysis into per-resource enrichment.
     Returns dict: path -> { summary, issues, recommendations }
+    Pass mock=True to return deterministic canned enrichment without calling the LLM.
     """
     if not resource_paths:
         return {}
+
+    if mock:
+        paths_set = set(resource_paths)
+        return {p: dict(v) for p, v in MOCK_ENRICHMENT.items() if p in paths_set}
 
     # Build context from sub_answers if available
     sub_context = ""

@@ -1,0 +1,14 @@
+{
+  "name": "express-langgraph-server",
+  "version": "1.0.0",
+  "description": "Node.js/Express duplicate of the Flask /api/query/langgraph endpoint",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.39.0",
+    "cors": "^2.8.5",
+    "express": "^4.21.0"
+  }
+}
