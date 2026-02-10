@@ -12,6 +12,7 @@ import RoughLine from './RoughLine';
 import GraphNode from './GraphNode';
 import RoughEdge from './RoughEdge';
 import GraphControls from './GraphControls';
+import SaveGraph from './saveGraph';
 import ContextMenu from './ContextMenu';
 
 import useGraphData from './hooks/useGraphData';
@@ -103,6 +104,7 @@ function SvgPage() {
         }}>
 
             <GraphControls mode={mode} setMode={setMode} zoomScale={viewTransform.scale} />
+            <SaveGraph zoomScale={viewTransform.scale} />
 
             <svg
                 ref={svgRef}
