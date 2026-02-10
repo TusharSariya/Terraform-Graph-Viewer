@@ -2,7 +2,7 @@ import React from 'react';
 import useGraphInteraction from './hooks/useGraphInteraction';
 
 
-const SaveGraph = () => {
+const SaveGraph = ({shapes, paths, drawLines}) => {
 
     return (<div style={{
         position: 'absolute',

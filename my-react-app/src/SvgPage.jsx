@@ -104,7 +104,7 @@ function SvgPage() {
         }}>
 
             <GraphControls mode={mode} setMode={setMode} zoomScale={viewTransform.scale} />
-            <SaveGraph zoomScale={viewTransform.scale} />
+            <SaveGraph shapes={shapes} paths={paths} drawLines={drawnLines} />
 
             <svg
                 ref={svgRef}

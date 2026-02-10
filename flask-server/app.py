@@ -10,6 +10,46 @@ import re
 import tempfile
 import pydot
 import networkx as nx
+from sqlalchemy import create_engine, Column, Integer, Text, DateTime
+from sqlalchemy.orm import declarative_base
+from sqlalchemy.sql import func
+
+Base = declarative_base()
+
+
+class Shape(Base):
+    __tablename__ = 'shapes'
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    data = Column(Text)
+    created_at = Column(DateTime, server_default=func.now())
+
+
+class Path(Base):
+    __tablename__ = 'paths'
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    data = Column(Text)
+    created_at = Column(DateTime, server_default=func.now())
+
+
+class DrawLine(Base):
+    __tablename__ = 'draw_lines'
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    data = Column(Text)
+    created_at = Column(DateTime, server_default=func.now())
+
+
+class ContextMenu(Base):
+    __tablename__ = 'context_menus'
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    data = Column(Text)
+    created_at = Column(DateTime, server_default=func.now())
+
+
+def init_db():
+    """Create SQLite database with empty tables for graph state using SQLAlchemy."""
+    db_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'graph.db')
+    engine = create_engine(f'sqlite:///{db_path}')
+    Base.metadata.create_all(engine)
 
 
 app = Flask(__name__)
@@ -966,4 +1006,5 @@ def get_mock_response():
 
 
 if __name__ == '__main__':
+    init_db()
     app.run(debug=True, port=8000)
