@@ -1,107 +1,82 @@
-tofu plan -out=tfplan
+# Terraform Graph Visualizer
 
+Visualize Terraform/OpenTofu plan dependencies as an interactive graph and query them with natural language.
+
+![App Screenshot](./Screenshot%20from%202026-02-09%2016-08-24.png)
+
+## Overview
+
+This tool parses Terraform plan outputs and dependency graphs into an interactive visualization. It includes a React-based infinite canvas with AWS resource icons, pan/draw/erase tools, and a LangGraph-powered API for natural language queries about resource dependencies.
+
+## Features
+
+- **Graph generation** — Convert `tofu graph` output to an interactive SVG canvas
+- **Natural language queries** — Ask questions like "What resources depend on the security group?"
+- **Infinite canvas** — Pan, zoom, draw annotations, and explore large graphs
+- **AWS icons** — Visual resource types (Lambda, S3, SQS, IAM, etc.)
+
+## Prerequisites
+
+- [OpenTofu](https://opentofu.org/) (or Terraform)
+- Python 3
+- Node.js (for the React app)
+
+## Quick Start
+
+### 1. Generate the plan and graph
+
+```bash
+tofu plan -out=tfplan
 tofu show -json tfplan > plan.json
 tofu graph -plan=tfplan > graph.dot
-tofu graph -plan=tfplan| dot -Tsvg > graph.svg
+tofu graph -plan=tfplan | dot -Tsvg > graph.svg
+```
 
-planned values -> root module -> child modules -> resources
+### 2. Parse the graph to JSON
 
-tofu graph > graph.dot
-
+```bash
 python parse_dot.py graph.dot > graph.json
+```
 
-sudo apt install graphviz
+### 3. Start the backend
 
+```bash
+cd flask-server
+pip install -r requirements.txt
+python app.py
+```
 
-resource changes
+### 4. Start the frontend
 
-prior state
+```bash
+cd my-react-app
+npm install
+npm run dev
+```
 
+## Usage
 
-configuration -> edges
+### Query the graph via API
 
-
-resource_changes -> nodes
-
-configuration -> module calls -> lambda reader -> expressions -> (expr) -> refferences -> aws_sqs_queue.test_queue & var.attach_policy_statements
-
-data.aws_iam_policy_document.additional_inline -> var.attach_policy_statements
-
-
-dot file
-
-"module.lambda-reader.var.attach_policy_statements": [
-    "module.lambda-reader",
-    "module.lambda-reader.var.attach_policy_statements"
-  ],
-
-  "module.lambda-reader.var.policy_statements": [
-    "aws_s3_bucket.test",
-    "aws_sqs_queue.test_queue",
-    "module.lambda-reader",
-    "module.lambda-reader.var.policy_statements"
-  ],
-  "module.lambda-reader.data.aws_iam_policy_document.additional_inline": [
-    "module.lambda-reader.local.create_role",
-    "module.lambda-reader.var.attach_policy_statements",
-    "module.lambda-reader.var.policy_statements"
-  ],
-  "module.lambda-reader.data.aws_iam_policy_document.additional_inline[0]": [
-    "module.lambda-reader.data.aws_iam_policy_document.additional_inline"
-  ],
-  "module.lambda-reader.aws_iam_role_policy.additional_inline": [
-    "module.lambda-reader.aws_iam_role.lambda[0]",
-    "module.lambda-reader.data.aws_iam_policy_document.additional_inline[0]",
-    "module.lambda-reader.local.policy_name"
-  ],
-  "module.lambda-reader.aws_iam_role_policy.additional_inline[0]": [
-    "module.lambda-reader.aws_iam_role_policy.additional_inline"
-  ],
-  "module.lambda-reader.aws_lambda_function.this": [
-    "module.lambda-reader.aws_iam_role_policy.additional_inline[0]"
-  ],
-  "module.lambda-reader.aws_lambda_function.this[0]": [
-    "module.lambda-reader.aws_lambda_function.this"
-  ],
-  "module.lambda-reader": [
-    "module.lambda-reader.aws_lambda_function.this[0]"
-  ],
-  "root": [
-    "module.lambda-reader",
-    "module.lambda-writer",
-    "provider[\\",
-    "provider[\\",
-    "provider[\\",
-    "provider[\\"
-  ]
-
-  "aws_s3_bucket_object.test": [
-    "aws_s3_bucket.test",
-    "aws_s3_bucket_object.test"
-  ],
-  "aws_s3_bucket.test": [
-    "provider[\\",
-    "aws_s3_bucket.test"
-  ],
-  "provider[\\\"registry.opentofu.org/hashicorp/aws\\\"]": [
-    "aws_s3_bucket_object.test",
-    "module.lambda-reader.aws_lambda_function.this[0]",
-    "module.lambda-writer.aws_lambda_function.this[0]"
-  ],
-  "root": [
-    "module.lambda-reader",
-    "module.lambda-writer",
-    "provider[\\",
-    "provider[\\",
-    "provider[\\",
-    "provider[\\"
-  ]
-
-
+```bash
 curl -X POST http://localhost:8000/api/query \
   -H "Content-Type: application/json" \
   -d '{"question": "What resources depend on the security group?"}'
+```
 
-watch -n 1 nvidia-smi
+### Graph without a plan
 
-htop
+```bash
+tofu graph > graph.dot
+python parse_dot.py graph.dot > graph.json
+```
+
+## Project Structure
+
+| Directory       | Description                    |
+|----------------|--------------------------------|
+| `flask-server/`| Python backend, LangGraph, API |
+| `my-react-app/`| React graph visualization      |
+| `express-server/` | Node.js alternative backend |
+| `parse_dot.py` | DOT → JSON parser              |
+| `main.tf`      | Example Terraform config       |
